@@ -1,0 +1,8 @@
+*
+!*/
+!.gitignore
+!*.edf
+!EEG_preprocessing_v7.ipynb
+segmented_tasks/
+.claude/
+v7_cache/
