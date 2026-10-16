@@ -287,7 +287,7 @@ s = content("Is the accuracy real? Leakage checks", "Validity");
 const checks = [
   ["Person-wise folds", "No participant appears in both training and test sets in any fold; no duplicate EDF files."],
   ["Label permutation", "With shuffled labels the pipeline falls to chance: 49.4 / 54.6 / 48.3% (binary), 18.7 / 17.6 / 18.5% (6-class)."],
-  ["Reproducibility", "Same seed, two runs: 382 / 476 both times. Different seed: 384 / 476. The result does not drift upward."],
+  ["Reproducibility", "Same seed twice: 382 / 476 both times. Seeds 1, 2, 3: 384, 384, 386. Mean 80.59 ± 0.35%; changes come from the seed, not from learning across runs."],
   ["Onset sensitivity", "Shifting the onset by ±2 s: binary 75.9–79.2%, so the reported figure may be about 3 points optimistic."],
 ];
 checks.forEach((c, i) => {
@@ -305,7 +305,7 @@ s = content("Response to review feedback", "Validity");
 s.addTable([
   [HDR("Question"), HDR("Finding / action")],
   [CELL("v10 results differ from earlier report", { bold: true }), CELL("The executed notebook prints both v9 (79.62%) and v10 (80.25%) summaries; the deep models (EEGNet, CNN–LSTM) are not deterministic and shift by about 0.5–2 points between runs. The final numbers are v10.")],
-  [CELL("Accuracy rising each run: leakage?", { bold: true }), CELL("No. Fixed seed gives identical results (382/476 twice); permutation tests sit at chance; folds are split by person. Nested CV on all tasks is being completed.")],
+  [CELL("Accuracy rising each run: leakage?", { bold: true }), CELL("No. Same seed gives identical results (382/476 twice); other seeds give 384–386 (80.59 ± 0.35% over 5 runs); permutation tests sit at chance; folds are split by person. Nested CV on all tasks is being completed.")],
   [CELL("Only LR for left vs right", { bold: true }), CELL("All eight models (LR, LDA, SVM, RF, ET, HGB, AdaBoost, NB) and the ensemble are being run on the L/R task with the same folds.")],
   [CELL("Add CSP features to every model?", { bold: true }), CELL("FBCSP alone is weaker (61.60% vs 64.45%; L/R 52.70% vs 58.09%). Each model is being re-run with and without FBCSP features; CSP is kept only where it helps.")],
 ], { x: 0.5, y: 1.05, w: 9.0, colW: [2.6, 6.4], rowH: [0.36, 0.8, 0.8, 0.6, 0.8], border: { type: "solid", pt: 0.5, color: "D0D5DD" }, valign: "middle", fontSize: 11.5 });
