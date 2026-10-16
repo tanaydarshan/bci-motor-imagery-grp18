@@ -281,12 +281,37 @@ bullets(s, [
 ], { x: 5.95, y: 1.1, w: 3.55, h: 3.9, fontSize: 12.5 });
 s.addNotes("Left versus right imagery is the hardest binary task because imagery produces weak, lateralised mu changes. Arms show the clearest lateralisation, matching their large cortical area.");
 
+// ---------- 13b. L/R all models ----------
+s = content("Left vs right: every model, with and without CSP", "Results");
+const lrRows = [
+  ["Ensemble (LR+LDA+ET+HGB)", "140", "58.09", "138", "57.26"],
+  ["Logistic Regression", "139", "57.68", "143", "59.34"],
+  ["LDA", "137", "56.85", "143", "59.34"],
+  ["SVM (RBF)", "131", "54.36", "132", "54.77"],
+  ["Extra Trees", "122", "50.62", "124", "51.45"],
+  ["Hist. Gradient Boosting", "121", "50.21", "128", "53.11"],
+  ["AdaBoost", "117", "48.55", "131", "54.36"],
+  ["Naive Bayes", "109", "45.23", "116", "48.13"],
+  ["Random Forest", "108", "44.81", "105", "43.57"],
+];
+s.addTable([
+  [HDR("Model (241 imagery trials)"), HDR("Base: correct"), HDR("Base %"), HDR("+ FBCSP: correct"), HDR("+ FBCSP %")],
+  ...lrRows.map((r, i) => (i === 0 ? [BEST(r[0]), BEST(r[1]), BEST(r[2]), BEST(r[3]), BEST(r[4])] : [CELL(r[0]), CELL(r[1]), CELL(r[2]), CELL(r[3]), CELL(r[4], (r[4] === "59.34") ? { bold: true, color: C.accent3 } : {})])),
+], { x: 0.5, y: 1.0, w: 6.0, colW: [2.4, 0.9, 0.8, 1.1, 0.8], rowH: 0.36, border: { type: "solid", pt: 0.5, color: "D0D5DD" }, fontSize: 11.5 });
+bullets(s, [
+  "Same 5 person-wise folds, imagery calibration and mirror augmentation for every model.",
+  "Linear models work best: the left/right signal is a weak, roughly linear power difference between hemispheres.",
+  [{ text: "CSP: ", options: { bold: true } }, { text: "+4 trials for LR and LDA (59.34%, p = 0.002), no gain for the ensemble. The rise is within fold spread (±5%), so CSP is optional, not a clear improvement." }],
+  "Trees and Naive Bayes stay near chance with 241 trials.",
+], { x: 6.75, y: 1.05, w: 2.75, h: 4.0, fontSize: 11.5 });
+s.addNotes("Answers the guide: all eight models were run on left versus right imagery, each with and without filter-bank CSP features fitted inside each training fold. Chance is 50 percent. Ensemble 140 of 241, p = 0.007. LR or LDA with CSP 143 of 241, p = 0.002.");
+
 // ---------- 14. validity ----------
 pres.addSection({ title: "Validity" });
 s = content("Is the accuracy real? Leakage checks", "Validity");
 const checks = [
   ["Person-wise folds", "No participant appears in both training and test sets in any fold; no duplicate EDF files."],
-  ["Label permutation", "With shuffled labels the pipeline falls to chance: 49.4 / 54.6 / 48.3% (binary), 18.7 / 17.6 / 18.5% (6-class)."],
+  ["Label permutation", "With shuffled labels the final pipeline falls to chance: 54.6 / 52.1 / 50.2% for action vs imagery (real labels: 80.25%)."],
   ["Reproducibility", "Same seed twice: 382 / 476 both times. Seeds 1, 2, 3: 384, 384, 386. Mean 80.59 ± 0.35%; changes come from the seed, not from learning across runs."],
   ["Onset sensitivity", "Shifting the onset by ±2 s: binary 75.9–79.2%, so the reported figure may be about 3 points optimistic."],
 ];
@@ -306,8 +331,8 @@ s.addTable([
   [HDR("Question"), HDR("Finding / action")],
   [CELL("v10 results differ from earlier report", { bold: true }), CELL("The executed notebook prints both v9 (79.62%) and v10 (80.25%) summaries; the deep models (EEGNet, CNN–LSTM) are not deterministic and shift by about 0.5–2 points between runs. The final numbers are v10.")],
   [CELL("Accuracy rising each run: leakage?", { bold: true }), CELL("No. Same seed gives identical results (382/476 twice); other seeds give 384–386 (80.59 ± 0.35% over 5 runs); permutation tests sit at chance; folds are split by person. Nested CV on all tasks is being completed.")],
-  [CELL("Only LR for left vs right", { bold: true }), CELL("All eight models (LR, LDA, SVM, RF, ET, HGB, AdaBoost, NB) and the ensemble are being run on the L/R task with the same folds.")],
-  [CELL("Add CSP features to every model?", { bold: true }), CELL("FBCSP alone is weaker (61.60% vs 64.45%; L/R 52.70% vs 58.09%). Each model is being re-run with and without FBCSP features; CSP is kept only where it helps.")],
+  [CELL("Only LR for left vs right", { bold: true }), CELL("Done. The reported 58.09% is the ensemble. All 8 models were run on the same folds: LR 57.68%, LDA 56.85%, SVM 54.36%; tree models and NB 45–51%.")],
+  [CELL("Add CSP features to every model?", { bold: true }), CELL("L/R done: CSP adds 4 trials for LR and LDA (59.34%) but not for the ensemble; gain is within fold noise. CSP alone is weaker (52.70%). Other tasks still running.")],
 ], { x: 0.5, y: 1.05, w: 9.0, colW: [2.6, 6.4], rowH: [0.36, 0.8, 0.8, 0.6, 0.8], border: { type: "solid", pt: 0.5, color: "D0D5DD" }, valign: "middle", fontSize: 11.5 });
 s.addNotes("CSP learns spatial filters for two-class variance differences. Our feature set already includes band power per channel and Riemannian covariance features, which carry the same information, so CSP is expected to add little.");
 
