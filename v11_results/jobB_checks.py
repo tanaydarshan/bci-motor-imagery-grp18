@@ -59,10 +59,10 @@ for task in ["bin", "6", "LR", "12"]:
 
 # ---- 3. Nested cross-validation: every development choice is re-made using ONLY the training people of each outer fold
 CONFIGS = {
-  "bin": {"no-align": (X_noalign, None, False), "align": (X_v8, X_v10_mir, False), "align+mirror": (X_v8, X_v10_mir, True)},
-  "6":   {"no-align": (X_noalign, None, False), "align": (X_v8, X_v10_mir, False), "align+mirror": (X_v8, X_v10_mir, True)},
-  "12":  {"no-align": (X_noalign, None, False), "align": (X_v8, X_v10_mir, False), "align+mirror": (X_v8, X_v10_mir, True)},
-  "LR":  {"std-cal": (X_v8, X_v10_mir, False), "std-cal+mirror": (X_v8, X_v10_mir, True),
+  "bin": {"no-align": (X_noalign, None, False), "align": (X_final, X_mirror, False), "align+mirror": (X_final, X_mirror, True)},
+  "6":   {"no-align": (X_noalign, None, False), "align": (X_final, X_mirror, False), "align+mirror": (X_final, X_mirror, True)},
+  "12":  {"no-align": (X_noalign, None, False), "align": (X_final, X_mirror, False), "align+mirror": (X_final, X_mirror, True)},
+  "LR":  {"std-cal": (X_final, X_mirror, False), "std-cal+mirror": (X_final, X_mirror, True),
           "img-cal": (X_img, X_img_mir, False), "img-cal+mirror": (X_img, X_img_mir, True)},
 }
 OUT.setdefault("nested", {})
