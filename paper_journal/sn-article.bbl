@@ -1,0 +1,561 @@
+%% BioMed_Central_Bib_Style_v1.01
+
+\begin{thebibliography}{30}
+% BibTex style file: bmc-mathphys.bst (version 2.1), 2014-07-24
+\ifx \bisbn   \undefined \def \bisbn  #1{ISBN #1}\fi
+\ifx \binits  \undefined \def \binits#1{#1}\fi
+\ifx \bauthor  \undefined \def \bauthor#1{#1}\fi
+\ifx \batitle  \undefined \def \batitle#1{#1}\fi
+\ifx \bjtitle  \undefined \def \bjtitle#1{#1}\fi
+\ifx \bvolume  \undefined \def \bvolume#1{\textbf{#1}}\fi
+\ifx \byear  \undefined \def \byear#1{#1}\fi
+\ifx \bissue  \undefined \def \bissue#1{#1}\fi
+\ifx \bfpage  \undefined \def \bfpage#1{#1}\fi
+\ifx \blpage  \undefined \def \blpage #1{#1}\fi
+\ifx \burl  \undefined \def \burl#1{\textsf{#1}}\fi
+\ifx \doiurl  \undefined \def \doiurl#1{\url{https://doi.org/#1}}\fi
+\ifx \betal  \undefined \def \betal{\textit{et al.}}\fi
+\ifx \binstitute  \undefined \def \binstitute#1{#1}\fi
+\ifx \binstitutionaled  \undefined \def \binstitutionaled#1{#1}\fi
+\ifx \bctitle  \undefined \def \bctitle#1{#1}\fi
+\ifx \beditor  \undefined \def \beditor#1{#1}\fi
+\ifx \bpublisher  \undefined \def \bpublisher#1{#1}\fi
+\ifx \bbtitle  \undefined \def \bbtitle#1{#1}\fi
+\ifx \bedition  \undefined \def \bedition#1{#1}\fi
+\ifx \bseriesno  \undefined \def \bseriesno#1{#1}\fi
+\ifx \blocation  \undefined \def \blocation#1{#1}\fi
+\ifx \bsertitle  \undefined \def \bsertitle#1{#1}\fi
+\ifx \bsnm \undefined \def \bsnm#1{#1}\fi
+\ifx \bsuffix \undefined \def \bsuffix#1{#1}\fi
+\ifx \bparticle \undefined \def \bparticle#1{#1}\fi
+\ifx \barticle \undefined \def \barticle#1{#1}\fi
+\bibcommenthead
+\ifx \bconfdate \undefined \def \bconfdate #1{#1}\fi
+\ifx \botherref \undefined \def \botherref #1{#1}\fi
+\ifx \url \undefined \def \url#1{\textsf{#1}}\fi
+\ifx \bchapter \undefined \def \bchapter#1{#1}\fi
+\ifx \bbook \undefined \def \bbook#1{#1}\fi
+\ifx \bcomment \undefined \def \bcomment#1{#1}\fi
+\ifx \oauthor \undefined \def \oauthor#1{#1}\fi
+\ifx \citeauthoryear \undefined \def \citeauthoryear#1{#1}\fi
+\ifx \endbibitem  \undefined \def \endbibitem {}\fi
+\ifx \bconflocation  \undefined \def \bconflocation#1{#1}\fi
+\ifx \arxivurl  \undefined \def \arxivurl#1{\textsf{#1}}\fi
+\csname PreBibitemsHook\endcsname
+
+%%% 1
+\bibitem[\protect\citeauthoryear{Wolpaw et~al.}{2002}]{Wolpaw2002}
+\begin{barticle}
+\bauthor{\bsnm{Wolpaw}, \binits{J.R.}},
+\bauthor{\bsnm{Birbaumer}, \binits{N.}},
+\bauthor{\bsnm{McFarland}, \binits{D.J.}},
+\bauthor{\bsnm{Pfurtscheller}, \binits{G.}},
+\bauthor{\bsnm{Vaughan}, \binits{T.M.}}:
+\batitle{Brain--computer interfaces for communication and control}.
+\bjtitle{Clinical Neurophysiology}
+\bvolume{113}(\bissue{6}),
+\bfpage{767}--\blpage{791}
+(\byear{2002})
+\doiurl{10.1016/S1388-2457(02)00057-3}
+\end{barticle}
+\endbibitem
+
+%%% 2
+\bibitem[\protect\citeauthoryear{Nicolas-Alonso and
+  Gomez-Gil}{2012}]{NicolasAlonso2012}
+\begin{barticle}
+\bauthor{\bsnm{Nicolas-Alonso}, \binits{L.F.}},
+\bauthor{\bsnm{Gomez-Gil}, \binits{J.}}:
+\batitle{Brain computer interfaces, a review}.
+\bjtitle{Sensors}
+\bvolume{12}(\bissue{2}),
+\bfpage{1211}--\blpage{1279}
+(\byear{2012})
+\doiurl{10.3390/s120201211}
+\end{barticle}
+\endbibitem
+
+%%% 3
+\bibitem[\protect\citeauthoryear{Pfurtscheller and
+  Neuper}{2001}]{Pfurtscheller2001}
+\begin{barticle}
+\bauthor{\bsnm{Pfurtscheller}, \binits{G.}},
+\bauthor{\bsnm{Neuper}, \binits{C.}}:
+\batitle{Motor imagery and direct brain--computer communication}.
+\bjtitle{Proceedings of the IEEE}
+\bvolume{89}(\bissue{7}),
+\bfpage{1123}--\blpage{1134}
+(\byear{2001})
+\doiurl{10.1109/5.939829}
+\end{barticle}
+\endbibitem
+
+%%% 4
+\bibitem[\protect\citeauthoryear{Pfurtscheller and
+  Aranibar}{1977}]{PfurtschellerAranibar1977}
+\begin{barticle}
+\bauthor{\bsnm{Pfurtscheller}, \binits{G.}},
+\bauthor{\bsnm{Aranibar}, \binits{A.}}:
+\batitle{Event-related cortical desynchronization detected by power
+  measurements of scalp eeg}.
+\bjtitle{Electroencephalography and Clinical Neurophysiology}
+\bvolume{42}(\bissue{6}),
+\bfpage{817}--\blpage{826}
+(\byear{1977})
+\doiurl{10.1016/0013-4694(77)90235-8}
+\end{barticle}
+\endbibitem
+
+%%% 5
+\bibitem[\protect\citeauthoryear{Ramoser et~al.}{2000}]{Ramoser2000}
+\begin{barticle}
+\bauthor{\bsnm{Ramoser}, \binits{H.}},
+\bauthor{\bsnm{M{\"u}ller-Gerking}, \binits{J.}},
+\bauthor{\bsnm{Pfurtscheller}, \binits{G.}}:
+\batitle{Optimal spatial filtering of single trial eeg during imagined hand
+  movement}.
+\bjtitle{IEEE Transactions on Rehabilitation Engineering}
+\bvolume{8}(\bissue{4}),
+\bfpage{441}--\blpage{446}
+(\byear{2000})
+\doiurl{10.1109/86.895946}
+\end{barticle}
+\endbibitem
+
+%%% 6
+\bibitem[\protect\citeauthoryear{Blankertz et~al.}{2008}]{Blankertz2008}
+\begin{barticle}
+\bauthor{\bsnm{Blankertz}, \binits{B.}},
+\bauthor{\bsnm{Tomioka}, \binits{R.}},
+\bauthor{\bsnm{Lemm}, \binits{S.}},
+\bauthor{\bsnm{Kawanabe}, \binits{M.}},
+\bauthor{\bsnm{M{\"u}ller}, \binits{K.R.}}:
+\batitle{Optimizing spatial filters for robust eeg single-trial analysis}.
+\bjtitle{IEEE Signal Processing Magazine}
+\bvolume{25}(\bissue{1}),
+\bfpage{41}--\blpage{56}
+(\byear{2008})
+\doiurl{10.1109/MSP.2008.4408441}
+\end{barticle}
+\endbibitem
+
+%%% 7
+\bibitem[\protect\citeauthoryear{Naeem et~al.}{2006}]{Naeem2006}
+\begin{barticle}
+\bauthor{\bsnm{Naeem}, \binits{M.}},
+\bauthor{\bsnm{Brunner}, \binits{C.}},
+\bauthor{\bsnm{Leeb}, \binits{R.}},
+\bauthor{\bsnm{Graimann}, \binits{B.}},
+\bauthor{\bsnm{Pfurtscheller}, \binits{G.}}:
+\batitle{Separability of four-class motor imagery data using independent
+  components analysis}.
+\bjtitle{Journal of Neural Engineering}
+\bvolume{3}(\bissue{3}),
+\bfpage{208}--\blpage{216}
+(\byear{2006})
+\doiurl{10.1088/1741-2560/3/3/003}
+\end{barticle}
+\endbibitem
+
+%%% 8
+\bibitem[\protect\citeauthoryear{Lotte et~al.}{2018}]{Lotte2018}
+\begin{barticle}
+\bauthor{\bsnm{Lotte}, \binits{F.}},
+\bauthor{\bsnm{Bougrain}, \binits{L.}},
+\bauthor{\bsnm{Cichocki}, \binits{A.}},
+\bauthor{\bsnm{Clerc}, \binits{M.}},
+\bauthor{\bsnm{Congedo}, \binits{M.}},
+\bauthor{\bsnm{Rakotomamonjy}, \binits{A.}},
+\bauthor{\bsnm{Yger}, \binits{F.}}:
+\batitle{A review of classification algorithms for eeg-based brain--computer
+  interfaces: A 10 year update}.
+\bjtitle{Journal of Neural Engineering}
+\bvolume{15}(\bissue{3}),
+\bfpage{031005}
+(\byear{2018})
+\doiurl{10.1088/1741-2552/aab2f2}
+\end{barticle}
+\endbibitem
+
+%%% 9
+\bibitem[\protect\citeauthoryear{Badcock et~al.}{2013}]{Badcock2013}
+\begin{barticle}
+\bauthor{\bsnm{Badcock}, \binits{N.A.}},
+\bauthor{\bsnm{Mousikou}, \binits{P.}},
+\bauthor{\bsnm{Mahajan}, \binits{Y.}},
+\bauthor{\bsnm{Lissa}, \binits{P.}},
+\bauthor{\bsnm{Thie}, \binits{J.}},
+\bauthor{\bsnm{McArthur}, \binits{G.}}:
+\batitle{Validation of the emotiv epoc eeg gaming system for measuring research
+  quality auditory erps}.
+\bjtitle{PeerJ}
+\bvolume{1},
+\bfpage{38}
+(\byear{2013})
+\doiurl{10.7717/peerj.38}
+\end{barticle}
+\endbibitem
+
+%%% 10
+\bibitem[\protect\citeauthoryear{Duvinage et~al.}{2013}]{Duvinage2013}
+\begin{barticle}
+\bauthor{\bsnm{Duvinage}, \binits{M.}},
+\bauthor{\bsnm{Castermans}, \binits{T.}},
+\bauthor{\bsnm{Petieau}, \binits{M.}},
+\bauthor{\bsnm{Hoellinger}, \binits{T.}},
+\bauthor{\bsnm{Cheron}, \binits{G.}},
+\bauthor{\bsnm{Dutoit}, \binits{T.}}:
+\batitle{Performance of the emotiv epoc headset for p300-based applications}.
+\bjtitle{BioMedical Engineering OnLine}
+\bvolume{12}(\bissue{1}),
+\bfpage{56}
+(\byear{2013})
+\doiurl{10.1186/1475-925X-12-56}
+\end{barticle}
+\endbibitem
+
+%%% 11
+\bibitem[\protect\citeauthoryear{Maskeli{\=u}nas
+  et~al.}{2016}]{Maskeliunas2016}
+\begin{barticle}
+\bauthor{\bsnm{Maskeli{\=u}nas}, \binits{R.}},
+\bauthor{\bsnm{Dama{\v s}evi{\v c}ius}, \binits{R.}},
+\bauthor{\bsnm{Marti{\v s}ius}, \binits{I.}},
+\bauthor{\bsnm{Vasiljevas}, \binits{M.}}:
+\batitle{Consumer-grade {EEG} devices: Are they usable for control tasks?}
+\bjtitle{PeerJ}
+\bvolume{4},
+\bfpage{1746}
+(\byear{2016})
+\doiurl{10.7717/peerj.1746}
+\end{barticle}
+\endbibitem
+
+%%% 12
+\bibitem[\protect\citeauthoryear{Barachant et~al.}{2012}]{Barachant2012}
+\begin{barticle}
+\bauthor{\bsnm{Barachant}, \binits{A.}},
+\bauthor{\bsnm{Bonnet}, \binits{S.}},
+\bauthor{\bsnm{Congedo}, \binits{M.}},
+\bauthor{\bsnm{Jutten}, \binits{C.}}:
+\batitle{Multiclass brain--computer interface classification by riemannian
+  geometry}.
+\bjtitle{IEEE Transactions on Biomedical Engineering}
+\bvolume{59}(\bissue{4}),
+\bfpage{920}--\blpage{928}
+(\byear{2012})
+\doiurl{10.1109/TBME.2011.2172210}
+\end{barticle}
+\endbibitem
+
+%%% 13
+\bibitem[\protect\citeauthoryear{Congedo et~al.}{2017}]{Congedo2017}
+\begin{barticle}
+\bauthor{\bsnm{Congedo}, \binits{M.}},
+\bauthor{\bsnm{Barachant}, \binits{A.}},
+\bauthor{\bsnm{Bhatia}, \binits{R.}}:
+\batitle{Riemannian geometry for {EEG}-based brain--computer interfaces: A
+  primer and a review}.
+\bjtitle{Brain--Computer Interfaces}
+\bvolume{4}(\bissue{3}),
+\bfpage{155}--\blpage{174}
+(\byear{2017})
+\doiurl{10.1080/2326263X.2017.1297192}
+\end{barticle}
+\endbibitem
+
+%%% 14
+\bibitem[\protect\citeauthoryear{Schirrmeister
+  et~al.}{2017}]{Schirrmeister2017}
+\begin{barticle}
+\bauthor{\bsnm{Schirrmeister}, \binits{R.T.}},
+\bauthor{\bsnm{Springenberg}, \binits{J.T.}},
+\bauthor{\bsnm{Fiederer}, \binits{L.D.J.}},
+\bauthor{\bsnm{Glasstetter}, \binits{M.}},
+\bauthor{\bsnm{Eggensperger}, \binits{K.}},
+\bauthor{\bsnm{Tangermann}, \binits{M.}},
+\bauthor{\bsnm{Hutter}, \binits{F.}},
+\bauthor{\bsnm{Burgard}, \binits{W.}},
+\bauthor{\bsnm{Ball}, \binits{T.}}:
+\batitle{Deep learning with convolutional neural networks for eeg decoding and
+  visualization}.
+\bjtitle{Human Brain Mapping}
+\bvolume{38}(\bissue{11}),
+\bfpage{5391}--\blpage{5420}
+(\byear{2017})
+\doiurl{10.1002/hbm.23730}
+\end{barticle}
+\endbibitem
+
+%%% 15
+\bibitem[\protect\citeauthoryear{Lawhern et~al.}{2018}]{Lawhern2018}
+\begin{barticle}
+\bauthor{\bsnm{Lawhern}, \binits{V.J.}},
+\bauthor{\bsnm{Solon}, \binits{A.J.}},
+\bauthor{\bsnm{Waytowich}, \binits{N.R.}},
+\bauthor{\bsnm{Gordon}, \binits{S.M.}},
+\bauthor{\bsnm{Hung}, \binits{C.P.}},
+\bauthor{\bsnm{Lance}, \binits{B.J.}}:
+\batitle{Eegnet: A compact convolutional neural network for eeg-based
+  brain--computer interfaces}.
+\bjtitle{Journal of Neural Engineering}
+\bvolume{15}(\bissue{5}),
+\bfpage{056013}
+(\byear{2018})
+\doiurl{10.1088/1741-2552/aace8c}
+\end{barticle}
+\endbibitem
+
+%%% 16
+\bibitem[\protect\citeauthoryear{Pfurtscheller and Lopes~da
+  Silva}{1999}]{PfurtschellerLopes1999}
+\begin{barticle}
+\bauthor{\bsnm{Pfurtscheller}, \binits{G.}},
+\bauthor{\bsnm{Silva}, \binits{F.H.}}:
+\batitle{Event-related eeg/meg synchronization and desynchronization: Basic
+  principles}.
+\bjtitle{Clinical Neurophysiology}
+\bvolume{110}(\bissue{11}),
+\bfpage{1842}--\blpage{1857}
+(\byear{1999})
+\doiurl{10.1016/S1388-2457(99)00141-8}
+\end{barticle}
+\endbibitem
+
+%%% 17
+\bibitem[\protect\citeauthoryear{Ang et~al.}{2012}]{Ang2012}
+\begin{barticle}
+\bauthor{\bsnm{Ang}, \binits{K.K.}},
+\bauthor{\bsnm{Chin}, \binits{Z.Y.}},
+\bauthor{\bsnm{Wang}, \binits{C.}},
+\bauthor{\bsnm{Guan}, \binits{C.}},
+\bauthor{\bsnm{Zhang}, \binits{H.}}:
+\batitle{Filter bank common spatial pattern algorithm on bci competition iv
+  datasets 2a and 2b}.
+\bjtitle{Frontiers in Neuroscience}
+\bvolume{6},
+\bfpage{39}
+(\byear{2012})
+\doiurl{10.3389/fnins.2012.00039}
+\end{barticle}
+\endbibitem
+
+%%% 18
+\bibitem[\protect\citeauthoryear{Tabar and Halici}{2017}]{Tabar2017}
+\begin{barticle}
+\bauthor{\bsnm{Tabar}, \binits{Y.R.}},
+\bauthor{\bsnm{Halici}, \binits{U.}}:
+\batitle{A novel deep learning approach for classification of {EEG} motor
+  imagery signals}.
+\bjtitle{Journal of Neural Engineering}
+\bvolume{14}(\bissue{1}),
+\bfpage{016003}
+(\byear{2017})
+\doiurl{10.1088/1741-2560/14/1/016003}
+\end{barticle}
+\endbibitem
+
+%%% 19
+\bibitem[\protect\citeauthoryear{Torrence and Compo}{1998}]{Torrence1998}
+\begin{barticle}
+\bauthor{\bsnm{Torrence}, \binits{C.}},
+\bauthor{\bsnm{Compo}, \binits{G.P.}}:
+\batitle{A practical guide to wavelet analysis}.
+\bjtitle{Bulletin of the American Meteorological Society}
+\bvolume{79}(\bissue{1}),
+\bfpage{61}--\blpage{78}
+(\byear{1998})
+\doiurl{10.1175/1520-0477(1998)079<0061:APGTWA>2.0.CO;2}
+\end{barticle}
+\endbibitem
+
+%%% 20
+\bibitem[\protect\citeauthoryear{Sakhavi et~al.}{2018}]{Sakhavi2018}
+\begin{barticle}
+\bauthor{\bsnm{Sakhavi}, \binits{S.}},
+\bauthor{\bsnm{Guan}, \binits{C.}},
+\bauthor{\bsnm{Yan}, \binits{S.}}:
+\batitle{Learning temporal information for brain--computer interface using
+  convolutional neural networks}.
+\bjtitle{IEEE Transactions on Neural Networks and Learning Systems}
+\bvolume{29}(\bissue{11}),
+\bfpage{5619}--\blpage{5629}
+(\byear{2018})
+\doiurl{10.1109/TNNLS.2018.2789927}
+\end{barticle}
+\endbibitem
+
+%%% 21
+\bibitem[\protect\citeauthoryear{He and Wu}{2020}]{He2020}
+\begin{barticle}
+\bauthor{\bsnm{He}, \binits{H.}},
+\bauthor{\bsnm{Wu}, \binits{D.}}:
+\batitle{Transfer learning for brain--computer interfaces: A euclidean space
+  data alignment approach}.
+\bjtitle{IEEE Transactions on Biomedical Engineering}
+\bvolume{67}(\bissue{2}),
+\bfpage{399}--\blpage{410}
+(\byear{2020})
+\doiurl{10.1109/TBME.2019.2913914}
+\end{barticle}
+\endbibitem
+
+%%% 22
+\bibitem[\protect\citeauthoryear{Zanini et~al.}{2018}]{Zanini2018}
+\begin{barticle}
+\bauthor{\bsnm{Zanini}, \binits{P.}},
+\bauthor{\bsnm{Congedo}, \binits{M.}},
+\bauthor{\bsnm{Jutten}, \binits{C.}},
+\bauthor{\bsnm{Said}, \binits{S.}},
+\bauthor{\bsnm{Berthoumieu}, \binits{Y.}}:
+\batitle{Transfer learning: A {Riemannian} geometry framework with applications
+  to brain--computer interfaces}.
+\bjtitle{IEEE Transactions on Biomedical Engineering}
+\bvolume{65}(\bissue{5}),
+\bfpage{1107}--\blpage{1116}
+(\byear{2018})
+\doiurl{10.1109/TBME.2017.2742541}
+\end{barticle}
+\endbibitem
+
+%%% 23
+\bibitem[\protect\citeauthoryear{Zhang and Wu}{2020}]{Zhang2020}
+\begin{barticle}
+\bauthor{\bsnm{Zhang}, \binits{W.}},
+\bauthor{\bsnm{Wu}, \binits{D.}}:
+\batitle{Manifold embedded knowledge transfer for brain--computer interfaces}.
+\bjtitle{IEEE Transactions on Neural Systems and Rehabilitation Engineering}
+\bvolume{28}(\bissue{5}),
+\bfpage{1117}--\blpage{1127}
+(\byear{2020})
+\doiurl{10.1109/TNSRE.2020.2985996}
+\end{barticle}
+\endbibitem
+
+%%% 24
+\bibitem[\protect\citeauthoryear{Roy et~al.}{2019}]{Roy2019}
+\begin{barticle}
+\bauthor{\bsnm{Roy}, \binits{Y.}},
+\bauthor{\bsnm{Banville}, \binits{H.}},
+\bauthor{\bsnm{Albuquerque}, \binits{I.}},
+\bauthor{\bsnm{Gramfort}, \binits{A.}},
+\bauthor{\bsnm{Falk}, \binits{T.H.}},
+\bauthor{\bsnm{Faubert}, \binits{J.}}:
+\batitle{Deep learning-based electroencephalography analysis: A systematic
+  review}.
+\bjtitle{Journal of Neural Engineering}
+\bvolume{16}(\bissue{5}),
+\bfpage{051001}
+(\byear{2019})
+\doiurl{10.1088/1741-2552/ab260c}
+\end{barticle}
+\endbibitem
+
+%%% 25
+\bibitem[\protect\citeauthoryear{Altaheri et~al.}{2023}]{Altaheri2023}
+\begin{barticle}
+\bauthor{\bsnm{Altaheri}, \binits{H.}},
+\bauthor{\bsnm{Muhammad}, \binits{G.}},
+\bauthor{\bsnm{Alsulaiman}, \binits{M.}},
+\bauthor{\bsnm{Amin}, \binits{S.U.}},
+\bauthor{\bsnm{Altuwaijri}, \binits{G.A.}},
+\bauthor{\bsnm{Abdul}, \binits{W.}},
+\bauthor{\bsnm{Bencherif}, \binits{M.A.}},
+\bauthor{\bsnm{Faisal}, \binits{M.}}:
+\batitle{Deep learning techniques for classification of electroencephalogram
+  (eeg) motor imagery (mi) signals: A review}.
+\bjtitle{Neural Computing and Applications}
+\bvolume{35}(\bissue{20}),
+\bfpage{14681}--\blpage{14722}
+(\byear{2023})
+\doiurl{10.1007/s00521-021-06352-5}
+\end{barticle}
+\endbibitem
+
+%%% 26
+\bibitem[\protect\citeauthoryear{Ang et~al.}{2015}]{Ang2015}
+\begin{barticle}
+\bauthor{\bsnm{Ang}, \binits{K.K.}},
+\bauthor{\bsnm{Chua}, \binits{K.S.G.}},
+\bauthor{\bsnm{Phua}, \binits{K.S.}},
+\bauthor{\bsnm{Wang}, \binits{C.}},
+\bauthor{\bsnm{Chin}, \binits{Z.Y.}},
+\bauthor{\bsnm{Kuah}, \binits{C.W.K.}},
+\bauthor{\bsnm{Low}, \binits{W.}},
+\bauthor{\bsnm{Guan}, \binits{C.}}:
+\batitle{A randomized controlled trial of eeg-based motor imagery
+  brain--computer interface robotic rehabilitation for stroke}.
+\bjtitle{Clinical EEG and Neuroscience}
+\bvolume{46}(\bissue{4}),
+\bfpage{310}--\blpage{320}
+(\byear{2015})
+\doiurl{10.1177/1550059414522229}
+\end{barticle}
+\endbibitem
+
+%%% 27
+\bibitem[\protect\citeauthoryear{Gramfort et~al.}{2013}]{Gramfort2013}
+\begin{barticle}
+\bauthor{\bsnm{Gramfort}, \binits{A.}},
+\bauthor{\bsnm{Luessi}, \binits{M.}},
+\bauthor{\bsnm{Larson}, \binits{E.}},
+\bauthor{\bsnm{Engemann}, \binits{D.A.}},
+\bauthor{\bsnm{Strohmeier}, \binits{D.}},
+\bauthor{\bsnm{Brodbeck}, \binits{C.}},
+\bauthor{\bsnm{Goj}, \binits{R.}},
+\bauthor{\bsnm{Jas}, \binits{M.}},
+\bauthor{\bsnm{Brooks}, \binits{T.}},
+\bauthor{\bsnm{Parkkonen}, \binits{L.}},
+\bauthor{\bsnm{H{\"a}m{\"a}l{\"a}inen}, \binits{M.S.}}:
+\batitle{Meg and eeg data analysis with mne-python}.
+\bjtitle{Frontiers in Neuroscience}
+\bvolume{7},
+\bfpage{267}
+(\byear{2013})
+\doiurl{10.3389/fnins.2013.00267}
+\end{barticle}
+\endbibitem
+
+%%% 28
+\bibitem[\protect\citeauthoryear{Hjorth}{1970}]{Hjorth1970}
+\begin{barticle}
+\bauthor{\bsnm{Hjorth}, \binits{B.}}:
+\batitle{{EEG} analysis based on time domain properties}.
+\bjtitle{Electroencephalography and Clinical Neurophysiology}
+\bvolume{29}(\bissue{3}),
+\bfpage{306}--\blpage{310}
+(\byear{1970})
+\doiurl{10.1016/0013-4694(70)90143-4}
+\end{barticle}
+\endbibitem
+
+%%% 29
+\bibitem[\protect\citeauthoryear{Higuchi}{1988}]{Higuchi1988}
+\begin{barticle}
+\bauthor{\bsnm{Higuchi}, \binits{T.}}:
+\batitle{Approach to an irregular time series on the basis of the fractal
+  theory}.
+\bjtitle{Physica D: Nonlinear Phenomena}
+\bvolume{31}(\bissue{2}),
+\bfpage{277}--\blpage{283}
+(\byear{1988})
+\doiurl{10.1016/0167-2789(88)90081-4}
+\end{barticle}
+\endbibitem
+
+%%% 30
+\bibitem[\protect\citeauthoryear{Ledoit and Wolf}{2004}]{LedoitWolf2004}
+\begin{barticle}
+\bauthor{\bsnm{Ledoit}, \binits{O.}},
+\bauthor{\bsnm{Wolf}, \binits{M.}}:
+\batitle{A well-conditioned estimator for large-dimensional covariance
+  matrices}.
+\bjtitle{Journal of Multivariate Analysis}
+\bvolume{88}(\bissue{2}),
+\bfpage{365}--\blpage{411}
+(\byear{2004})
+\doiurl{10.1016/S0047-259X(03)00096-4}
+\end{barticle}
+\endbibitem
+
+\end{thebibliography}
