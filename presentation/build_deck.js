@@ -214,7 +214,7 @@ const res = [
   ["80.25%", "Action vs imagery", "382 / 476 trials\nchance 50%"],
   ["26.68%", "Body part (6 classes)", "127 / 476 trials\nchance 16.7%"],
   ["21.43%", "Limb × condition (12)", "102 / 476 trials\nchance 8.3%"],
-  ["58.09%", "Left vs right imagery", "140 / 241 trials\nchance 50%, p = 0.007"],
+  ["58.09%", "Left vs right imagery", "140 / 241 trials, chance 50%\nstrict nested CV: 52.28%"],
 ];
 res.forEach((r, i) => {
   const x = 0.5 + i * 2.3;
@@ -224,7 +224,7 @@ res.forEach((r, i) => {
   s.addText(r[2], { x: x + 0.15, y: 2.6, w: 1.85, h: 0.75, fontSize: 11, color: C.accent4, margin: 0, valign: "top", isTextBox: true });
 });
 bullets(s, [
-  "Trial-level accuracy, pooled over all test folds. Fold mean ± SD: 80.19 ± 6.59 (binary), 26.68 ± 1.79 (6-class), 21.42 ± 1.21 (12-class).",
+  "Trial-level accuracy, pooled over all test folds. Left vs right is not yet reliable (nested CV 52.28%). Fold mean ± SD: 80.19 ± 6.59 (binary), 26.68 ± 1.79 (6-class), 21.42 ± 1.21 (12-class).",
   "Body-part and 12-class accuracies are 1.6× and 2.6× chance: above chance, but far from usable control.",
 ], { x: 0.5, y: 3.75, w: 9.0, h: 1.3, fontSize: 12.5 });
 s.addNotes("Window-level accuracies are lower: 68.53% binary, 21.01% six-class, 15.75% twelve-class. Averaging the 17 windows of a trial adds roughly 12 points for binary.");
@@ -277,7 +277,7 @@ bullets(s, [
   [{ text: "Requested by the guide. ", options: { bold: true } }, { text: "Imagery trials only, 241 trials, 5-fold person-wise CV." }],
   [{ text: "What helped: ", options: { bold: true } }, { text: "calibrating features on each person's imagery trials only, plus mirror augmentation." }],
   [{ text: "Baselines: ", options: { bold: true } }, { text: "FBCSP + LDA 52.70%; standard calibration + mirror 53.53%." }],
-  "Overall 58.09% is significant (p = 0.007); arm imagery reaches 74.07%.",
+  [{ text: "Caution: ", options: { bold: true, color: C.accent3 } }, { text: "strict nested CV gives 52.28% (126/241, p = 0.26). The 58.09% depends on choices made after seeing results, so it is optimistic." }],
 ], { x: 5.95, y: 1.1, w: 3.55, h: 3.9, fontSize: 12.5 });
 s.addNotes("Left versus right imagery is the hardest binary task because imagery produces weak, lateralised mu changes. Arms show the clearest lateralisation, matching their large cortical area.");
 
@@ -355,7 +355,7 @@ s = content("Response to review feedback", "Validity");
 s.addTable([
   [HDR("Question"), HDR("Finding / action")],
   [CELL("v10 results differ from earlier report", { bold: true }), CELL("The executed notebook prints both v9 (79.62%) and v10 (80.25%) summaries; the deep models (EEGNet, CNN–LSTM) are not deterministic and shift by about 0.5–2 points between runs. The final numbers are v10.")],
-  [CELL("Accuracy rising each run: leakage?", { bold: true }), CELL("No. Same seed gives identical results (382/476 twice); other seeds give 384–386 (80.59 ± 0.35% over 5 runs); shuffled-label tests give chance on all four tasks; folds are split by person. Nested CV still running.")],
+  [CELL("Accuracy rising each run: leakage?", { bold: true }), CELL("No. Same seed gives identical results (382/476 twice); other seeds give 384–386 (80.59 ± 0.35% over 5 runs); shuffled-label tests give chance on all four tasks; folds are split by person. Nested CV on left vs right: 52.28%, so that result was optimistic.")],
   [CELL("Only LR for left vs right", { bold: true }), CELL("Done. The reported 58.09% is the ensemble. All 8 models were run on the same folds: LR 57.68%, LDA 56.85%, SVM 54.36%; tree models and NB 45–51%.")],
   [CELL("Add CSP features to every model?", { bold: true }), CELL("Tested on all models. Ensemble: +5 trials on action vs imagery (81.30%), −2 on left vs right (57.26%). Gains are small, mixed and within fold noise, so CSP stays optional. 6/12-class still running.")],
 ], { x: 0.5, y: 1.05, w: 9.0, colW: [2.6, 6.4], rowH: [0.36, 0.8, 0.8, 0.6, 0.8], border: { type: "solid", pt: 0.5, color: "D0D5DD" }, valign: "middle", fontSize: 11.5 });
@@ -369,6 +369,7 @@ bullets(s, [
   "14 saline channels with sparse motor-cortex coverage (no C3/C4).",
   "Onset estimated from motion; small timing errors remain.",
   "One session per person: no cross-session tests.",
+  "Left vs right imagery is not yet reliable: 52.28% under nested CV.",
   "Six- and twelve-class accuracy is above chance but too low for control.",
 ], { x: 0.5, y: 1.5, w: 4.3, h: 3.5, fontSize: 13 });
 s.addText("Next steps", { x: 5.2, y: 1.05, w: 4.3, h: 0.4, fontSize: 16, bold: true, color: C.text2, margin: 0, isTextBox: true });
@@ -385,7 +386,7 @@ s.addNotes("Be honest about the multi-class results; the main contribution is a 
 s = pres.addSlide({ masterName: "TITLE_DARK", sectionTitle: "Conclusion" });
 s.addText("Thank you", { placeholder: "title" });
 s.addText([
-  { text: "Action vs imagery 80.25%  ·  Left vs right imagery 58.09%  ·  person-wise validation", options: { breakLine: true } },
+  { text: "Action vs imagery 80.25%  ·  person-wise validation  ·  leakage checks passed", options: { breakLine: true } },
   { text: " ", options: { breakLine: true, fontSize: 8 } },
   { text: "Questions and suggestions welcome", options: {} },
 ], { placeholder: "body" });
