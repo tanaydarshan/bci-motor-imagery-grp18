@@ -336,7 +336,7 @@ pres.addSection({ title: "Validity" });
 s = content("Is the accuracy real? Leakage checks", "Validity");
 const checks = [
   ["Person-wise folds", "No participant appears in both training and test sets in any fold; no duplicate EDF files."],
-  ["Label permutation", "Shuffled labels give chance: action/imagery 50–55% (real 80.25), body part 17–19% (real 26.68), left/right 44–51% (real 58.09)."],
+  ["Label permutation", "Shuffled labels give chance on all tasks: action/imagery 50–55% (real 80.25), body part 17–19% (26.68), 12-class 8–11% (21.43), left/right 44–51% (58.09)."],
   ["Reproducibility", "Same seed twice: 382 / 476 both times. Seeds 1, 2, 3: 384, 384, 386. Mean 80.59 ± 0.35%; changes come from the seed, not from learning across runs."],
   ["Onset sensitivity", "Shifting the onset by ±2 s: binary 75.9–79.2%, so the reported figure may be about 3 points optimistic."],
 ];
@@ -355,7 +355,7 @@ s = content("Response to review feedback", "Validity");
 s.addTable([
   [HDR("Question"), HDR("Finding / action")],
   [CELL("v10 results differ from earlier report", { bold: true }), CELL("The executed notebook prints both v9 (79.62%) and v10 (80.25%) summaries; the deep models (EEGNet, CNN–LSTM) are not deterministic and shift by about 0.5–2 points between runs. The final numbers are v10.")],
-  [CELL("Accuracy rising each run: leakage?", { bold: true }), CELL("No. Same seed gives identical results (382/476 twice); other seeds give 384–386 (80.59 ± 0.35% over 5 runs); shuffled-label tests give chance on action/imagery, body part and left/right; folds are split by person. Nested CV still running.")],
+  [CELL("Accuracy rising each run: leakage?", { bold: true }), CELL("No. Same seed gives identical results (382/476 twice); other seeds give 384–386 (80.59 ± 0.35% over 5 runs); shuffled-label tests give chance on all four tasks; folds are split by person. Nested CV still running.")],
   [CELL("Only LR for left vs right", { bold: true }), CELL("Done. The reported 58.09% is the ensemble. All 8 models were run on the same folds: LR 57.68%, LDA 56.85%, SVM 54.36%; tree models and NB 45–51%.")],
   [CELL("Add CSP features to every model?", { bold: true }), CELL("Tested on all models. Ensemble: +5 trials on action vs imagery (81.30%), −2 on left vs right (57.26%). Gains are small, mixed and within fold noise, so CSP stays optional. 6/12-class still running.")],
 ], { x: 0.5, y: 1.05, w: 9.0, colW: [2.6, 6.4], rowH: [0.36, 0.8, 0.8, 0.6, 0.8], border: { type: "solid", pt: 0.5, color: "D0D5DD" }, valign: "middle", fontSize: 11.5 });
