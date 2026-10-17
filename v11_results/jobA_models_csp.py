@@ -44,11 +44,13 @@ def scores(clf, B):
     d = clf.decision_function(B)
     return np.c_[-d, d] if d.ndim == 1 else d
 
-results = {}
+import os
+results = json.load(open('/tmp/claude-0/exp/v11/jobA.json')) if os.path.exists('/tmp/claude-0/exp/v11/jobA.json') else {}
 for task in ["LR", "bin", "6", "12"]:
     T = TASKS[task]
     idx = np.where(T["mask"])[0]; y = T["y"]
     for fold, (tr_l, te_l) in enumerate(GroupKFold(n_splits=T["k"]).split(idx, y[idx], groups=sw[idx])):
+        if len(results.get(f'{task}|LogReg|base', {}).get('folds', [])) > fold: continue
         tr, te = idx[tr_l], idx[te_l]; t0 = time.time()
         Ctr, Ctrm, Cte = fbcsp(tr, te, y[tr], T["ymap"])
         tt = trial_of_win[te]; ut = np.unique(tt); yt = np.array([y[te][tt == t][0] for t in ut])

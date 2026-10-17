@@ -5,7 +5,7 @@ import json, time
 from sklearn.linear_model import LogisticRegression
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.ensemble import ExtraTreesClassifier, HistGradientBoostingClassifier
-OUT = {}
+OUT = json.load(open("/tmp/claude-0/exp/v11/jobB.json"))
 def save(): json.dump(OUT, open("/tmp/claude-0/exp/v11/jobB.json", "w"))
 def members(rs):
     return {"LogReg": lambda: LogisticRegression(C=0.01, max_iter=3000),
@@ -34,10 +34,10 @@ def cv(idx, y, ymap, X, Xm, k, rs=42, mirror=True):
 # ---- 1. Reproducibility: same seed twice, then three other seeds (binary, final v10 setup)
 T = TASKS["bin"]; idx = np.where(T["mask"])[0]
 rep = []
-for rs in [42, 42, 1, 2, 3]:
+for rs in ([] if "repro_bin" in OUT else [42, 42, 1, 2, 3]):
     c, n = cv(idx, T["y"], T["ymap"], T["X"], T["Xm"], T["k"], rs=rs); rep.append([rs, c["Ensemble"], n])
     print("repro seed", rs, c["Ensemble"], "/", n, flush=True)
-OUT["repro_bin"] = rep; save()
+if rep: OUT["repro_bin"] = rep; save()
 
 # ---- 2. Label permutation on all four tasks (labels shuffled across trials within each recording)
 rng = np.random.default_rng(7)
@@ -48,8 +48,10 @@ def permuted(y, mask):
         ts = np.unique(trial_of_win[(sess_w == r) & mask]); l = np.array([lab[t] for t in ts]); rng.shuffle(l)
         for t, v in zip(ts, l): yp[trial_of_win == t] = v
     return yp
-OUT["perm"] = {}
-for task, T in TASKS.items():
+OUT.setdefault("perm", {})
+for task in ["bin", "6", "LR", "12"]:
+    T = TASKS[task]
+    if task in OUT["perm"]: continue
     idx = np.where(T["mask"])[0]; accs = []
     for rep_i in range(3):
         c, n = cv(idx, permuted(T["y"], T["mask"]), T["ymap"], T["X"], T["Xm"], T["k"]); accs.append(c["Ensemble"] / n)
@@ -63,8 +65,10 @@ CONFIGS = {
   "LR":  {"std-cal": (X_v8, X_v10_mir, False), "std-cal+mirror": (X_v8, X_v10_mir, True),
           "img-cal": (X_img, X_img_mir, False), "img-cal+mirror": (X_img, X_img_mir, True)},
 }
-OUT["nested"] = {}
-for task, T in TASKS.items():
+OUT.setdefault("nested", {})
+for task in ["LR", "bin", "6", "12"]:
+    T = TASKS[task]
+    if task in OUT["nested"]: continue
     idx = np.where(T["mask"])[0]; y = T["y"]; k = T["k"]; tot_c = tot_n = 0; picks = []
     for fo, (tr_l, te_l) in enumerate(GroupKFold(n_splits=k).split(idx, y[idx], groups=sw[idx])):
         outer_tr, outer_te = idx[tr_l], idx[te_l]; t0 = time.time()
