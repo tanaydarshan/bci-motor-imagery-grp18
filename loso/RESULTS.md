@@ -30,6 +30,18 @@ No. Independent reruns gave **identical per-trial predictions**:
 * left vs right: 2 runs, 241/241 identical
 * 12 classes: 172/172 identical on the 15 people both runs covered
 
+## Shuffled-label (permutation) tests
+
+The labels are shuffled across trials within each recording, and then the complete pipeline is run: alignment, mirror augmentation, the ensemble and trial averaging. A leaking pipeline would stay above chance.
+
+| Task | Scheme | Shuffled-label accuracy | Real labels |
+|---|---|---|---|
+| Action vs imagery | 5-fold, 20 runs (`perm_null.py`) | mean 48.68%, SD 2.84%, range 41.8–52.9% | 80.25% |
+| Action vs imagery | LOSO, 4 runs | 56.72, 52.94, 49.37, 48.74% (mean 51.9%) | 80.25% |
+| Left vs right imagery | LOSO, 1 run | 48.96% | 58.51% |
+
+The real result is about 11 null standard deviations above the shuffled mean. The highest shuffled LOSO run (56.72%) lies inside the spread of the 24 shuffled runs. That spread is wider than a simple binomial would give, because trials of the same person are correlated.
+
 ## Learning curve, action vs imagery (`learning_curve.py`)
 
 The same people are always tested (5-fold by person); only the number of training people changes.
