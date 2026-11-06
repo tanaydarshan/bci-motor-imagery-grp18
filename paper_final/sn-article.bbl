@@ -1,6 +1,6 @@
 %% BioMed_Central_Bib_Style_v1.01
 
-\begin{thebibliography}{35}
+\begin{thebibliography}{40}
 % BibTex style file: bmc-mathphys.bst (version 2.1), 2014-07-24
 \ifx \bisbn   \undefined \def \bisbn  #1{ISBN #1}\fi
 \ifx \binits  \undefined \def \binits#1{#1}\fi
@@ -642,6 +642,86 @@ pp. \bfpage{133}--\blpage{161}.
 \bfpage{310}--\blpage{320}
 (\byear{2015})
 \doiurl{10.1177/1550059414522229}
+\end{barticle}
+\endbibitem
+
+%%% 36
+\bibitem[\protect\citeauthoryear{Gramfort et~al.}{2013}]{Gramfort2013}
+\begin{barticle}
+\bauthor{\bsnm{Gramfort}, \binits{A.}},
+\bauthor{\bsnm{Luessi}, \binits{M.}},
+\bauthor{\bsnm{Larson}, \binits{E.}},
+\bauthor{\bsnm{Engemann}, \binits{D.A.}},
+\bauthor{\bsnm{Strohmeier}, \binits{D.}},
+\bauthor{\bsnm{Brodbeck}, \binits{C.}},
+\bauthor{\bsnm{Goj}, \binits{R.}},
+\bauthor{\bsnm{Jas}, \binits{M.}},
+\bauthor{\bsnm{Brooks}, \binits{T.}},
+\bauthor{\bsnm{Parkkonen}, \binits{L.}},
+\bauthor{\bsnm{H{\"a}m{\"a}l{\"a}inen}, \binits{M.S.}}:
+\batitle{Meg and eeg data analysis with mne-python}.
+\bjtitle{Frontiers in Neuroscience}
+\bvolume{7},
+\bfpage{267}
+(\byear{2013})
+\doiurl{10.3389/fnins.2013.00267}
+\end{barticle}
+\endbibitem
+
+%%% 37
+\bibitem[\protect\citeauthoryear{Ledoit and Wolf}{2004}]{LedoitWolf2004}
+\begin{barticle}
+\bauthor{\bsnm{Ledoit}, \binits{O.}},
+\bauthor{\bsnm{Wolf}, \binits{M.}}:
+\batitle{A well-conditioned estimator for large-dimensional covariance
+  matrices}.
+\bjtitle{Journal of Multivariate Analysis}
+\bvolume{88}(\bissue{2}),
+\bfpage{365}--\blpage{411}
+(\byear{2004})
+\doiurl{10.1016/S0047-259X(03)00096-4}
+\end{barticle}
+\endbibitem
+
+%%% 38
+\bibitem[\protect\citeauthoryear{Cortes and Vapnik}{1995}]{CortesVapnik1995}
+\begin{barticle}
+\bauthor{\bsnm{Cortes}, \binits{C.}},
+\bauthor{\bsnm{Vapnik}, \binits{V.}}:
+\batitle{Support-vector networks}.
+\bjtitle{Machine Learning}
+\bvolume{20}(\bissue{3}),
+\bfpage{273}--\blpage{297}
+(\byear{1995})
+\doiurl{10.1007/BF00994018}
+\end{barticle}
+\endbibitem
+
+%%% 39
+\bibitem[\protect\citeauthoryear{Breiman}{2001}]{Breiman2001}
+\begin{barticle}
+\bauthor{\bsnm{Breiman}, \binits{L.}}:
+\batitle{Random forests}.
+\bjtitle{Machine Learning}
+\bvolume{45}(\bissue{1}),
+\bfpage{5}--\blpage{32}
+(\byear{2001})
+\doiurl{10.1023/A:1010933404324}
+\end{barticle}
+\endbibitem
+
+%%% 40
+\bibitem[\protect\citeauthoryear{Hochreiter and
+  Schmidhuber}{1997}]{HochreiterSchmidhuber1997}
+\begin{barticle}
+\bauthor{\bsnm{Hochreiter}, \binits{S.}},
+\bauthor{\bsnm{Schmidhuber}, \binits{J.}}:
+\batitle{Long short-term memory}.
+\bjtitle{Neural Computation}
+\bvolume{9}(\bissue{8}),
+\bfpage{1735}--\blpage{1780}
+(\byear{1997})
+\doiurl{10.1162/neco.1997.9.8.1735}
 \end{barticle}
 \endbibitem
 

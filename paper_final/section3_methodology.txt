@@ -1,0 +1,516 @@
+3 Proposed Methodology
+3.1 System Overview
+The system takes the raw files produced by the headset and returns one label for
+every 10 s task. It works in two stages (Fig. 1). The first stage, signal preparation,
+turns a continuous recording into clean, labelled trials: it finds where the task sched-
+ule starts, filters the EEG, cuts out the twelve trials, removes the ones spoiled by
+artefacts and normalises what is left. The second stage, representation and classifi-
+cation, splits each trial into short overlapping windows, describes every window with
+spectral, time–frequency, connectivity and covariance features, aligns these features
+within each recording and classifies the window with an ensemble of four models. The
+predictions for the windows of a trial are then averaged into one decision. Throughout
+the pipeline, no participant’s data are ever used for both training and testing.
+
+
+
+
+Fig. 1 Overview of the proposed pipeline.
+
+
+
+
+3.2 Experimental Protocol
+Participants sat in front of a screen in a quiet room. They were asked to keep their eyes
+open, to follow the instruction shown on the screen, to avoid unnecessary movement
+and speech, and to relax whenever a fixation cross appeared. The protocol covers six
+movements: right-arm flexion, left-arm flexion, right-leg lifting, left-leg lifting, right-
+wrist rotation and left-wrist rotation. Each movement was first carried out physically
+(action ) and then rehearsed mentally without moving (imagery ), giving twelve tasks
+in a fixed order:
+
+                                            8
+RightArm_Action            RightArm_Imagine
+LeftArm_Action             LeftArm_Imagine
+RightLeg_Action            RightLeg_Imagine
+LeftLeg_Action             LeftLeg_Imagine
+RightWrist_Action          RightWrist_Imagine
+LeftWrist_Action           LeftWrist_Imagine
+
+Each task lasted 10 s and was followed by 5 s of rest, so the whole schedule took 175 s
+from the start of the first task to the end of the last. Two session layouts occur in the
+data (Fig. 2). In most sessions the tasks began a few seconds after the recording was
+started. In several later sessions the recording opened with a resting baseline, about
+50 s with eyes open followed by about 50 s with eyes closed, so the tasks began roughly
+two minutes in. Every trial carries three labels: the task itself (twelve classes), the
+condition, action or imagery (two classes), and the body part (six classes).
+
+
+
+
+Fig. 2 Timeline of a recording session: (a) standard session; (b) session with a resting baseline.
+
+
+
+
+3.3 Data Acquisition
+EEG was recorded with a 14-channel Emotiv EPOC X fitted with saline-soaked felt
+electrodes at AF3, AF4, F3, F4, F7, F8, FC5, FC6, T7, T8, P7, P8, O1 and O2, placed
+according to the international 10–20 system, with the headset’s CMS/DRL reference.
+The signals were sampled at 128 Hz and saved in EDF format by the EmotivPRO soft-
+ware. For every session EmotivPRO also saves a second file from the headset’s built-in
+inertial sensor, which holds three accelerometer axes and four quaternion (orientation)
+components sampled at 32 Hz. We never used this motion file as a classification input;
+it served only to locate the task schedule (Section 3.4). In total we collected 59 EEG
+recordings containing all fourteen channels from 47 participants. A few participants
+were recorded in more than one session.
+
+
+
+
+                                                  9
+3.4 Motion-Guided Trial Onset Detection
+To cut the trials correctly, we need to know when the first task begins in each recording.
+Our first pipeline assumed a fixed delay of 15 s for every file. When we checked this
+against the data it turned out to be wrong: the delay between starting the recording
+and starting the tasks changed from session to session, and in sessions with a baseline
+it was more than two minutes. With a fixed offset, most trials were cut several seconds
+early, and a window labelled with one task often contained the end of the previous one.
+    To recover the real onset we used a simple physical fact. Moving an arm, a leg
+or a wrist shakes the head slightly, and the headset’s motion sensor picks this up;
+imagining the same movement does not. The procedure has four steps.
+    Step 1: motion energy. The motion signal is divided into 0.5 s bins. For each bin
+b, the motion energy is the logarithm of the total absolute change across the seven
+inertial channels,
+                                     X7 X
+                           mb = log         |sc [n] − sc [n − 1]| ,                    (1)
+                                     c=1 n∈b
+and the sequence mb is centred on its median and divided by its standard deviation.
+    Step 2: scoring each candidate onset. For every candidate onset t0 , in steps of 0.5 s,
+the twelve-task schedule is laid over the motion signal. We take the mean motion
+energy over seconds 1–10 of each task, skipping the first second, when the participant
+is still reacting to the cue. For each of the six action–imagery pairs we compute the
+difference dk , and from these a paired t-statistic:
+
+                                                              d¯
+          dk = m̄action,k − m̄imagery,k ,       t(t0 ) =       √ ,   k = 1, . . . , 6.   (2)
+                                                           sd / 6
+
+     Step 3: choosing the onset. The candidate with the largest t is selected. We treat
+it as confident if t ≥ 4 and all six pairs show more motion during action than during
+imagery.
+     Step 4: an independent check. Recordings were normally stopped soon after the
+last task, and across the confident recordings the file ended a median of 181 s after the
+first task began. This gives a second, label-free estimate of the onset, t̂0 = Trec − 181,
+where Trec is the length of the recording. An onset that fails Step 3 is still accepted if
+it lies within 5 s of this estimate. Otherwise the recording is dropped, since mislabelled
+trials would do more harm than a slightly smaller dataset.
+     Fig. 3 shows the procedure for one recording. Motion energy rises clearly in every
+action block and stays low in the imagery blocks. The t-statistic peaks sharply at
+the detected onset of 26.0 s (t = 24.8), whereas at the old fixed onset of 15 s it is
+slightly negative, which means that under the old timing the “action” windows of this
+recording contained less movement than the “imagery” windows.
+     Across the dataset, 48 of the 59 recordings gave a confident onset and 5 more
+passed the duration check. Two were excluded because the two estimates disagreed,
+and four were too short to contain a complete schedule (sessions that had been stopped
+and restarted). The detected onsets ranged from 7.5 s to 136.5 s, and the median gap
+between the motion-based and the duration-based estimates was 2.5 s. In the seven
+
+
+                                               10
+Fig. 3 Motion-guided onset detection for one recording: (a) head-motion energy with the detected
+schedule; (b) paired t-statistic for every candidate onset.
+
+
+sessions where the eyes-closed baseline could be confirmed by a clear rise in occipital
+alpha power, the detected onset fell 7.3–15.5 s after the end of the eyes-closed period,
+which is where the schedule was expected to begin. The remaining 53 recordings were
+used in all later steps.
+
+3.5 EEG Preprocessing
+Preprocessing has three parts: filtering, trial rejection and normalisation (Fig. 4).
+
+
+
+
+Fig. 4 Filtering, trial rejection and per-recording normalisation.
+
+
+
+                                                 11
+     Band-pass filtering. The EDF files were loaded with MNE-Python [36], and only
+the fourteen EEG channels were kept; the quality, battery and marker channels were
+discarded and missing samples were set to zero. Each continuous recording was filtered
+between 4 and 45 Hz with a zero-phase FIR filter (Hamming-window design, MNE
+defaults). The 4 Hz edge removes slow electrode drift and most of the energy of blinks
+and eye movements. The 45 Hz edge removes high-frequency muscle activity and the
+50 Hz mains interference. What remains covers the theta, mu, beta and low-gamma
+rhythms. Because the filter is zero-phase it does not shift the signal in time, and
+filtering the whole recording before cutting the trials avoids distortion at the trial
+edges.
+     Trial extraction. Starting from the detected onset t0 , trial k (k = 0, . . . , 11) runs
+from t0 + 15k to t0 + 15k + 10 s. Each trial is therefore a 14 × 1280 matrix, and the
+53 recordings give 636 trials.
+     Trial rejection. A trial was discarded if it failed any of three checks. (i) It was flat,
+with zero variance over the whole trial. (ii) Any sample reached 150 µV. Genuine EEG
+on this device stays well below this level (the median peak of a trial was 92 µV), and
+larger values nearly always come from blinks, jaw clenching or a moving cable. (iii)
+The mean absolute excess kurtosis across channels was 10 or more, which flags sudden
+spikes and electrode pops that stay under the amplitude limit. No trial was flat. The
+amplitude rule caught 158 trials and the kurtosis rule 29, with 27 caught by both,
+so 160 trials (25.2%) were removed. This left 476 clean trials from 51 recordings
+and 47 participants, a data array of size 476 × 14 × 1280. Rejection was done before
+windowing, so that a noisy trial could not enter the training data as many overlapping
+windows. The classes stayed balanced: 235 action and 241 imagery trials, and between
+36 and 44 trials for each of the twelve tasks.
+     Per-recording normalisation. Signal amplitude changes from session to session with
+electrode impedance, the amount of saline and head shape. We therefore z-scored every
+channel c of every recording r separately,
+
+                                                xr,c [n] − µr,c
+                                  x̂r,c [n] =                   ,                         (3)
+                                                      σr,c
+
+where µr,c and σr,c are the mean and standard deviation of that channel over all
+retained trials of the recording. These statistics pool all twelve tasks, so no class labels
+are involved.
+
+3.6 Sliding-Window Segmentation
+A 10 s trial is long compared with the short bursts of mu and beta change that
+accompany a movement, and 476 trials are not many for training a classifier. Each
+trial was therefore split into overlapping 2 s windows with a stride of 0.5 s (Fig. 5).
+At 128 Hz a window holds 2 × 128 = 256 samples, neighbouring windows overlap by
+75%, and one trial yields
+                                       10 − 2
+                                 Nw =          + 1 = 17                             (4)
+                                         0.5
+windows. The 476 trials thus give 476 × 17 = 8,092 windows, an input array of size
+8092 × 14 × 256. Every window keeps the labels of its trial, together with the index of
+
+
+                                                 12
+the trial and the identity of the participant. The trial index is used later to combine
+the 17 window predictions into one decision, and the participant identity keeps all
+windows of a person in the same cross-validation fold.
+
+
+
+
+Fig. 5 Sliding-window segmentation of one trial.
+
+
+
+
+3.7 Feature Extraction
+Each 2 s window is turned into a fixed-length vector built from five families of features
+(Fig. 6): handcrafted spectral, statistical, fractal and wavelet measures; a spectrogram;
+a scalogram; inter-hemispheric connectivity; and the spatial covariance of the fourteen
+channels. The first four families give 1,666 values and the covariance family gives 105,
+for 1,771 features per window. None of them uses class labels.
+
+
+
+
+Fig. 6 The five feature families computed for every window.
+
+
+
+
+                                               13
+3.7.1 Handcrafted Features
+Twenty-four features are computed for each of the 14 channels, which gives 336 fea-
+tures. The power spectral density (PSD) of each channel is estimated with Welch’s
+method (1 s Hann segments, 50% overlap, 1 Hz resolution), and the mean power is
+taken in four bands: theta (4–8 Hz), mu (8–12 Hz), beta (13–30 Hz) and gamma
+(30–45 Hz). For band b with frequency bins Fb ,
+
+                                           1 X
+                                  Pb =          PSD(f ).                            (5)
+                                          |Fb |
+                                              f ∈Fb
+
+
+Each band is kept on a log scale, log(1 + Pb ), and as relative power, Pb /PSD. Three
+ratios are added: beta to mu, mu to theta, and a sensorimotor ratio (Pµ +Pβ )/(Pθ +Pγ ).
+The time-domain group contains the variance, kurtosis, skewness and mean absolute
+value of the signal, together with the Hjorth mobility and complexity [25],
+                            s
+                                var(x′ )                       Mobility(x′ )
+               Mobility =                ,     Complexity =                  ,      (6)
+                                var(x)                         Mobility(x)
+
+where x′ is the first difference of the signal. Three non-linear measures describe how
+irregular the signal is: the Higuchi fractal dimension with kmax = 8 [26], the Pet-
+rosian fractal dimension, and the Hurst exponent estimated by rescaled-range analysis.
+Finally, a three-level discrete wavelet transform with the Daubechies-4 wavelet splits
+the window into bands of roughly 0–8, 8–16, 16–32 and 32–64 Hz, and the log energy
+of each band is kept.
+
+3.7.2 Spectrogram Features (STFT)
+Band power over a whole window tells us how much of a rhythm is present, but not
+when. Event-related desynchronisation, however, is a change over time. To keep this
+information we compute a spectrogram with the short-time Fourier transform,
+                                                                     2
+                                     X
+                                                         −j2πf n/N
+                       S (t, f ) =        x[n] w[n − t] e                ,          (7)
+                                      n
+
+
+where w is a 0.5 s (64-sample) Hann window moved in 0.25 s steps. This gives 9 time
+frames per window and a frequency resolution of 2 Hz. For each channel and band,
+the power in each frame is averaged over the band and log-transformed (9 values), and
+the variance across frames is added as a measure of how unsteady the band power is.
+The result is 14 × 4 × 10 = 560 spectrogram features.
+    Fig. 7 shows the mean spectrogram of all action windows and all imagery windows
+at four channels, together with their difference. At all four sites, imagery windows
+carry about 0.8–2 dB more power in the 8–13 Hz mu band than action windows, which
+fits the stronger mu suppression expected during real movement. Action windows, in
+turn, show more power below 8 Hz at the frontal channel AF3 and above 30 Hz at
+
+
+                                               14
+FC5 and T8. This points to eye and head movement and to muscle activity while the
+participant moves.
+
+
+
+
+Fig. 7 Mean STFT spectrograms of action and imagery windows at AF3, F3, FC5 and T8, and
+their difference (imagery minus action).
+
+
+
+
+3.7.3 Scalogram Features (CWT)
+The STFT uses the same window at every frequency, so it has to trade time reso-
+lution against frequency resolution. The continuous wavelet transform avoids this by
+stretching the analysing wavelet with frequency, short for fast rhythms and long for
+slow ones [23]. We use the real-valued Morlet wavelet ψ :
+                                          
+                                     t−τ
+                          Z
+                     1
+        W (a, τ ) = √         x(t) ψ           dt,   Scalogram(a, τ ) = |W (a, τ )|2 ,   (8)
+                      a               a
+
+with scales a chosen so that the centre frequencies are exactly 5, 7, 10, 12, 15, 20, 25,
+30, 35 and 40 Hz. Three groups of values are kept for each channel: the log energy
+at each frequency in four 0.5 s segments (40 values), the ratio of high-frequency (20–
+40 Hz) to low-frequency (5–15 Hz) energy (1 value), and the log variance over time
+at each frequency (10 values). This gives 14 × 51 = 714 scalogram features. The mean
+scalograms (Fig. 8) show the same pattern as the spectrograms, with more mu power
+during imagery, but sharper in both time and frequency, particularly around 10–12 Hz.
+
+
+
+                                                15
+Fig. 8 Mean Morlet scalograms of action and imagery windows and their difference, for the channels
+of Fig. 7.
+
+
+3.7.4 Connectivity and Riemannian Covariance Features
+Inter-hemispheric connectivity (56 features). Moving one side of the body mainly
+engages the opposite hemisphere. The fourteen electrodes form seven left–right pairs
+(AF3–AF4, F3–F4, F7–F8, FC5–FC6, T7–T8, P7–P8 and O1–O2). For each pair and
+each of the four bands we compute the magnitude-squared coherence and the power
+asymmetry log(Pleft /Pright ), which gives 7 × 4 × 2 = 56 features.
+    Riemannian covariance features (105 features). For each window X ∈ R14×256 we
+estimate the spatial covariance matrix
+
+                                               1
+                                       C=         XX ⊤                                        (9)
+                                             T −1
+
+with Ledoit–Wolf shrinkage [37], which keeps the matrix well conditioned with only
+T = 256 samples. Covariance matrices are symmetric and positive definite, and they
+lie on a curved Riemannian manifold rather than in an ordinary vector space [12]. To
+remove the offset between sessions, the matrices of each recording r are re-centred on
+their own Riemannian mean Mr [32],
+
+                                    C̃ = Mr−1/2 C Mr−1/2 ,                                   (10)
+
+so that every recording is centred on the identity matrix. The re-centred matrices are
+projected onto the tangent space at the identity, and the upper triangle is kept as a
+
+
+                                               16
+vector of 14 × 15/2 = 105 values. Mr is computed from all windows of the recording,
+without labels.
+
+3.8 Subject-Wise Feature Alignment
+Normalising the raw signal is not enough on its own: feature values still sit in dif-
+ferent ranges for different people, and one person’s mu power may simply be higher
+than another’s. Each of the 1,666 non-covariance features is therefore standardised
+separately for every recording r, using that recording’s own windows,
+
+                                  zr,j − µr,j
+                        ẑr,j =               ,        j = 1, . . . , 1666.         (11)
+                                      σr,j
+
+Together with the covariance re-centring, this places every recording around the same
+reference point. The statistics pool all twelve tasks and use no labels, so in practice a
+new user would only need to provide one unlabelled calibration session.
+
+3.9 Hemispheric Mirror Augmentation
+The electrodes of the EPOC X are arranged in symmetric pairs. Since a limb on one
+side of the body is controlled mainly by the opposite hemisphere, swapping each left
+electrode with its right partner gives a rough picture of the same movement made on
+the other side. We use this to add a mirrored copy of every training window (Fig. 9).
+Because every feature is computed per channel or per channel pair, the mirrored
+features can be built directly. The handcrafted, spectrogram and scalogram columns of
+partner electrodes are swapped, coherence stays the same, the sign of the asymmetry
+is flipped, and the re-centred covariance matrix is permuted, C̃ ′ = P C̃P ⊤ , before it
+is projected to the tangent space. The labels are mirrored in the same way (right arm
+becomes left arm, right leg becomes left leg, right wrist becomes left wrist), while the
+action or imagery condition is kept. Mirrored copies are added to the training folds
+only; test windows are never altered.
+
+3.10 Classification Models
+Proposed ensemble. The 1,771 aligned features are scaled with a standard scaler fit-
+ted on the training participants and then passed to four classifiers of different types
+(Table 2). Each classifier outputs class probabilities for a window w, and the ensemble
+averages them with equal weights,
+
+                                                   4
+                                             1 X (m)
+                                      pw =        p .                               (12)
+                                             4 m=1 w
+
+Linear models and tree ensembles tend to make different mistakes, so averaging them
+evens out part of the error. The four models and their settings were fixed in advance
+and used without change for every task.
+   Comparison models. To put the ensemble in context, we evaluated a set of com-
+parison models on the same data and folds, at window level and without subject-wise
+
+
+                                                  17
+Fig. 9 Hemispheric mirror augmentation: (a) electrode pairs that are swapped; (b) how each feature
+group and the label are mirrored.
+
+
+Table 2 Classifiers of the proposed ensemble.
+
+Model                          Setting                               Reason for inclusion
+Logistic Regression (LR)       L2 penalty, C = 0.01                  Strongly regularised linear model
+Linear Discriminant Analysis   Least squares, automatic Ledoit–      Standard EEG classifier; copes
+(LDA)                          Wolf shrinkage
+                                         √                           with many features
+Extra Trees                    500 trees, d features per split       Non-linear, low-variance averaging
+                                                                     of random trees
+Histogram Gradient Boost-      200 iterations, learning rate 0.05,   Non-linear, corrects its errors step
+ing (HistGB)                   depth 4                               by step
+
+
+
+
+alignment. These were a support vector machine (RBF kernel, C = 10) [38], a random
+forest (300 trees, maximum depth 15) [39], histogram gradient boosting, Gaussian
+naive Bayes, AdaBoost (100 estimators) and shrinkage LDA. Each was applied to
+five feature sets: filter-bank CSP with four components in each of seven sub-bands
+between 4 and 40 Hz [20]; all 1,666 features; the top-k features ranked by ANOVA
+F -score (k = 150 for the binary task and 200 for the multi-class tasks); the Rieman-
+nian tangent-space features; and a combined set of CSP, all features and Riemannian
+features. Naive Bayes and AdaBoost were left out of the multi-class runs because of
+their run time. We also tested Riemannian minimum distance to mean (MDM) [12],
+and a hierarchical model that first predicts action or imagery and then the body part.
+In every comparison model the scaler, the feature selection, the CSP filters and the
+tangent-space reference were fitted inside each fold on the training participants only.
+    Deep-learning models. Two neural networks were trained directly on the raw 14 ×
+256 windows. EEGNet [15] used 8 temporal filters with a 64-sample kernel, a depth
+multiplier of 2, 16 separable filters and a dropout rate of 0.5. The CNN–LSTM used two
+one-dimensional convolution blocks (32 and 64 filters, each with batch normalisation,
+pooling and dropout), followed by two LSTM layers of 64 and 32 units [40] and a small
+dense layer. Both were trained with the Adam optimiser and a batch size of 64. Early
+
+
+
+                                                 18
+stopping was based on a validation set made up of 15% of the training participants,
+never the test participants.
+    CSP added to every classifier. Because CSP is the classic feature for motor imagery,
+we also asked whether it improves our own pipeline. In every fold, CSP filters with
+Ledoit–Wolf regularisation (four components in each of the seven sub-bands) were
+fitted on the training windows and their mirrored copies. The resulting 28 log-variance
+features were standardised within each recording and appended to the 1,771 features.
+Eight classifiers (LR, LDA, SVM, random forest, extra trees, HistGB, AdaBoost and
+naive Bayes) and the ensemble were then trained with and without these extra features,
+all with alignment, mirror augmentation and trial averaging.
+
+3.11 Imagery-versus-Imagery (Left versus Right) Task
+The imagery-versus-imagery binary task asks whether the side of an imagined move-
+ment can be decoded. Only the 241 imagery trials are used, and the target is the
+side of the body, left or right, pooled over arm, leg and wrist. For this task the per-
+recording standardisation of Section 3.8 is computed from that recording’s imagery
+windows only (three left and three right trials) rather than from all twelve tasks; the
+side labels are not used. Mirror augmentation is applied as before, with the side label
+flipped. As a reference we also ran the standard method for this kind of problem,
+filter-bank CSP followed by shrinkage LDA [20], and all eight classifiers listed above.
+Significance against the 50% chance level was tested with a one-sided binomial test.
+
+3.12 Trial-Level Decision and Evaluation
+Trial-level decision. A working BCI makes one decision per task, not one per 2 s
+window. The 17 window probabilities of a trial are therefore averaged, and the class
+with the highest mean probability is chosen (Fig. 10c):
+
+                                     17
+                                  1 X
+                          p̄ =          pw ,        ŷ = arg max p̄c .               (13)
+                                 17 w=1                        c
+
+
+All windows of a trial always belong to the same test fold, so this averaging never
+mixes training and test data. Window-level accuracy is reported as well.
+    Person-wise GroupKFold. The main results use GroupKFold cross-validation
+grouped by participant (Fig. 10a). The participants are divided into folds, and each
+of them is tested exactly once, by a model that never saw any of their data. Five folds
+were used for the two binary tasks (9–10 test participants per fold) and three folds for
+the six- and twelve-class tasks (15–16 test participants per fold), so that every class
+keeps enough training examples. Folds are grouped by person rather than by record-
+ing, so a participant with two sessions can never appear on both sides of a split. The
+neural networks and the hierarchical model used three folds for all tasks.
+    Leave-one-subject-out (LOSO). As a stricter check, the ensemble and its four mem-
+bers were also evaluated with leave-one-subject-out validation (Fig. 10b). Each of the
+47 participants is held out in turn, and a new model is trained on the other 46, giving
+47 folds per task. The label-free steps are unchanged, and the scaler, the classifiers and
+
+
+                                               19
+mirror augmentation use the 46 training participants only. For the imagery-versus-
+imagery task, SVM, random forest, AdaBoost and naive Bayes were evaluated with
+LOSO as well.
+
+
+
+
+Fig. 10 Evaluation scheme: (a) person-wise 5-fold cross-validation; (b) leave-one-subject-out vali-
+dation; (c) trial-level decision.
+
+
+    Validity checks. Several further checks were run on the final pipeline. (1) Label per-
+mutation : the labels were shuffled across trials within each recording and the complete
+pipeline, including alignment, mirror augmentation, the ensemble and trial averaging,
+was run again; this was done three times for every task, twenty more times for the
+binary task, and five times under LOSO (four runs for the binary task and one for
+the imagery-versus-imagery task). (2) Reproducibility : the pipelines were rerun with
+the same random seed, and the binary pipeline also with three other seeds. (3) Learn-
+ing curve : for the binary task, the same test participants were classified by models
+trained on 5, 10, 20 and 30 randomly chosen training participants and on all of them.
+(4) Nested cross-validation : inside each outer training set, an inner person-wise cross-
+validation chose the configuration (no alignment, alignment, or alignment with mirror
+augmentation; for the imagery-versus-imagery task, standard or imagery-only calibra-
+tion with or without mirroring) and the classifier, and only that choice was tested on
+the outer test participants. This removes the optimism that comes from comparing
+several set-ups on the same test people. (5) Onset sensitivity : every detected onset
+was shifted by ±2 s and the classification was repeated.
+    Metrics. Accuracy is reported as the number of correctly classified test trials pooled
+over all folds, and as the mean ± standard deviation across folds. For the LOSO results
+we also report balanced accuracy, macro-averaged F1, Cohen’s kappa, the accuracy
+per participant, and the accuracy on the training participants, which shows the gap
+between fit and generalisation. Chance level is 50% for the binary tasks, 16.67% for
+six classes and 8.33% for twelve classes. Accuracies were compared with chance using
+
+
+                                                20
+a one-sided binomial test, and paired comparisons between two methods on the same
+trials used McNemar’s test.
+
