@@ -1,0 +1,38 @@
+
+=== bin: 47 people, 476 trials, chance 50.00% ===
+  people complete / trials complete & unique / labels match data / trials belong to their test person: True [True, True, True, True, True, True]
+  LogReg        382/476 =  80.25%   p = 1.6e-42
+  LDA           385/476 =  80.88%   p = 2.3e-44
+  ExtraTrees    371/476 =  77.94%   p = 3.8e-36
+  HistGB        383/476 =  80.46%   p = 4e-43
+  Ensemble      382/476 =  80.25%   p = 1.6e-42
+
+=== 6: 47 people, 476 trials, chance 16.67% ===
+  people complete / trials complete & unique / labels match data / trials belong to their test person: True [True, True, True, True, True, True]
+  LogReg        121/476 =  25.42%   p = 8.3e-07
+  LDA           117/476 =  24.58%   p = 6.9e-06
+  ExtraTrees     99/476 =  20.80%   p = 0.011
+  HistGB        131/476 =  27.52%   p = 2e-09
+  Ensemble      123/476 =  25.84%   p = 2.7e-07
+
+=== 12: 47 people, 476 trials, chance 8.33% ===
+  people complete / trials complete & unique / labels match data / trials belong to their test person: True [True, True, True, True, True, True]
+  LogReg        101/476 =  21.22%   p = 3.2e-18
+  LDA            97/476 =  20.38%   p = 2.3e-16
+  ExtraTrees     91/476 =  19.12%   p = 9.7e-14
+  HistGB         90/476 =  18.91%   p = 2.5e-13
+  Ensemble      106/476 =  22.27%   p = 1.1e-20
+
+=== LR: 47 people, 241 trials, chance 50.00% ===
+  people complete / trials complete & unique / labels match data / trials belong to their test person: True [True, True, True, True, True, True]
+  LogReg        147/241 =  61.00%   p = 0.00039
+  LDA           137/241 =  56.85%   p = 0.02
+  ExtraTrees    131/241 =  54.36%   p = 0.099
+  HistGB        122/241 =  50.62%   p = 0.45
+  Ensemble      141/241 =  58.51%   p = 0.0049
+  SVM           130/241 =  53.94%   p = 0.12
+  RandomForest  125/241 =  51.87%   p = 0.3
+  AdaBoost      128/241 =  53.11%   p = 0.18
+  NaiveBayes    125/241 =  51.87%   p = 0.3
+
+ALL CHECKS PASSED
