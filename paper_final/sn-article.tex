@@ -1,0 +1,156 @@
+%Version 3.1 December 2024
+% See section 11 of the User Manual for version history
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                                 %%
+%% Please do not use \input{...} to include other tex files.       %%
+%% Submit your LaTeX manuscript as one .tex document.              %%
+%%                                                                 %%
+%% All additional figures and files should be attached             %%
+%% separately and not embedded in the \TeX\ document itself.       %%
+%%                                                                 %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%\documentclass[referee,sn-basic]{sn-jnl}% referee option is meant for double line spacing
+
+%%=======================================================%%
+%% to print line numbers in the margin use lineno option %%
+%%=======================================================%%
+
+%%\documentclass[lineno,pdflatex,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
+
+%%=========================================================================================%%
+%% the documentclass is set to pdflatex as default. You can delete it if not appropriate.  %%
+%%=========================================================================================%%
+
+%%\documentclass[sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
+
+%%Note: the following reference styles support Namedate and Numbered referencing. By default the style follows the most common style. To switch between the options you can add or remove Numbered in the optional parenthesis. 
+%%The option is available for: sn-basic.bst, sn-chicago.bst%  
+ 
+%%\documentclass[pdflatex,sn-nature]{sn-jnl}% Style for submissions to Nature Portfolio journals
+%%\documentclass[pdflatex,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
+\documentclass[pdflatex,sn-mathphys-num]{sn-jnl}% Math and Physical Sciences Numbered Reference Style
+%%\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}% Math and Physical Sciences Author Year Reference Style
+%%\documentclass[pdflatex,sn-aps]{sn-jnl}% American Physical Society (APS) Reference Style
+%%\documentclass[pdflatex,sn-vancouver-num]{sn-jnl}% Vancouver Numbered Reference Style
+%%\documentclass[pdflatex,sn-vancouver-ay]{sn-jnl}% Vancouver Author Year Reference Style
+%%\documentclass[pdflatex,sn-apa]{sn-jnl}% APA Reference Style
+%%\documentclass[pdflatex,sn-chicago]{sn-jnl}% Chicago-based Humanities Reference Style
+
+%%%% Standard Packages
+%%<additional latex packages if required can be included here>
+
+\usepackage{graphicx}%
+\usepackage{multirow}%
+\usepackage{amsmath,amssymb,amsfonts}%
+\usepackage{amsthm}%
+\usepackage{mathrsfs}%
+\usepackage[title]{appendix}%
+\usepackage{xcolor}%
+\usepackage{textcomp}%
+\usepackage{manyfoot}%
+\usepackage{booktabs}%
+\usepackage{algorithm}%
+\usepackage{algorithmicx}%
+\usepackage{algpseudocode}%
+\usepackage{listings}%
+\usepackage{placeins}
+
+%%%%
+
+%%%%%=============================================================================%%%%
+%%%%  Remarks: This template is provided to aid authors with the preparation
+%%%%  of original research articles intended for submission to journals published 
+%%%%  by Springer Nature. The guidance has been prepared in partnership with 
+%%%%  production teams to conform to Springer Nature technical requirements. 
+%%%%  Editorial and presentation requirements differ among journal portfolios and 
+%%%%  research disciplines. You may find sections in this template are irrelevant 
+%%%%  to your work and are empowered to omit any such section if allowed by the 
+%%%%  journal you intend to submit to. The submission guidelines and policies 
+%%%%  of the journal take precedence. A detailed User Manual is available in the 
+%%%%  template package for technical guidance.
+%%%%%=============================================================================%%%%
+
+%% as per the requirement new theorem styles can be included as shown below
+\theoremstyle{thmstyleone}%
+\newtheorem{theorem}{Theorem}%  meant for continuous numbers
+%%\newtheorem{theorem}{Theorem}[section]% meant for sectionwise numbers
+%% optional argument [theorem] produces theorem numbering sequence instead of independent numbers for Proposition
+\newtheorem{proposition}[theorem]{Proposition}% 
+%%\newtheorem{proposition}{Proposition}% to get separate numbers for theorem and proposition etc.
+
+\theoremstyle{thmstyletwo}%
+\newtheorem{example}{Example}%
+\newtheorem{remark}{Remark}%
+
+\theoremstyle{thmstylethree}%
+\newtheorem{definition}{Definition}%
+
+\raggedbottom
+%%\unnumbered% uncomment this for unnumbered level heads
+
+\begin{document}
+
+\title[EEG Motor Action and Motor Imagery Classification]{EEG-Based Motor Action and Motor Imagery Classification Using Machine Learning}
+
+\author[1]{\fnm{Harsada} \sur{K}}\email{cb.ai.u4aid24019@cb.students.amrita.edu}
+\author[1]{\fnm{V} \sur{Tanay Darshan}}\email{cb.ai.u4aid24059@cb.students.amrita.edu}
+\author[1]{\fnm{K} \sur{Nikhitha}}\email{cb.ai.u4aid24042@cb.students.amrita.edu}
+\author[1]{\fnm{S Sai} \sur{Tejesh Reddy}}\email{cb.ai.u4aid24057@cb.students.amrita.edu}
+\author*[1]{\fnm{Abhishek} \sur{S}}\email{s\_abhishek@cb.amrita.edu}
+
+\affil*[1]{\orgdiv{Amrita School of Artificial Intelligence, Coimbatore}\\ \orgname{Amrita Vishwa Vidyapeetham}, \country{India}}
+
+\abstract{This work presents an EEG-based classification framework for distinguishing motor actions and motor imagery using a consumer-grade Emotiv EPOC X headset. EEG was recorded from 47 participants with 14 channels at 128~Hz while they performed, and then imagined, six limb movements of the right and left arm, leg and wrist, giving twelve task classes. The task schedule did not start at the same moment in every recording, so we located it with the headset's own motion sensor before cutting any trials. Signals were band-pass filtered between 4 and 45~Hz, trials with large amplitudes or sharp spikes were rejected, and the remaining 476 trials were split into 8,092 overlapping 2~s windows. Each window was described by 1,771 features covering band power, statistical, fractal and wavelet measures, spectrograms, scalograms, inter-hemispheric connectivity and Riemannian covariance, all standardised within their own recording. An ensemble of logistic regression, linear discriminant analysis, extra trees and histogram gradient boosting, trained with left--right mirrored copies of the training data, classified the windows, and the windows of each trial were averaged into one decision. On people whose data were never used for training, the system reached 80.25\% for action versus imagery, 26.68\% for body part and 21.43\% for the twelve tasks, and leave-one-subject-out validation gave almost the same figures (80.25\%, 25.84\% and 22.27\%). With shuffled labels, accuracy fell to chance. Left versus right imagery, however, could not be decoded reliably (52.28\% under nested cross-validation).}
+
+\keywords{Electroencephalography (EEG), Brain--Computer Interface, Motor Imagery, Motor Action, Spectrogram, Scalogram, Riemannian Geometry, Machine Learning, Emotiv EPOC X}
+
+\maketitle
+
+%% ===================================================================
+\section{Introduction}\label{sec1}
+
+Brain--computer interfaces (BCIs) give the brain a channel to a computer that does not pass through muscles. They record brain activity, look for patterns that match an intention, and turn those patterns into a command. Motor applications are where this matters most. A person who has lost control of a limb after a stroke or a spinal injury can often still produce the cortical activity that would normally drive the movement, and a BCI that reads this activity could steer a wheelchair, open a prosthetic hand or guide a rehabilitation robot. Most such systems use electroencephalography (EEG). It is non-invasive and cheap compared with other recording methods, it follows brain activity on the scale of milliseconds, and it can be recorded with equipment small enough to carry \citep{Wolpaw2002,NicolasAlonso2012}.
+
+Two related mental states are central to this work. In motor execution, or \emph{action}, the person really makes the movement. In motor imagery, the same movement is rehearsed in the mind while the body stays still. The two are not the same, but they share much of their neural machinery. Both reduce the power of the sensorimotor rhythms over the motor cortex, mostly in the mu band (8--12~Hz) and the beta band (13--30~Hz), and this drop, known as event-related desynchronisation, is the signal that most motor-imagery BCIs rely on \citep{Pfurtscheller2001,PfurtschellerAranibar1977}.
+
+Much of the early work kept the problem small. The classic task is to tell imagined left-hand movement from imagined right-hand movement, and Common Spatial Pattern (CSP) filters followed by linear discriminant analysis or a support vector machine became the standard way to solve it \citep{Ramoser2000,Blankertz2008}. Adding more classes makes things far harder. The cortical areas for the hand, the wrist and the leg lie close together, the skull spreads their activity across the scalp, and the EEG of one person can look quite unlike that of the next \citep{Naeem2006,Lotte2018}. A model that works well for the people it was trained on can therefore fail on someone new.
+
+The recording hardware adds its own limits. Clinical EEG amplifiers give clean signals, but they are expensive, slow to set up and rarely leave the laboratory. Consumer headsets such as the Emotiv EPOC are cheap, quick to put on and comfortable enough for everyday use, and studies have shown that they capture real neural activity \citep{Badcock2013,Duvinage2013}. They are also noisier, more sensitive to movement and limited in where they place their electrodes \citep{Maskeliunas2016}. The EPOC X used here has fourteen saline electrodes, none of which sits over the central motor strip (C3, Cz and C4), which is where motor activity is usually strongest.
+
+Researchers have tried many ways of turning short EEG segments into something a classifier can use. Band-power and statistical features summarise each channel. Spectrograms and scalograms keep track of how the rhythms change over time. Riemannian methods describe a trial by the covariance between its channels and work directly with the geometry of these matrices \citep{Barachant2012,Congedo2017}. Deep networks such as EEGNet learn their own features from the raw signal \citep{Schirrmeister2017,Lawhern2018}. Each of these views captures something the others miss, so combining them is a natural step, particularly when the dataset is too small for a deep network to learn everything on its own.
+
+How a model is evaluated matters as much as the model itself. EEG windows cut from the same recording are strongly correlated, so if windows of one person appear in both the training and the test set, the classifier can learn to recognise the person instead of the task. An early version of our own pipeline fell into exactly this trap and reported accuracies above 90\%, which dropped sharply once the evaluation was corrected. For a BCI that has to work for new users, the only fair test is one in which the people being tested were never seen during training.
+
+In this study we built a complete classification pipeline around the Emotiv EPOC X and a twelve-task protocol. Participants performed and then imagined six movements: right-arm and left-arm flexion, right-leg and left-leg lifting, and right-wrist and left-wrist rotation. We analysed the same recordings at three levels of detail: action versus imagery (two classes), the body part involved (six classes), and the exact task (twelve classes). At our guide's suggestion we also asked whether the side of an imagined movement, left or right, can be decoded. Along the way we found that the task schedule did not start at a fixed time in every recording, and we recovered the true start from the headset's own motion sensor before cutting any trials. Every result we report comes from people the model had not seen during training.
+
+The main contributions of this work are as follows:
+
+\begin{enumerate}
+\item \textbf{A twelve-task motor dataset recorded with consumer-grade EEG.} We recorded 47 participants with a 14-channel Emotiv EPOC X while they performed and imagined six limb movements, which gives twelve task conditions in every session.
+
+\item \textbf{Multi-level motor classification.} The same trials are classified as action or imagery, by body part and by exact task, so the loss of accuracy can be followed as the target becomes more specific. Left versus right imagery is examined as a separate problem.
+
+\item \textbf{Time--frequency and multi-domain feature fusion.} Handcrafted spectral, statistical, fractal and wavelet features are combined with spectrogram (STFT), scalogram (CWT), connectivity and Riemannian tangent-space features, 1,771 values per window in total, and the contribution of each family is measured on its own.
+
+\item \textbf{Cross-subject adaptation and trial-level decisions.} Features are standardised within each recording without using labels, the training data are doubled by hemispheric mirroring, and an ensemble of four classifiers makes one decision per trial by averaging the predictions for its windows.
+
+\item \textbf{Strict subject-independent evaluation.} Results are reported under person-wise GroupKFold and leave-one-subject-out validation and checked with shuffled-label tests, repeated runs, a learning curve and nested cross-validation.
+\end{enumerate}
+
+The rest of the paper is organised as follows. Section~\ref{sec:related} reviews related work. Section~\ref{sec:methods} describes the protocol, data acquisition, preprocessing, feature extraction, classifiers and evaluation. Section~\ref{sec:results} presents and discusses the results, and Section~\ref{sec:conclusion} concludes the paper.
+
+%% SECTIONS-BELOW
+\section{Literature Review}\label{sec:related}
+\emph{(to be added)}
+\section{Proposed Methodology}\label{sec:methods}
+\emph{(to be added)}
+\section{Results and Discussion}\label{sec:results}
+\emph{(to be added)}
+\section{Conclusion}\label{sec:conclusion}
+\emph{(to be added)}
+
+\bibliography{bibliography}
+
+\end{document}
