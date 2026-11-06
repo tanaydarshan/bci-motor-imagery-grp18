@@ -42,3 +42,7 @@
   person 42/47 done in 663s, SVM running 120/220 = 54.55%
   person 43/47 done in 655s, SVM running 121/224 = 54.02%
   person 44/47 done in 691s, SVM running 121/226 = 53.54%
+  person 45/47 done in 447s, SVM running 125/230 = 54.35%
+  person 46/47 done in 433s, SVM running 128/236 = 54.24%
+  person 47/47 done in 441s, SVM running 130/241 = 53.94%
+DONE
