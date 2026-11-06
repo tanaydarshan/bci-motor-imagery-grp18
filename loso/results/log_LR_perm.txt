@@ -1,1 +1,2 @@
 === LOSO, task LR, shuffled labels run 1 ===
+  person  1/47: 5/6 correct (running 5/6 = 83.33%) 22s
