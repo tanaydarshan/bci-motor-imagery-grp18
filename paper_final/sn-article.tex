@@ -128,15 +128,11 @@ In this study we built a complete classification pipeline around the Emotiv EPOC
 The main contributions of this work are as follows:
 
 \begin{enumerate}
-\item \textbf{A twelve-task motor dataset recorded with consumer-grade EEG.} We recorded 47 participants with a 14-channel Emotiv EPOC X while they performed and imagined six limb movements, which gives twelve task conditions in every session.
+\item \textbf{A new twelve-task EEG dataset of real and imagined limb movements.} We recorded 47 participants with a consumer-grade 14-channel Emotiv EPOC X while each of six movements (right and left arm, leg and wrist) was first performed and then imagined. Most public motor datasets contain imagery only and use research-grade amplifiers.
 
-\item \textbf{Multi-level motor classification.} The same trials are classified as action or imagery, by body part and by exact task, so the loss of accuracy can be followed as the target becomes more specific. Left versus right imagery is examined as a separate problem.
+\item \textbf{Trial timing recovered from the headset's motion sensor.} When the task schedule does not start at a fixed time, we locate it from the built-in inertial sensor, using the fact that real movement shakes the head slightly and imagery does not. This needs no stimulus markers and no extra hardware.
 
-\item \textbf{Time--frequency and multi-domain feature fusion.} Handcrafted spectral, statistical, fractal and wavelet features are combined with spectrogram (STFT), scalogram (CWT), connectivity and Riemannian tangent-space features, 1,771 values per window in total, and the contribution of each family is measured on its own.
-
-\item \textbf{Cross-subject adaptation and trial-level decisions.} Features are standardised within each recording without using labels, the training data are doubled by hemispheric mirroring, and an ensemble of four classifiers makes one decision per trial by averaging the predictions for its windows.
-
-\item \textbf{Strict subject-independent evaluation.} Results are reported under person-wise GroupKFold and leave-one-subject-out validation and checked with shuffled-label tests, repeated runs, a learning curve and nested cross-validation.
+\item \textbf{Subject-independent decoding of action versus imagery and of the moving limb.} The same trials are classified at three levels (action versus imagery, body part, exact task), plus the side of imagined movements. Feature-level hemispheric mirroring doubles the training data, label-free alignment within each recording reduces differences between people, and averaging over each trial gives one decision per task. The system reaches 80.25\% for action versus imagery on people it has never seen.
 \end{enumerate}
 
 The rest of the paper is organised as follows. Section~\ref{sec:related} reviews related work. Section~\ref{sec:methods} describes the protocol, data acquisition, preprocessing, feature extraction, classifiers and evaluation. Section~\ref{sec:results} presents and discusses the results, and Section~\ref{sec:conclusion} concludes the paper.
