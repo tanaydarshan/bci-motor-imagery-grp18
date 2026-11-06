@@ -1,0 +1,42 @@
+{
+ "bin": {
+  "correct_5fold": 382,
+  "correct_loso": 382,
+  "same": 462,
+  "n": 476,
+  "only_5fold": 7,
+  "only_loso": 7,
+  "mcnemar_p": 1.0,
+  "people_changed": 13
+ },
+ "6": {
+  "correct_5fold": 127,
+  "correct_loso": 123,
+  "same": 295,
+  "n": 476,
+  "only_5fold": 41,
+  "only_loso": 37,
+  "mcnemar_p": 0.7343420330298466,
+  "people_changed": 38
+ },
+ "12": {
+  "correct_5fold": 102,
+  "correct_loso": 106,
+  "same": 283,
+  "n": 476,
+  "only_5fold": 32,
+  "only_loso": 36,
+  "mcnemar_p": 0.716300760154337,
+  "people_changed": 37
+ },
+ "LR": {
+  "correct_5fold": 140,
+  "correct_loso": 141,
+  "same": 200,
+  "n": 241,
+  "only_5fold": 20,
+  "only_loso": 21,
+  "mcnemar_p": 1.0,
+  "people_changed": 29
+ }
+}

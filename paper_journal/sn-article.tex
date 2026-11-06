@@ -102,7 +102,7 @@
 
 \affil*[1]{\orgdiv{Amrita School of Artificial Intelligence, Coimbatore}\\ \orgname{Amrita Vishwa Vidyapeetham}, \country{India}}
 
-\abstract{This work presents an EEG-based classification framework for distinguishing motor actions and motor imagery using a consumer-grade Emotiv EPOC X headset. We recorded 14-channel EEG at 128~Hz from 47 participants while they performed, and then imagined, six limb movements (right and left arm, leg and wrist), which gives twelve tasks. Because the task schedule did not start at the same moment in every recording, we located it using the headset's own motion sensor. The signals were band-pass filtered between 4 and 45~Hz, trials with large amplitudes or spikes were removed, and the remaining 476 trials were cut into 8,092 overlapping 2~s windows. Each window was described by 1,771 features covering band power, statistics, fractal measures, wavelets, spectrograms, scalograms, inter-hemispheric connectivity and Riemannian covariance, all standardised within each recording. An ensemble of logistic regression, linear discriminant analysis, extra trees and histogram gradient boosting, trained with left--right mirrored copies of the data, classified the windows, and the windows of a trial were averaged into one decision. Under person-wise GroupKFold validation, the system reached 80.25\% for action versus imagery, 26.68\% for body part (six classes) and 21.43\% for all twelve tasks. Shuffled-label tests fell to chance on every task, repeated runs gave nearly identical results, and nested cross-validation confirmed the binary result (79.41\%). Left versus right imagery reached 58.09\% in standard cross-validation but only 52.28\% under nested cross-validation, so it could not be decoded reliably. Adding common spatial pattern features changed the ensemble's accuracy by less than two points in either direction.}
+\abstract{This work presents an EEG-based classification framework for distinguishing motor actions and motor imagery using a consumer-grade Emotiv EPOC X headset. We recorded 14-channel EEG at 128~Hz from 47 participants while they performed, and then imagined, six limb movements (right and left arm, leg and wrist), giving twelve tasks. Because the task schedule did not start at the same moment in every recording, we located it using the headset's own motion sensor. Signals were band-pass filtered between 4 and 45~Hz, trials with large amplitudes or spikes were removed, and the remaining 476 trials were cut into 8,092 overlapping 2~s windows. Each window was described by 1,771 features covering band power, statistics, fractal measures, wavelets, spectrograms, scalograms, inter-hemispheric connectivity and Riemannian covariance, all standardised within each recording. An ensemble of logistic regression, linear discriminant analysis, extra trees and histogram gradient boosting, trained with left--right mirrored copies of the data, classified the windows, and the windows of a trial were averaged into one decision. Under person-wise GroupKFold validation, the system reached 80.25\% for action versus imagery, 26.68\% for body part (six classes) and 21.43\% for all twelve tasks. Leave-one-subject-out evaluation gave almost the same results (80.25\%, 25.84\% and 22.27\%), shuffled-label tests fell to chance and nested cross-validation confirmed the binary result (79.41\%). Left versus right imagery reached 58.09\% in standard cross-validation but only 52.28\% under nested cross-validation, so it could not be decoded reliably. Adding common spatial pattern features changed the ensemble's accuracy by less than two points in either direction.}
 
 \keywords{Electroencephalography (EEG), Brain--Computer Interface, Motor Imagery, Motor Action, Spectrogram, Scalogram, Riemannian Geometry, Machine Learning, Emotiv EPOC X}
 
@@ -134,7 +134,7 @@ The main contributions of this work are:
 
 \item \textbf{Cross-subject adaptation and trial-level decisions.} Features are standardised within each recording without using labels, the training data are doubled by hemispheric mirroring, and a four-model ensemble makes one decision per trial by averaging its windows.
 
-\item \textbf{A careful check of the results.} Besides person-wise validation, we report shuffled-label tests on all tasks, repeated runs with different random seeds, nested cross-validation, sensitivity to the trial timing and a model-by-model test of whether CSP features help.
+\item \textbf{A careful check of the results.} Besides person-wise validation, we report leave-one-subject-out evaluation of every classifier, shuffled-label tests on all tasks, repeated runs, a learning curve, nested cross-validation, sensitivity to the trial timing and a model-by-model test of whether CSP features help.
 \end{enumerate}
 
 Section~\ref{sec:related} reviews related work. Section~\ref{sec:methods} describes the protocol, preprocessing, features, classifiers and evaluation. Section~\ref{sec:results} presents and discusses the results, and Section~\ref{sec:conclusion} concludes.
@@ -438,7 +438,7 @@ All windows of a trial are always in the same test fold, so this averaging never
 \label{fig:eval}
 \end{figure}
 
-\emph{Validity checks.} Four further checks were run on the final pipeline. (1) \emph{Label permutation}: the labels were shuffled across trials within each recording, and the complete pipeline, including alignment, mirror augmentation, the ensemble and trial averaging, was run three times on every task. (2) \emph{Reproducibility}: the binary pipeline was run twice with the same random seed and once each with three other seeds. (3) \emph{Onset sensitivity}: every detected onset was shifted by $\pm$2~s and part of the pipeline was re-run. (4) \emph{Nested cross-validation}: within each outer training set, an inner person-wise cross-validation picked the feature configuration and the classifier, and only that choice was then tested on the outer test participants. This last check removes the optimism that comes from comparing several set-ups on the same test people.
+\emph{Validity checks.} Five further checks were run on the final pipeline. (1) \emph{Label permutation}: the labels were shuffled across trials within each recording, and the complete pipeline, including alignment, mirror augmentation, the ensemble and trial averaging, was run three times on every task. (2) \emph{Reproducibility}: the binary pipeline was run twice with the same random seed and once each with three other seeds. (3) \emph{Onset sensitivity}: every detected onset was shifted by $\pm$2~s and part of the pipeline was re-run. (4) \emph{Nested cross-validation}: within each outer training set, an inner person-wise cross-validation picked the feature configuration and the classifier, and only that choice was then tested on the outer test participants. This check removes the optimism that comes from comparing several set-ups on the same test people. (5) \emph{Leave-one-subject-out (LOSO)}: each of the 47 participants was held out in turn and the model was trained on the other 46, giving 47 folds; this is described in Section~\ref{subsec:loso}.
 
 \FloatBarrier
 
@@ -699,13 +699,17 @@ Three other seeds (binary) & 384, 384, 386 of 476 & 5-run mean 80.59 $\pm$ 0.35 
 \addlinespace
 Nested CV, action vs.\ imagery & 378/476 = 79.41 & Standard CV 80.25 \\
 Nested CV, left vs.\ right & 126/241 = 52.28 & Standard CV 58.09 \\
+\addlinespace
+Shuffled labels, action/imagery, 20 more runs & mean 48.68 $\pm$ 2.84 (41.8--52.9) & Chance 50; real 80.25 \\
+Shuffled labels, LOSO, action/imagery & 56.72, 52.94, 49.37, 48.74 & Real (LOSO) 80.25 \\
+Shuffled labels, LOSO, left vs.\ right & 48.96 & Real (LOSO) 58.51 \\
 \botrule
 \end{tabular}
 \end{table}
 
 \emph{Fold integrity.} In every fold of every task, no participant, recording or trial appeared in both the training and the test set, and no EEG file was present twice under different names.
 
-\emph{Label permutation.} A pipeline that leaks information keeps scoring above chance even when the labels are meaningless. Ours did not: with shuffled labels, all four tasks fell to the level expected from guessing (Table~\ref{tab:validity}).
+\emph{Label permutation.} A pipeline that leaks information keeps scoring above chance even when the labels are meaningless. Ours did not: with shuffled labels, all four tasks fell to the level expected from guessing (Table~\ref{tab:validity}). For action versus imagery we repeated the shuffle 20 more times to see how far chance results spread; they ranged from 41.8\% to 52.9\% (mean 48.68\%), and the real result lies about 11 standard deviations above that mean. The spread is wider than a simple binomial model would suggest, because trials of the same person are correlated.
 
 \emph{Reproducibility.} Running the binary pipeline twice with the same seed gave exactly the same 382 correct trials, and three other seeds gave 384, 384 and 386. The small differences come from the random parts of the tree models, not from anything learned between runs, so repeated runs do not creep upwards. Over the five runs the binary accuracy was 80.59 $\pm$ 0.35\%.
 
@@ -731,6 +735,51 @@ $+2$ s & 75.85\% (355/468) & 25.00\% (117/468) \\
 
 Body-part accuracy barely moved, but binary accuracy fell by about 3 points when the onset was shifted. Some of this drop is expected, since a shifted window takes in 2~s of rest or of the next task, but it also means the binary result may be optimistic by up to about 3 points. Even in the worst case it stays above 75\%, so our conclusions do not change.
 
+\subsection{Leave-One-Subject-Out Evaluation}\label{subsec:loso}
+
+Five-fold validation holds out about nine people at a time. As a stricter and more common test for subject-independent BCIs, we also ran leave-one-subject-out (LOSO) validation: each participant was held out in turn and the model was trained on the remaining 46, so 47 separate models were trained per task. Folds were grouped by person, so a participant with two sessions was never split. The label-free steps (filtering, rejection, per-recording normalisation and alignment) were unchanged. The scaler, the classifiers and mirror augmentation used only the 46 training people, and the v10 settings were kept fixed. Every fold was checked in code: exactly one test person, with no person or trial on both sides. The predictions were then re-scored against labels recomputed from the data. Table~\ref{tab:loso} lists the results.
+
+\begin{table*}[htbp]
+\centering
+\caption{Leave-one-subject-out results (trial level, pooled over 47 folds; correct trials in brackets). The last row repeats the ensemble under person-wise 5-fold (3-fold for six and twelve classes) for comparison.}
+\label{tab:loso}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Model & Action vs.\ imagery (476) & Body part (476) & Twelve tasks (476) & Left vs.\ right imagery (241) \\
+\midrule
+\textbf{Ensemble} & \textbf{80.25} (382) & \textbf{25.84} (123) & \textbf{22.27} (106) & 58.51 (141) \\
+Logistic Regression & 80.25 (382) & 25.42 (121) & 21.22 (101) & 61.00 (147) \\
+LDA & 80.88 (385) & 24.58 (117) & 20.38 (97) & 56.85 (137) \\
+HistGB & 80.46 (383) & 27.52 (131) & 18.91 (90) & 50.62 (122) \\
+Extra Trees & 77.94 (371) & 20.80 (99) & 19.12 (91) & 54.36 (131) \\
+\addlinespace
+Ensemble, 5-fold (Table~\ref{tab:main}) & 80.25 (382) & 26.68 (127) & 21.43 (102) & 58.09 (140) \\
+Chance & 50.00 & 16.67 & 8.33 & 50.00 \\
+\botrule
+\end{tabular}}
+\end{table*}
+
+LOSO and 5-fold validation agree to within one point on every task. The identical action-versus-imagery score is a coincidence rather than a repeat of the same predictions. The two schemes disagreed on 14 trials from 13 people, and 7 of these became correct under LOSO while 7 became wrong. On the harder tasks the predictions changed much more (38\% of trials for body part and 41\% for twelve tasks), but gains and losses again balanced out (McNemar $p \ge 0.72$ on all tasks). On action versus imagery, accuracy per person was 81.3 $\pm$ 17.8\%: 14 of the 47 participants were classified perfectly and 3 fell below 50\%. All four classifiers were significantly above chance on the binary, body-part and twelve-task problems ($p < 0.02$). For left versus right imagery, only logistic regression, LDA and the ensemble were. We also ran SVM, Random Forest, AdaBoost and Naive Bayes under LOSO for that task, and all four stayed at chance (51.9--53.9\%, $p \ge 0.12$).
+
+Two further checks were run in this setting. First, repeating LOSO gave identical predictions for every trial: three runs for action versus imagery, two for body part and two for left versus right. A model's accuracy therefore does not drift upwards when the evaluation is run again. Second, a learning curve for action versus imagery tested the same held-out people while the number of training people was varied (Table~\ref{tab:lcurve}). Accuracy rose smoothly with diminishing gains and was the same with about 38 and with 46 training people. This is the pattern of genuine learning; a leak would give high accuracy even with very few training people.
+
+\begin{table}[htbp]
+\centering
+\caption{Learning curve for action versus imagery (ensemble, trial level, same test people throughout).}
+\label{tab:lcurve}
+\footnotesize
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+Training people & 5 & 10 & 20 & 30 & $\approx$38 & 46 (LOSO) \\
+\midrule
+Accuracy (\%) & 70.90 & 75.11 & 77.00 & 78.68 & 80.25 & 80.25 \\
+\botrule
+\end{tabular}
+\end{table}
+
+Training accuracy was far above test accuracy for every model: 91--100\% on the training people against 19--81\% on new people. The models fit individual participants closely, and only part of what they learn transfers to someone new. This gap is overfitting to individuals, not leakage. A leak would raise test accuracy, and the shuffled-label tests and the learning curve rule that out.
+
 \subsection{Effect of Evaluation Design}\label{subsec:design}
 
 An early version of this pipeline reported accuracies above 94\%. Those numbers came from random window-level splits, with feature selection and spatial filters fitted on all of the data. Overlapping windows from the same trial and the same person ended up on both sides of the split, so the model could recognise the person, or even the trial, instead of the task. Once every learned step was restricted to the training participants and folds were grouped by person, accuracy fell to realistic levels. How a model is evaluated can matter more than which classifier is used, and person-wise grouping should be standard whenever the goal is a BCI that works for new users \citep{Lotte2018}.
@@ -747,7 +796,7 @@ Several limitations should be kept in mind. First, the Emotiv EPOC X has no elec
 
 We have presented a subject-independent pipeline for classifying motor action and motor imagery from a 14-channel consumer-grade Emotiv EPOC X. Using EEG from 47 participants who performed and imagined six limb movements, we analysed the same recordings at several levels of difficulty. Three steps mattered most: recovering the real trial onsets from the headset's motion sensor, which fixed a timing error that had mislabelled most trials in our earlier attempts; standardising features within each recording without labels, which removed much of the difference between people; and averaging the predictions of all windows in a trial, which gave far more reliable decisions than single 2~s windows.
 
-With these steps and a four-model ensemble trained with hemispheric mirror augmentation, the system reached 80.25\% for action versus imagery, 26.68\% for six body parts and 21.43\% for all twelve tasks on people never seen during training, all well above chance. Shuffled-label tests fell to chance on every task, repeated runs gave nearly identical results, nested cross-validation confirmed the action-versus-imagery result (79.41\%), and the system beat CSP, Riemannian and deep-learning baselines tested under the same conditions. Adding CSP features changed the ensemble's accuracy by less than two points, upwards on one task and downwards on the other two, because our feature set already covers most of the band-power and covariance information that CSP extracts. Among the time--frequency representations, the Morlet scalogram was consistently more useful than the STFT spectrogram, thanks to its sharper view of the mu rhythm.
+With these steps and a four-model ensemble trained with hemispheric mirror augmentation, the system reached 80.25\% for action versus imagery, 26.68\% for six body parts and 21.43\% for all twelve tasks on people never seen during training, all well above chance. Shuffled-label tests fell to chance on every task, repeated runs gave nearly identical results, nested cross-validation confirmed the action-versus-imagery result (79.41\%), leave-one-subject-out evaluation over all 47 participants gave the same accuracies within one point (80.25\%, 25.84\% and 22.27\%), and the system beat CSP, Riemannian and deep-learning baselines tested under the same conditions. Adding CSP features changed the ensemble's accuracy by less than two points, upwards on one task and downwards on the other two, because our feature set already covers most of the band-power and covariance information that CSP extracts. Among the time--frequency representations, the Morlet scalogram was consistently more useful than the STFT spectrogram, thanks to its sharper view of the mu rhythm.
 
 The study also shows where a low-cost headset falls short. Left versus right imagery reached 58.09\% in standard cross-validation but only 52.28\% under nested cross-validation, and identifying the limb was much harder than telling movement from imagery. Without electrodes over the central motor strip, these finer distinctions remain out of reach. Future work will use recordings with randomised task order, more imagery repetitions and better electrode coverage, ICA-based removal of eye and muscle activity, and online testing with real-time feedback.
 

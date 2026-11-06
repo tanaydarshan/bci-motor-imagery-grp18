@@ -1,0 +1,23 @@
+=== 1. Fold audit (people / recordings / trials never on both sides) ===
+  bin 5/3-fold:  5 folds, 476 trials each tested once, no overlap
+  bin LOSO    : 47 folds, 476 trials each tested once, no overlap
+    6 5/3-fold:  3 folds, 476 trials each tested once, no overlap
+    6 LOSO    : 47 folds, 476 trials each tested once, no overlap
+   12 5/3-fold:  3 folds, 476 trials each tested once, no overlap
+   12 LOSO    : 47 folds, 476 trials each tested once, no overlap
+   LR 5/3-fold:  5 folds, 241 trials each tested once, no overlap
+   LR LOSO    : 47 folds, 241 trials each tested once, no overlap
+
+=== 2. Mirror label maps (training-only augmentation) ===
+  body : {'RA': 'LA', 'LA': 'RA', 'RL': 'LL', 'LL': 'RL', 'RW': 'LW', 'LW': 'RW'}
+  12   : {'RA-A': 'LA-A', 'RA-I': 'LA-I', 'LA-A': 'RA-A', 'LA-I': 'RA-I', 'RL-A': 'LL-A', 'RL-I': 'LL-I', 'LL-A': 'RL-A', 'LL-I': 'RL-I', 'RW-A': 'LW-A', 'RW-I': 'LW-I', 'LW-A': 'RW-A', 'LW-I': 'RW-I'}
+  bin  : {0: np.int64(0), 1: np.int64(1)}  side: {0: np.int64(1), 1: np.int64(0)}
+
+=== 3. Label-free normalisation: per-recording feature means are ~0 whatever the labels ===
+  max |mean| of aligned features within any recording: 2.44e-12 (alignment uses recording id only)
+
+=== 4. LOSO vs 5-fold: same predictions or a coincidence? ===
+  bin: 5-fold 382/476, LOSO 382/476 | identical prediction on 97.1% of trials | correct only in 5-fold: 7, only in LOSO: 7 (McNemar p = 1.00)
+    6: 5-fold 127/476, LOSO 123/476 | identical prediction on 62.0% of trials | correct only in 5-fold: 41, only in LOSO: 37 (McNemar p = 0.73)
+   LR: 5-fold 140/241, LOSO 141/241 | identical prediction on 83.0% of trials | correct only in 5-fold: 20, only in LOSO: 21 (McNemar p = 1.00)
+DONE

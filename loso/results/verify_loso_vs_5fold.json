@@ -1,0 +1,26 @@
+{
+ "bin": {
+  "fivefold": 382,
+  "loso": 382,
+  "same_pred": 0.9705882352941176,
+  "only5": 7,
+  "onlyLOSO": 7,
+  "mcnemar_p": 1.0
+ },
+ "6": {
+  "fivefold": 127,
+  "loso": 123,
+  "same_pred": 0.6197478991596639,
+  "only5": 41,
+  "onlyLOSO": 37,
+  "mcnemar_p": 0.7343420330298466
+ },
+ "LR": {
+  "fivefold": 140,
+  "loso": 141,
+  "same_pred": 0.8298755186721992,
+  "only5": 20,
+  "onlyLOSO": 21,
+  "mcnemar_p": 1.0
+ }
+}

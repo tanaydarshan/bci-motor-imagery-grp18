@@ -1,0 +1,16 @@
+=== LOSO, task 12, real labels ===
+  person  1/47: 4/12 correct (running 4/12 = 33.33%) 215s
+  person  2/47: 5/12 correct (running 9/24 = 37.50%) 217s
+  person  3/47: 3/8 correct (running 12/32 = 37.50%) 223s
+  person  4/47: 7/12 correct (running 19/44 = 43.18%) 204s
+  person  5/47: 5/12 correct (running 24/56 = 42.86%) 218s
+  person  6/47: 1/6 correct (running 25/62 = 40.32%) 223s
+  person  7/47: 4/11 correct (running 29/73 = 39.73%) 216s
+  person  8/47: 5/12 correct (running 34/85 = 40.00%) 228s
+  person  9/47: 1/8 correct (running 35/93 = 37.63%) 230s
+  person 10/47: 0/6 correct (running 35/99 = 35.35%) 211s
+  person 11/47: 3/12 correct (running 38/111 = 34.23%) 225s
+  person 12/47: 0/19 correct (running 38/130 = 29.23%) 211s
+  person 13/47: 1/7 correct (running 39/137 = 28.47%) 201s
+  person 14/47: 2/23 correct (running 41/160 = 25.62%) 199s
+  person 15/47: 2/12 correct (running 43/172 = 25.00%) 199s

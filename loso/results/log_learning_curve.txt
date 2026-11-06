@@ -1,0 +1,6 @@
+train people    5: test 70.90%  train 100.00%  (435s)
+train people   10: test 75.11%  train 100.00%  (571s)
+train people   20: test 77.00%  train 100.00%  (760s)
+train people   30: test 78.68%  train 100.00%  (978s)
+train people  all: test 80.25%  train 100.00%  (568s)
+DONE
