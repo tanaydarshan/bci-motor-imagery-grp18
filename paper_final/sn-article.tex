@@ -549,6 +549,65 @@ Telling real from imagined movement was clearly the easiest problem. Four out of
 
 Averaging over a trial helped on every task. Going from single windows to whole trials raised accuracy by 11.7 points for action versus imagery and by 5.7 points for both body part and twelve tasks. A single 2~s window is noisy, and the average of 17 windows removes much of that noise. The spread between folds is wide, however. Binary accuracy ranged from 71.3\% to 89.7\% depending on which participants were held out, so decoding depends strongly on the individual, and differences of one or two points between methods should be read with care.
 
+\subsection{Accuracy of All Models}\label{subsec:allmodels}
+
+Tables~\ref{tab:allmodels} and~\ref{tab:allbaselines} bring together the accuracy of every model evaluated in this study. Table~\ref{tab:allmodels} covers the classifiers that were run inside the proposed pipeline, with subject-wise alignment, mirror augmentation and trial averaging, under both GroupKFold and LOSO validation. Table~\ref{tab:allbaselines} covers the comparison and deep-learning models, which were evaluated per window on raw or unaligned features.
+
+\begin{table*}[htbp]
+\centering
+\caption{Trial-level accuracy (\%) of every classifier in the proposed pipeline (alignment, mirror augmentation and trial averaging). GKF = person-wise GroupKFold; LOSO = leave-one-subject-out. The best value in each column is in bold; -- = not evaluated.}
+\label{tab:allmodels}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lcccccccc@{}}
+\toprule
+ & \multicolumn{2}{c}{\textbf{Action vs.\ imagery}} & \multicolumn{2}{c}{\textbf{Body part (6)}} & \multicolumn{2}{c}{\textbf{Twelve tasks (12)}} & \multicolumn{2}{c}{\textbf{Imagery vs.\ imagery (L/R)}} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
+\textbf{Model} & \textbf{GKF} & \textbf{LOSO} & \textbf{GKF} & \textbf{LOSO} & \textbf{GKF} & \textbf{LOSO} & \textbf{GKF} & \textbf{LOSO} \\
+\midrule
+Ensemble (proposed) & 80.25 & 80.25 & \textbf{26.68} & 25.84 & \textbf{21.43} & \textbf{22.27} & \textbf{58.09} & 58.51 \\
+Logistic Regression & \textbf{80.46} & 80.25 & 26.26 & 25.42 & -- & 21.22 & 57.68 & \textbf{61.00} \\
+LDA (shrinkage) & 80.25 & \textbf{80.88} & 23.95 & 24.58 & -- & 20.38 & 56.85 & 56.85 \\
+HistGB & 79.20 & 80.46 & 24.58 & \textbf{27.52} & -- & 18.91 & 50.21 & 50.62 \\
+Extra Trees & 77.94 & 77.94 & 19.33 & 20.80 & -- & 19.12 & 50.62 & 54.36 \\
+SVM (RBF) & 77.94 & -- & 25.21 & -- & -- & -- & 54.36 & 53.94 \\
+Random Forest & 77.52 & -- & 19.96 & -- & -- & -- & 44.81 & 51.87 \\
+AdaBoost & 78.78 & -- & 19.33 & -- & -- & -- & 48.55 & 53.11 \\
+Naive Bayes & 73.11 & -- & 19.54 & -- & -- & -- & 45.23 & 51.87 \\
+\midrule
+Chance level & \multicolumn{2}{c}{50.00} & \multicolumn{2}{c}{16.67} & \multicolumn{2}{c}{8.33} & \multicolumn{2}{c}{50.00} \\
+\botrule
+\end{tabular}}
+\end{table*}
+
+\begin{table*}[htbp]
+\centering
+\caption{Window-level accuracy (fold mean $\pm$ SD, \%) of the comparison and deep-learning models, evaluated without subject-wise alignment, augmentation or trial averaging. Each value is the best of the five feature sets for that model and task. The proposed ensemble is shown at window and trial level for reference.}
+\label{tab:allbaselines}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Model} & \textbf{Action vs.\ imagery} & \textbf{Body part (6)} & \textbf{Twelve tasks (12)} \\
+\midrule
+Histogram Gradient Boosting & 64.45 $\pm$ 2.35 & 20.27 $\pm$ 0.84 & 13.91 $\pm$ 1.11 \\
+Random Forest & 63.81 $\pm$ 3.95 & 20.37 $\pm$ 0.69 & 13.35 $\pm$ 0.72 \\
+LDA (shrinkage) & 63.35 $\pm$ 2.91 & 20.30 $\pm$ 1.61 & 13.44 $\pm$ 1.87 \\
+SVM (RBF) & 62.89 $\pm$ 3.73 & 20.70 $\pm$ 1.13 & 14.32 $\pm$ 1.27 \\
+AdaBoost & 62.85 $\pm$ 2.77 & -- & -- \\
+Gaussian Naive Bayes & 59.80 $\pm$ 3.06 & -- & -- \\
+Riemannian MDM & 62.31 $\pm$ 4.64 & 19.92 $\pm$ 1.44 & 12.05 $\pm$ 1.37 \\
+FBCSP + best classifier & 61.60 $\pm$ 4.37 & 19.47 $\pm$ 2.49 & 11.50 $\pm$ 1.03 \\
+Hierarchical (condition $\to$ body part) & -- & -- & 13.83 $\pm$ 1.28 \\
+EEGNet & 61.65 $\pm$ 2.14 & 15.94 $\pm$ 0.46 & 11.77 $\pm$ 0.55 \\
+CNN--LSTM & 57.84 $\pm$ 2.08 & -- & -- \\
+\midrule
+\textbf{Proposed ensemble (window level)} & \textbf{68.53 $\pm$ 3.59} & \textbf{21.01 $\pm$ 0.42} & \textbf{15.75 $\pm$ 0.83} \\
+\textbf{Proposed ensemble (trial level)} & \textbf{80.19 $\pm$ 6.59} & \textbf{26.68 $\pm$ 1.79} & \textbf{21.42 $\pm$ 1.21} \\
+\botrule
+\end{tabular}}
+\end{table*}
+
+Within the proposed pipeline, the linear models and HistGB performed almost identically on action versus imagery (79.2--80.9\%), while Extra Trees, Random Forest, AdaBoost and Naive Bayes were 2--7 points lower. The ensemble gave the highest accuracy for body part and for the imagery-versus-imagery task under GroupKFold and for the twelve tasks under LOSO, and it stayed within 2.5 points of the best model in every other column. Logistic regression was almost as consistent, while the tree-based models varied much more from task to task. On the imagery-versus-imagery task, only the linear models and the ensemble rose clearly above chance. Among the comparison models, no classifier stood out: the best result for each was within a few points of the others, and all of them fell well short of the proposed pipeline.
+
 \subsection{Leave-One-Subject-Out Evaluation}\label{subsec:loso}
 
 Under LOSO validation each model is trained on 46 participants and tested on the remaining one, and this is repeated for all 47 participants. Table~\ref{tab:loso} lists the metrics of the ensemble, and Fig.~\ref{fig:losomodels} shows the accuracy of every member of the ensemble.
@@ -611,30 +670,9 @@ Subject-wise alignment had the largest effect of any step. Without it, binary ac
 
 \subsection{Comparison with Baseline and Deep-Learning Models}\label{subsec:baselines}
 
-Table~\ref{tab:baselines} sets the proposed system beside the comparison models. These were evaluated window by window on the same folds and with the same leakage controls, but without subject-wise alignment, augmentation or trial averaging.
+Table~\ref{tab:allbaselines} sets the proposed system beside the comparison models. These were evaluated window by window on the same folds and with the same leakage controls, but without subject-wise alignment, augmentation or trial averaging.
 
-\begin{table*}[htbp]
-\centering
-\caption{Best comparison models (window level unless stated, fold mean $\pm$ SD, \%). The neural networks and the hierarchical model used three folds for all tasks.}
-\label{tab:baselines}
-\footnotesize
-\begin{tabular}{@{}lccc@{}}
-\toprule
-\textbf{Model} & \textbf{Action vs.\ imagery} & \textbf{Body part} & \textbf{Twelve tasks} \\
-\midrule
-All features + HistGB & 64.45 $\pm$ 2.35 & 19.71 $\pm$ 0.13 & 12.90 $\pm$ 0.03 \\
-CSP + all features + Riemannian, SVM & 62.89 $\pm$ 3.73 & 20.62 $\pm$ 0.59 & 14.32 $\pm$ 1.27 \\
-Riemannian tangent space + SVM & 58.87 $\pm$ 2.93 & 20.70 $\pm$ 1.13 & 13.17 $\pm$ 1.78 \\
-Riemannian tangent space + HistGB & 63.90 $\pm$ 4.23 & 20.27 $\pm$ 0.84 & 12.84 $\pm$ 1.20 \\
-Riemannian MDM & 62.31 $\pm$ 4.64 & 19.92 $\pm$ 1.44 & 12.05 $\pm$ 1.37 \\
-Hierarchical (condition $\to$ body part) & -- & -- & 13.83 $\pm$ 1.28 \\
-EEGNet & 61.65 $\pm$ 2.14 & 15.94 $\pm$ 0.46 & 11.77 $\pm$ 0.55 \\
-CNN--LSTM & 57.84 $\pm$ 2.08 & -- & -- \\
-\textbf{Proposed (window level)} & \textbf{68.53 $\pm$ 3.59} & \textbf{21.01 $\pm$ 0.42} & \textbf{15.75 $\pm$ 0.83} \\
-\textbf{Proposed (trial level)} & \textbf{80.19 $\pm$ 6.59} & \textbf{26.68 $\pm$ 1.79} & \textbf{21.42 $\pm$ 1.21} \\
-\botrule
-\end{tabular}
-\end{table*}
+
 
 The proposed system was the best method on every task. Even at window level it beat every baseline on the binary and twelve-task problems and slightly exceeded the best body-part baselines. The strongest conventional pipelines, which combined CSP, Riemannian and handcrafted features with SVM or gradient boosting, reached 62--64\% on the binary task and about 20--21\% on body part. Riemannian classifiers were competitive throughout, especially for body part, which shows that the covariance between channels carries useful information.
 
