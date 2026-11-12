@@ -5,7 +5,7 @@ nb = json.load(open('EEG_preprocessing_v10.ipynb')); C = nb['cells']; s = lambda
 G = {}
 for i, c in enumerate(C):
     if c['cell_type'] != 'code' or i < 3: continue
-    code = s(i)
+    code = s(i).replace("CACHE_DIR = 'feature_cache'", "CACHE_DIR = '" + os.environ.get('FEATURE_CACHE', 'feature_cache') + "'")
     if 'import tensorflow' in code or 'Input(' in code or 'run_dl(' in code: continue
     if ('run_ml(' in code and 'def run_ml' not in code) or 'gkf3 = GroupKFold' in code or 'abl = {}' in code or 'plt.' in code or 'scores_anova' in code: continue
     if 'def run_ensemble' in code: code = code.split('ens_bin = run_ensemble')[0]
