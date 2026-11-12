@@ -369,28 +369,22 @@ highest shuffled LOSO score (56.72%) lies within this spread.
 
 
                                                 29
-Table 13 Validity checks on the final pipeline (trial-level accuracy, %).
+  Table 13 Validity checks on the final pipeline (trial-level accuracy, %).
 
-Check                                  Result                                 Reference
-Shuffled labels, action vs. imagery    54.62, 52.10, 50.21                    Chance 50; real 80.25
-Shuffled labels, action vs. imagery    mean 48.68 ± 2.84 (41.8–52.9)          Chance 50; real 80.25
-(20 further runs)
-Shuffled labels, body part             18.07, 19.33, 17.02                    Chance 16.67; real 26.68
-Shuffled labels, twelve tasks          10.50, 7.98, 8.19                      Chance 8.33; real 21.43
-Shuffled labels, imagery L/R           45.64, 43.57, 51.04                    Chance 50; real 58.09
-Shuffled labels, LOSO, action vs.      56.72, 52.94, 49.37, 48.74             Real (LOSO) 80.25
-imagery
-Same random seed, repeated runs        382 / 382 of 476 (GroupKFold);         –
-                                       identical prediction for every trial
-                                       (LOSO)
-Other random seeds (action vs.         80.67, 80.67, 81.09                    Mean of 5 runs 80.59 ±
-imagery)                                                                      0.35
-Nested CV, action vs. imagery          79.41                                  Standard CV 80.25
-Nested CV, imagery L/R                 52.28                                  Standard CV 58.09
-Onset shifted by −2 / 0 / +2 s,        76.16 / 79.20 / 75.85                  Without mirror augmen-
-action vs. imagery                                                            tation
-Onset shifted by −2 / 0 / +2 s, body   27.00 / 26.89 / 25.00                  Without mirror augmen-
-part                                                                          tation
+  Check                                                   Result
+  Shuffled labels, action vs. imagery                     54.62, 52.10, 50.21
+  Shuffled labels, action vs. imagery (20 further runs)   mean 48.68 ± 2.84 (41.8–52.9)
+  Shuffled labels, body part                              18.07, 19.33, 17.02
+  Shuffled labels, twelve tasks                           10.50, 7.98, 8.19
+  Shuffled labels, imagery L/R                            45.64, 43.57, 51.04
+  Shuffled labels, LOSO, action vs. imagery               56.72, 52.94, 49.37, 48.74
+  Same random seed, repeated runs                         382 / 382 of 476 (GroupKFold); identical pre-
+                                                          diction for every trial (LOSO)
+  Other random seeds, action vs. imagery                  80.67, 80.67, 81.09
+  Nested CV, action vs. imagery                           79.41
+  Nested CV, imagery L/R                                  52.28
+  Onset shifted by −2 / 0 / +2 s, action vs. imagery      76.16 / 79.20 / 75.85
+  Onset shifted by −2 / 0 / +2 s, body part               27.00 / 26.89 / 25.00
 
 
 
@@ -407,7 +401,18 @@ when the model was trained on a growing number of participants. Accuracy rose fr
 each step, and it did not change between about 38 and 46 training participants. This
 is the pattern of genuine learning; a leak would give high accuracy even with very few
 training participants.
-    Nested cross-validation. When the inner loop was free to choose between no
+
+
+
+
+Fig. 15 Learning curve for action versus imagery: test accuracy against the number of training
+participants.
+
+
+
+
+                                                     30
+    Nested cross-validation. When the inner loop was free to choose between no
 alignment, alignment, and alignment with mirror augmentation, and between the four
 classifiers and the ensemble, action versus imagery reached 79.41%, less than one point
 below standard cross-validation. The inner loop chose subject-wise alignment in every
@@ -421,26 +426,13 @@ a shifted window includes rest or part of the next task, but it also means that 
 binary result may be optimistic by up to about 3 points. Even in the worst case it
 stays above 75%.
 
-
-
-                                                  30
-Fig. 15 Learning curve for action versus imagery: test accuracy against the number of training
-participants.
-
-
 4.12 Limitations
-Several limitations should be kept in mind when interpreting these results. First, the
-Emotiv EPOC X has no electrodes over the central motor strip (C3, Cz and C4),
-which limits body-part and left–right decoding; a headset with central coverage would
-probably help most for these tasks. Second, the dataset contains 476 trials, about 40
-per task, and sliding windows increase the number of training samples but not the
-number of independent trials or people. Third, artefacts were handled by filtering and
-trial rejection; ICA could separate cortical activity from eye and muscle activity, which
-probably contributes to the binary result. Fourth, every participant performed the
-tasks in the same order, so slow drift, fatigue or time on task may be partly mixed up
-with the task label, especially for left versus right. Fifth, the ensemble and its settings
-were fixed before testing but were developed on the same group of participants, so the
-multi-class results may be slightly optimistic. Finally, all results are offline. Subject-
-wise alignment assumes one unlabelled calibration session for each new user, and an
-online evaluation with real-time feedback remains to be done.
+Three limitations matter most. First, every participant performed the tasks in the
+same order, so slow drift or fatigue during a session may be partly confounded with
+the task label, particularly for the imagery-versus-imagery task. Second, artefacts were
+handled by filtering and trial rejection only; eye and muscle activity may therefore
+contribute to the action-versus-imagery result, and ICA-based artefact removal would
+help to separate it from cortical activity. Third, all results are offline, and subject-
+wise alignment assumes one unlabelled calibration session for each new user; an online
+evaluation with real-time feedback remains to be done.
 
