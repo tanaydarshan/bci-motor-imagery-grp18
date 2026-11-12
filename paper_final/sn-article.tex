@@ -818,7 +818,24 @@ Three limitations matter most. First, every participant performed the tasks in t
 
 \FloatBarrier
 \section{Conclusion}\label{sec:conclusion}
-\emph{(to be added)}
+
+This study presented a subject-independent pipeline for classifying motor action and motor imagery from a consumer-grade 14-channel Emotiv EPOC X headset. EEG was recorded from 47 participants who performed and then imagined six limb movements, and the same 476 trials were classified at several levels of detail. The pipeline recovers the true trial timing from the headset's motion sensor, standardises 1,771 spectral, time--frequency, connectivity and covariance features within each recording, doubles the training data by hemispheric mirroring, and combines four classifiers into an ensemble that makes one decision per trial.
+
+Real and imagined movement could be told apart reliably in people the model had never seen. The ensemble reached 80.25\% under person-wise cross-validation, the same 80.25\% under leave-one-subject-out validation, and 79.41\% under nested cross-validation, while shuffled labels brought accuracy down to chance. The finer distinctions were much harder: 26.68\% for the six body parts and 21.43\% for the twelve tasks, both clearly above chance but far from what a practical BCI would need. The side of an imagined movement could not be decoded reliably, with 52.28\% under nested cross-validation.
+
+Three further findings are of practical use. Subject-wise alignment was the single most effective step, raising action-versus-imagery accuracy by almost ten points. The Morlet scalogram was consistently more informative than the STFT spectrogram, and adding CSP features or replacing the feature-based models with deep networks did not improve the results on a dataset of this size.
+
+The main limit of the present system is the headset itself: with no electrodes over the central motor strip, decoding the limb and the side of a movement remains out of reach. Future work will therefore use recordings with randomised task order, more imagery repetitions and better coverage of the motor cortex, add ICA-based removal of eye and muscle activity, and evaluate the system online with real-time feedback.
+
+\section{Data availability}
+The data that support the findings of this study are available from the corresponding author upon reasonable request.
+
+\section{Author Contributions}
+All authors contributed to the study design, data collection, analysis and writing, and read and approved the final manuscript.
+
+\section{Funding}
+All necessary funding, including support for open access publication, is provided by Amrita Vishwa Vidyapeetham, India.
+
 
 \bibliography{bibliography}
 
