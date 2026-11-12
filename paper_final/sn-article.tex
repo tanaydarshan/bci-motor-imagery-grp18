@@ -195,7 +195,7 @@ Ref. & Task / Classes & Dataset / Hardware & Features / Representation & Model &
 
 \subsection{System Overview}\label{subsec:overview}
 
-The system takes the raw files produced by the headset and returns one label for every 10~s task. It works in two stages (Fig.~\ref{fig:pipeline}). The first stage, \emph{signal preparation}, turns a continuous recording into clean, labelled trials: it finds where the task schedule starts, filters the EEG, cuts out the twelve trials, removes the ones spoiled by artefacts and normalises what is left. The second stage, \emph{representation and classification}, splits each trial into short overlapping windows, describes every window with spectral, time--frequency, connectivity and covariance features, aligns these features within each recording and classifies the window with an ensemble of four models. The predictions for the windows of a trial are then averaged into one decision. Throughout the pipeline, no participant's data are ever used for both training and testing.
+The system takes the raw files produced by the headset and returns one label for every 10~s task. It works in two stages (Fig.~\ref{fig:pipeline}). The first stage, signal preparation, turns a continuous recording into clean, labelled trials: it finds where the task schedule starts, filters the EEG, cuts out the twelve trials, removes the ones spoiled by artefacts and normalises what is left. The second stage, representation and classification, splits each trial into short overlapping windows, describes every window with spectral, time--frequency, connectivity and covariance features, aligns these features within each recording and classifies the window with an ensemble of four models. The predictions for the windows of a trial are then averaged into one decision. Throughout the pipeline, no participant's data are ever used for both training and testing.
 
 \begin{figure}[htbp]
 \centering
@@ -206,7 +206,9 @@ The system takes the raw files produced by the headset and returns one label for
 
 \subsection{Experimental Protocol}\label{subsec:protocol}
 
-Participants sat in front of a screen in a quiet room. They were asked to keep their eyes open, to follow the instruction shown on the screen, to avoid unnecessary movement and speech, and to relax whenever a fixation cross appeared. The protocol covers six movements: right-arm flexion, left-arm flexion, right-leg lifting, left-leg lifting, right-wrist rotation and left-wrist rotation. Each movement was first carried out physically (\emph{action}) and then rehearsed mentally without moving (\emph{imagery}), giving twelve tasks in a fixed order:
+The protocol comprised six limb movements: right-arm flexion, left-arm flexion, right-leg lifting, left-leg lifting, right-wrist rotation and left-wrist rotation. Each movement was performed twice in succession, first as an overt movement (\textbf{action}) and then as a mental rehearsal of the same movement without any muscle activity (\textbf{imagery}). This produced twelve task conditions, presented in the following fixed order:
+
+\noindent\begin{minipage}{\linewidth}
 \begin{verbatim}
 RightArm_Action    RightArm_Imagine
 LeftArm_Action     LeftArm_Imagine
@@ -215,42 +217,44 @@ LeftLeg_Action     LeftLeg_Imagine
 RightWrist_Action  RightWrist_Imagine
 LeftWrist_Action   LeftWrist_Imagine
 \end{verbatim}
-Each task lasted 10~s and was followed by 5~s of rest, so the whole schedule took 175~s from the start of the first task to the end of the last. Two session layouts occur in the data (Fig.~\ref{fig:protocol}). In most sessions the tasks began a few seconds after the recording was started. In several later sessions the recording opened with a resting baseline, about 50~s with eyes open followed by about 50~s with eyes closed, so the tasks began roughly two minutes in. Every trial carries three labels: the task itself (twelve classes), the condition, action or imagery (two classes), and the body part (six classes).
+\end{minipage}
+
+\noindent Each task lasted 10~s and was followed by a 5~s rest interval, during which a fixation cross was displayed, so the complete schedule spanned 175~s (Fig.~\ref{fig:protocol}). Participants were instructed to keep their eyes open, to follow the cue displayed on the screen, and to avoid unnecessary movement and speech throughout the session. Three labels were assigned to every trial: the task (twelve classes), the condition, action or imagery (two classes), and the body part (six classes).
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/fig2_protocol.png}
-\caption{Timeline of a recording session: (a) standard session; (b) session with a resting baseline.}
+\caption{Timeline of the twelve-task protocol (A = action, I = imagery).}
 \label{fig:protocol}
 \end{figure}
 
 \subsection{Data Acquisition}\label{subsec:acquisition}
 
-EEG was recorded with a 14-channel Emotiv EPOC X fitted with saline-soaked felt electrodes at AF3, AF4, F3, F4, F7, F8, FC5, FC6, T7, T8, P7, P8, O1 and O2, placed according to the international 10--20 system, with the headset's CMS/DRL reference. The signals were sampled at 128~Hz and saved in EDF format by the EmotivPRO software. For every session EmotivPRO also saves a second file from the headset's built-in inertial sensor, which holds three accelerometer axes and four quaternion (orientation) components sampled at 32~Hz. We never used this motion file as a classification input; it served only to locate the task schedule (Section~\ref{subsec:onset}). In total we collected 59 EEG recordings containing all fourteen channels from 47 participants. A few participants were recorded in more than one session.
+EEG was recorded with a 14-channel Emotiv EPOC X fitted with saline-soaked felt electrodes at AF3, AF4, F3, F4, F7, F8, FC5, FC6, T7, T8, P7, P8, O1 and O2, placed according to the international 10--20 system, with the headset's CMS/DRL reference. The signals were sampled at 128~Hz and saved in EDF format by the EmotivPRO software. For every session EmotivPRO also saves a second file from the headset's built-in inertial sensor, which holds three accelerometer axes and four quaternion (orientation) components sampled at 32~Hz. We never used this motion file as a classification input; it served only to locate the task schedule (Section~\ref{subsec:onset}). The final dataset comprises 476 trials from 47 participants.
 
 \subsection{Motion-Guided Trial Onset Detection}\label{subsec:onset}
 
-To cut the trials correctly, we need to know when the first task begins in each recording. Our first pipeline assumed a fixed delay of 15~s for every file. When we checked this against the data it turned out to be wrong: the delay between starting the recording and starting the tasks changed from session to session, and in sessions with a baseline it was more than two minutes. With a fixed offset, most trials were cut several seconds early, and a window labelled with one task often contained the end of the previous one.
+To cut the trials correctly, we need to know when the first task begins in each recording. Our first pipeline assumed a fixed delay of 15~s for every file. When we checked this against the data it turned out to be wrong: the delay between starting the recording and starting the tasks changed from session to session. With a fixed offset, most trials were cut several seconds early, and a window labelled with one task often contained the end of the previous one.
 
 To recover the real onset we used a simple physical fact. Moving an arm, a leg or a wrist shakes the head slightly, and the headset's motion sensor picks this up; imagining the same movement does not. The procedure has four steps.
 
-\emph{Step 1: motion energy.} The motion signal is divided into 0.5~s bins. For each bin $b$, the motion energy is the logarithm of the total absolute change across the seven inertial channels,
+\textbf{Step 1: motion energy.} The motion signal is divided into 0.5~s bins. For each bin $b$, the motion energy is the logarithm of the total absolute change across the seven inertial channels,
 \begin{equation}
 m_b = \log \sum_{c=1}^{7} \sum_{n \in b} \left| s_c[n] - s_c[n-1] \right| ,
 \end{equation}
 and the sequence $m_b$ is centred on its median and divided by its standard deviation.
 
-\emph{Step 2: scoring each candidate onset.} For every candidate onset $t_0$, in steps of 0.5~s, the twelve-task schedule is laid over the motion signal. We take the mean motion energy over seconds 1--10 of each task, skipping the first second, when the participant is still reacting to the cue. For each of the six action--imagery pairs we compute the difference $d_k$, and from these a paired $t$-statistic:
+\textbf{Step 2: scoring each candidate onset.} For every candidate onset $t_0$, in steps of 0.5~s, the twelve-task schedule is laid over the motion signal. We take the mean motion energy over seconds 1--10 of each task, skipping the first second, when the participant is still reacting to the cue. For each of the six action--imagery pairs we compute the difference $d_k$, and from these a paired $t$-statistic:
 \begin{equation}
 d_k = \bar{m}_{\mathrm{action},k} - \bar{m}_{\mathrm{imagery},k}, \qquad
 t(t_0) = \frac{\bar{d}}{s_d/\sqrt{6}}, \qquad k = 1,\dots,6.
 \end{equation}
 
-\emph{Step 3: choosing the onset.} The candidate with the largest $t$ is selected. We treat it as \emph{confident} if $t \ge 4$ and all six pairs show more motion during action than during imagery.
+\textbf{Step 3: choosing the onset.} The candidate with the largest $t$ is selected. We treat it as confident if $t \ge 4$ and all six pairs show more motion during action than during imagery.
 
-\emph{Step 4: an independent check.} Recordings were normally stopped soon after the last task, and across the confident recordings the file ended a median of 181~s after the first task began. This gives a second, label-free estimate of the onset, $\hat{t}_0 = T_{\mathrm{rec}} - 181$, where $T_{\mathrm{rec}}$ is the length of the recording. An onset that fails Step~3 is still accepted if it lies within 5~s of this estimate. Otherwise the recording is dropped, since mislabelled trials would do more harm than a slightly smaller dataset.
+\textbf{Step 4: an independent check.} Recordings were normally stopped soon after the last task, and across the confident recordings the file ended a median of 181~s after the first task began. This gives a second, label-free estimate of the onset, $\hat{t}_0 = T_{\mathrm{rec}} - 181$, where $T_{\mathrm{rec}}$ is the length of the recording. An onset that fails Step~3 is still accepted if it lies within 5~s of this estimate. Otherwise the recording is dropped, since mislabelled trials would do more harm than a slightly smaller dataset.
 
-Fig.~\ref{fig:onset} shows the procedure for one recording. Motion energy rises clearly in every action block and stays low in the imagery blocks. The $t$-statistic peaks sharply at the detected onset of 26.0~s ($t = 24.8$), whereas at the old fixed onset of 15~s it is slightly negative, which means that under the old timing the ``action'' windows of this recording contained \emph{less} movement than the ``imagery'' windows.
+Fig.~\ref{fig:onset} shows the procedure for one recording. Motion energy rises clearly in every action block and stays low in the imagery blocks. The $t$-statistic peaks sharply at the detected onset of 26.0~s ($t = 24.8$), whereas at the old fixed onset of 15~s it is slightly negative, which means that under the old timing the ``action'' windows of this recording contained less movement than the ``imagery'' windows.
 
 \begin{figure}[htbp]
 \centering
@@ -258,8 +262,6 @@ Fig.~\ref{fig:onset} shows the procedure for one recording. Motion energy rises 
 \caption{Motion-guided onset detection for one recording: (a) head-motion energy with the detected schedule; (b) paired $t$-statistic for every candidate onset.}
 \label{fig:onset}
 \end{figure}
-
-Across the dataset, 48 of the 59 recordings gave a confident onset and 5 more passed the duration check. Two were excluded because the two estimates disagreed, and four were too short to contain a complete schedule (sessions that had been stopped and restarted). The detected onsets ranged from 7.5~s to 136.5~s, and the median gap between the motion-based and the duration-based estimates was 2.5~s. In the seven sessions where the eyes-closed baseline could be confirmed by a clear rise in occipital alpha power, the detected onset fell 7.3--15.5~s after the end of the eyes-closed period, which is where the schedule was expected to begin. The remaining 53 recordings were used in all later steps.
 
 \subsection{EEG Preprocessing}\label{subsec:cleaning}
 
@@ -272,13 +274,13 @@ Preprocessing has three parts: filtering, trial rejection and normalisation (Fig
 \label{fig:cleaning}
 \end{figure}
 
-\emph{Band-pass filtering.} The EDF files were loaded with MNE-Python \citep{Gramfort2013}, and only the fourteen EEG channels were kept; the quality, battery and marker channels were discarded and missing samples were set to zero. Each continuous recording was filtered between 4 and 45~Hz with a zero-phase FIR filter (Hamming-window design, MNE defaults). The 4~Hz edge removes slow electrode drift and most of the energy of blinks and eye movements. The 45~Hz edge removes high-frequency muscle activity and the 50~Hz mains interference. What remains covers the theta, mu, beta and low-gamma rhythms. Because the filter is zero-phase it does not shift the signal in time, and filtering the whole recording before cutting the trials avoids distortion at the trial edges.
+\textbf{Band-pass filtering.} The EDF files were loaded with MNE-Python \citep{Gramfort2013}, and only the fourteen EEG channels were kept; the quality, battery and marker channels were discarded and missing samples were set to zero. Each continuous recording was filtered between 4 and 45~Hz with a zero-phase FIR filter (Hamming-window design, MNE defaults). The 4~Hz edge removes slow electrode drift and most of the energy of blinks and eye movements. The 45~Hz edge removes high-frequency muscle activity and the 50~Hz mains interference. What remains covers the theta, mu, beta and low-gamma rhythms. Because the filter is zero-phase it does not shift the signal in time, and filtering the whole recording before cutting the trials avoids distortion at the trial edges.
 
-\emph{Trial extraction.} Starting from the detected onset $t_0$, trial $k$ ($k = 0, \dots, 11$) runs from $t_0 + 15k$ to $t_0 + 15k + 10$~s. Each trial is therefore a $14 \times 1280$ matrix, and the 53 recordings give 636 trials.
+\textbf{Trial extraction.} Starting from the detected onset $t_0$, trial $k$ ($k = 0, \dots, 11$) runs from $t_0 + 15k$ to $t_0 + 15k + 10$~s. Each trial is therefore a $14 \times 1280$ matrix.
 
-\emph{Trial rejection.} A trial was discarded if it failed any of three checks. (i) It was flat, with zero variance over the whole trial. (ii) Any sample reached 150~$\mu$V. Genuine EEG on this device stays well below this level (the median peak of a trial was 92~$\mu$V), and larger values nearly always come from blinks, jaw clenching or a moving cable. (iii) The mean absolute excess kurtosis across channels was 10 or more, which flags sudden spikes and electrode pops that stay under the amplitude limit. No trial was flat. The amplitude rule caught 158 trials and the kurtosis rule 29, with 27 caught by both, so 160 trials (25.2\%) were removed. This left \textbf{476 clean trials} from 51 recordings and 47 participants, a data array of size $476 \times 14 \times 1280$. Rejection was done before windowing, so that a noisy trial could not enter the training data as many overlapping windows. The classes stayed balanced: 235 action and 241 imagery trials, and between 36 and 44 trials for each of the twelve tasks.
+\textbf{Trial rejection.} A trial was discarded if it failed any of three checks. (i) It was flat, with zero variance over the whole trial. (ii) Any sample reached 150~$\mu$V. Genuine EEG on this device stays well below this level (the median peak of a trial was 92~$\mu$V), and larger values nearly always come from blinks, jaw clenching or a moving cable. (iii) The mean absolute excess kurtosis across channels was 10 or more, which flags sudden spikes and electrode pops that stay under the amplitude limit. After rejection, \textbf{476 clean trials} from 47 participants remained, a data array of size $476 \times 14 \times 1280$. Rejection was done before windowing, so that a noisy trial could not enter the training data as many overlapping windows. The classes stayed balanced: 235 action and 241 imagery trials, and between 36 and 44 trials for each of the twelve tasks.
 
-\emph{Per-recording normalisation.} Signal amplitude changes from session to session with electrode impedance, the amount of saline and head shape. We therefore z-scored every channel $c$ of every recording $r$ separately,
+\textbf{Per-recording normalisation.} Signal amplitude changes from session to session with electrode impedance, the amount of saline and head shape. We therefore z-scored every channel $c$ of every recording $r$ separately,
 \begin{equation}
 \hat{x}_{r,c}[n] = \frac{x_{r,c}[n] - \mu_{r,c}}{\sigma_{r,c}},
 \end{equation}
@@ -358,9 +360,9 @@ with scales $a$ chosen so that the centre frequencies are exactly 5, 7, 10, 12, 
 
 \subsubsection{Connectivity and Riemannian Covariance Features}\label{subsec:conn}
 
-\emph{Inter-hemispheric connectivity (56 features).} Moving one side of the body mainly engages the opposite hemisphere. The fourteen electrodes form seven left--right pairs (AF3--AF4, F3--F4, F7--F8, FC5--FC6, T7--T8, P7--P8 and O1--O2). For each pair and each of the four bands we compute the magnitude-squared coherence and the power asymmetry $\log(P_{\mathrm{left}}/P_{\mathrm{right}})$, which gives $7 \times 4 \times 2 = 56$ features.
+\textbf{Inter-hemispheric connectivity (56 features).} Moving one side of the body mainly engages the opposite hemisphere. The fourteen electrodes form seven left--right pairs (AF3--AF4, F3--F4, F7--F8, FC5--FC6, T7--T8, P7--P8 and O1--O2). For each pair and each of the four bands we compute the magnitude-squared coherence and the power asymmetry $\log(P_{\mathrm{left}}/P_{\mathrm{right}})$, which gives $7 \times 4 \times 2 = 56$ features.
 
-\emph{Riemannian covariance features (105 features).} For each window $X \in \mathbb{R}^{14 \times 256}$ we estimate the spatial covariance matrix
+\textbf{Riemannian covariance features (105 features).} For each window $X \in \mathbb{R}^{14 \times 256}$ we estimate the spatial covariance matrix
 \begin{equation}
 C = \frac{1}{T - 1} X X^{\top}
 \end{equation}
@@ -391,34 +393,81 @@ The electrodes of the EPOC X are arranged in symmetric pairs. Since a limb on on
 
 \subsection{Classification Models}\label{subsec:models}
 
-\emph{Proposed ensemble.} The 1,771 aligned features are scaled with a standard scaler fitted on the training participants and then passed to four classifiers of different types (Table~\ref{tab:models}). Each classifier outputs class probabilities for a window $w$, and the ensemble averages them with equal weights,
+Three groups of classifiers were used: the proposed ensemble, a set of classical comparison models, and two deep-learning models. All of them were trained and tested on exactly the same participant folds. Tables~\ref{tab:models}--\ref{tab:dlmodels} list every model with the parameter values used and what each value controls.
+
+\subsubsection{Proposed Ensemble}\label{subsec:ensemble}
+
+The proposed classifier is an ensemble of four models of different types (Table~\ref{tab:models}). The 1,771 aligned features are first scaled with a standard scaler fitted on the training participants only. Each of the four models then outputs class probabilities for a window $w$, and the ensemble averages them with equal weights:
 \begin{equation}
 p_w = \frac{1}{4} \sum_{m=1}^{4} p_w^{(m)} .
 \end{equation}
-Linear models and tree ensembles tend to make different mistakes, so averaging them evens out part of the error. The four models and their settings were fixed in advance and used without change for every task.
+Two members are linear models and two are tree ensembles. Linear models capture broad, additive differences between classes, while tree ensembles capture non-linear interactions between features, so the two kinds tend to make different errors and averaging them reduces the overall error. The four models and their settings were fixed before the experiments and used unchanged for every task.
 
 \begin{table}[htbp]
 \centering
-\caption{Classifiers of the proposed ensemble.}
+\caption{Members of the proposed ensemble.}
 \label{tab:models}
 \footnotesize
-\begin{tabular}{@{}p{0.27\linewidth}p{0.33\linewidth}p{0.32\linewidth}@{}}
+\begin{tabular}{@{}p{0.2\linewidth}p{0.27\linewidth}p{0.45\linewidth}@{}}
 \toprule
-Model & Setting & Reason for inclusion \\
+\textbf{Model} & \textbf{Parameter values} & \textbf{Meaning of the values} \\
 \midrule
-Logistic Regression (LR) & L2 penalty, $C = 0.01$ & Strongly regularised linear model \\
-Linear Discriminant Analysis (LDA) & Least squares, automatic Ledoit--Wolf shrinkage & Standard EEG classifier; copes with many features \\
-Extra Trees & 500 trees, $\sqrt{d}$ features per split & Non-linear, low-variance averaging of random trees \\
-Histogram Gradient Boosting (HistGB) & 200 iterations, learning rate 0.05, depth 4 & Non-linear, corrects its errors step by step \\
+Logistic Regression (LR) & L2 penalty, $C = 0.01$ & $C$ is the inverse of the regularisation strength. A small value applies strong regularisation, which keeps the weights small and limits overfitting with 1,771 features. \\ \addlinespace
+Linear Discriminant Analysis (LDA) & Least-squares solver, automatic Ledoit--Wolf shrinkage & Shrinkage pulls the class covariance towards a diagonal matrix by an amount estimated from the data, so the model stays stable when features outnumber training trials. \\ \addlinespace
+Extra Trees & 500 trees, $\sqrt{d} \approx 42$ features per split & Many randomised trees are averaged. Each split considers only 42 of the 1,771 features, which makes the trees different from one another and lowers the variance of the average. \\ \addlinespace
+Histogram Gradient Boosting (HistGB) & 200 iterations, learning rate 0.05, maximum depth 4 & Shallow trees (depth 4) are added one at a time, each correcting the errors of the previous ones. The small learning rate makes each step cautious, which reduces overfitting. \\ \addlinespace
+Ensemble & Equal-weight average of the four probability outputs & No model is favoured; the average is taken window by window and then over the 17 windows of a trial (Section~\ref{subsec:eval}). \\
 \botrule
 \end{tabular}
 \end{table}
 
-\emph{Comparison models.} To put the ensemble in context, we evaluated a set of comparison models on the same data and folds, at window level and without subject-wise alignment. These were a support vector machine (RBF kernel, $C = 10$) \citep{CortesVapnik1995}, a random forest (300 trees, maximum depth 15) \citep{Breiman2001}, histogram gradient boosting, Gaussian naive Bayes, AdaBoost (100 estimators) and shrinkage LDA. Each was applied to five feature sets: filter-bank CSP with four components in each of seven sub-bands between 4 and 40~Hz \citep{Ang2012}; all 1,666 features; the top-$k$ features ranked by ANOVA $F$-score ($k = 150$ for the binary task and 200 for the multi-class tasks); the Riemannian tangent-space features; and a combined set of CSP, all features and Riemannian features. Naive Bayes and AdaBoost were left out of the multi-class runs because of their run time. We also tested Riemannian minimum distance to mean (MDM) \citep{Barachant2012}, and a hierarchical model that first predicts action or imagery and then the body part. In every comparison model the scaler, the feature selection, the CSP filters and the tangent-space reference were fitted inside each fold on the training participants only.
+\subsubsection{Classical Comparison Models}\label{subsec:baselinemodels}
 
-\emph{Deep-learning models.} Two neural networks were trained directly on the raw $14 \times 256$ windows. EEGNet \citep{Lawhern2018} used 8 temporal filters with a 64-sample kernel, a depth multiplier of 2, 16 separable filters and a dropout rate of 0.5. The CNN--LSTM used two one-dimensional convolution blocks (32 and 64 filters, each with batch normalisation, pooling and dropout), followed by two LSTM layers of 64 and 32 units \citep{HochreiterSchmidhuber1997} and a small dense layer. Both were trained with the Adam optimiser and a batch size of 64. Early stopping was based on a validation set made up of 15\% of the \emph{training} participants, never the test participants.
+To place the ensemble in context, classical comparison models were evaluated on the same folds, at window level and without subject-wise alignment (Table~\ref{tab:basemodels}). Each of the first six models was trained on five alternative feature sets: (i) filter-bank CSP, with four components in each of seven sub-bands between 4 and 40~Hz, giving 28 features \citep{Ang2012}; (ii) all 1,666 non-covariance features; (iii) the top $k$ features ranked by ANOVA $F$-score, with $k = 150$ for the binary task and $k = 200$ for the multi-class tasks; (iv) the 105 Riemannian tangent-space features; and (v) a combined set of CSP, all features and Riemannian features. Naive Bayes and AdaBoost were run on the binary task only because of their run time. In every comparison model the scaler, the feature selection, the CSP filters and the tangent-space reference were fitted inside each fold on the training participants only.
 
-\emph{CSP added to every classifier.} Because CSP is the classic feature for motor imagery, we also asked whether it improves our own pipeline. In every fold, CSP filters with Ledoit--Wolf regularisation (four components in each of the seven sub-bands) were fitted on the training windows and their mirrored copies. The resulting 28 log-variance features were standardised within each recording and appended to the 1,771 features. Eight classifiers (LR, LDA, SVM, random forest, extra trees, HistGB, AdaBoost and naive Bayes) and the ensemble were then trained with and without these extra features, all with alignment, mirror augmentation and trial averaging.
+\begin{table}[htbp]
+\centering
+\caption{Classical comparison models.}
+\label{tab:basemodels}
+\footnotesize
+\begin{tabular}{@{}p{0.2\linewidth}p{0.27\linewidth}p{0.45\linewidth}@{}}
+\toprule
+\textbf{Model} & \textbf{Parameter values} & \textbf{Meaning of the values} \\
+\midrule
+Support Vector Machine (SVM) \citep{CortesVapnik1995} & RBF kernel, $C = 10$, $\gamma$ = scale & $C$ sets how strongly training errors are penalised; $\gamma$ sets the width of the kernel and is derived from the number and variance of the features. \\ \addlinespace
+Random Forest \citep{Breiman2001} & 300 trees, maximum depth 15 & Trees are grown on bootstrap samples and averaged; limiting the depth to 15 stops individual trees from memorising the training windows. \\ \addlinespace
+HistGB & 200 iterations, depth 5, learning rate 0.05 (binary); 100 iterations, learning rate 0.1 (multi-class) & Same boosting principle as in the ensemble, with fewer iterations for the slower multi-class runs. \\ \addlinespace
+Gaussian Naive Bayes & Default settings & Treats features as independent and normally distributed within each class; a fast, simple baseline. \\ \addlinespace
+AdaBoost & 100 estimators & Builds 100 weak learners in sequence, giving more weight each time to the windows misclassified so far. \\ \addlinespace
+LDA (shrinkage) & As in Table~\ref{tab:models} & Linear baseline on each feature set. \\ \addlinespace
+Riemannian MDM \citep{Barachant2012} & Riemannian mean of each class & Assigns a window to the class whose mean covariance matrix is closest in Riemannian distance; no tuning parameters. \\ \addlinespace
+Hierarchical model & Stage 1: Random Forest (action vs.\ imagery); stage 2: SVM per condition (body part) & Predicts the condition first and then the body part within that condition, giving a twelve-class label. \\
+\botrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Deep-Learning Models}\label{subsec:dl}
+
+Two neural networks were trained directly on the raw $14 \times 256$ windows, normalised with the mean and standard deviation of the training participants (Table~\ref{tab:dlmodels}). Early stopping was based on a validation set formed from 15\% of the training participants, never from the test participants.
+
+\begin{table}[htbp]
+\centering
+\caption{Deep-learning models.}
+\label{tab:dlmodels}
+\footnotesize
+\begin{tabular}{@{}p{0.14\linewidth}p{0.46\linewidth}p{0.32\linewidth}@{}}
+\toprule
+\textbf{Model} & \textbf{Architecture} & \textbf{Training settings} \\
+\midrule
+EEGNet \citep{Lawhern2018} & Temporal convolution with 8 filters (kernel 64 samples); depthwise spatial convolution over the 14 channels with depth multiplier 2; separable convolution with 16 filters (kernel 16); batch normalisation, ELU activation, average pooling and dropout 0.5 after each block & Adam optimiser, batch size 64, up to 100 epochs, early stopping with patience 15 \\ \addlinespace
+CNN--LSTM & Two 1-D convolution blocks with 32 filters (kernel 32, stride 2) and 64 filters (kernel 16), each with batch normalisation, max pooling and dropout 0.3; two LSTM layers with 64 and 32 units \citep{HochreiterSchmidhuber1997}; dense layer of 32 units & Adam optimiser, batch size 64, up to 50 epochs, early stopping with patience 10 \\
+\botrule
+\end{tabular}
+\end{table}
+
+\subsubsection{CSP Features Added to Every Classifier}\label{subsec:cspadd}
+
+Because CSP is the standard feature for motor imagery, we also tested whether it improves the proposed pipeline. In every fold, CSP filters with Ledoit--Wolf regularisation (four components in each of the seven sub-bands) were fitted on the training windows and their mirrored copies. The resulting 28 log-variance features were standardised within each recording and appended to the 1,771 features. Eight classifiers (LR, LDA, SVM, Random Forest, Extra Trees, HistGB, AdaBoost and Naive Bayes) and the ensemble were then trained with and without these extra features, all with alignment, mirror augmentation and trial averaging.
 
 \subsection{Imagery-versus-Imagery (Left versus Right) Task}\label{subsec:lr}
 
@@ -426,15 +475,15 @@ The imagery-versus-imagery binary task asks whether the side of an imagined move
 
 \subsection{Trial-Level Decision and Evaluation}\label{subsec:eval}
 
-\emph{Trial-level decision.} A working BCI makes one decision per task, not one per 2~s window. The 17 window probabilities of a trial are therefore averaged, and the class with the highest mean probability is chosen (Fig.~\ref{fig:eval}c):
+\textbf{Trial-level decision.} A working BCI makes one decision per task, not one per 2~s window. The 17 window probabilities of a trial are therefore averaged, and the class with the highest mean probability is chosen (Fig.~\ref{fig:eval}c):
 \begin{equation}
 \bar{p} = \frac{1}{17} \sum_{w=1}^{17} p_w, \qquad \hat{y} = \arg\max_c \bar{p}_c .
 \end{equation}
 All windows of a trial always belong to the same test fold, so this averaging never mixes training and test data. Window-level accuracy is reported as well.
 
-\emph{Person-wise GroupKFold.} The main results use GroupKFold cross-validation grouped by participant (Fig.~\ref{fig:eval}a). The participants are divided into folds, and each of them is tested exactly once, by a model that never saw any of their data. Five folds were used for the two binary tasks (9--10 test participants per fold) and three folds for the six- and twelve-class tasks (15--16 test participants per fold), so that every class keeps enough training examples. Folds are grouped by person rather than by recording, so a participant with two sessions can never appear on both sides of a split. The neural networks and the hierarchical model used three folds for all tasks.
+\textbf{Person-wise GroupKFold.} The main results use GroupKFold cross-validation grouped by participant (Fig.~\ref{fig:eval}a). The participants are divided into folds, and each of them is tested exactly once, by a model that never saw any of their data. Five folds were used for the two binary tasks (9--10 test participants per fold) and three folds for the six- and twelve-class tasks (15--16 test participants per fold), so that every class keeps enough training examples. Folds are grouped by person rather than by recording, so a participant with two sessions can never appear on both sides of a split. The neural networks and the hierarchical model used three folds for all tasks.
 
-\emph{Leave-one-subject-out (LOSO).} As a stricter check, the ensemble and its four members were also evaluated with leave-one-subject-out validation (Fig.~\ref{fig:eval}b). Each of the 47 participants is held out in turn, and a new model is trained on the other 46, giving 47 folds per task. The label-free steps are unchanged, and the scaler, the classifiers and mirror augmentation use the 46 training participants only. For the imagery-versus-imagery task, SVM, random forest, AdaBoost and naive Bayes were evaluated with LOSO as well.
+\textbf{Leave-one-subject-out (LOSO).} As a stricter check, the ensemble and its four members were also evaluated with leave-one-subject-out validation (Fig.~\ref{fig:eval}b). Each of the 47 participants is held out in turn, and a new model is trained on the other 46, giving 47 folds per task. The label-free steps are unchanged, and the scaler, the classifiers and mirror augmentation use the 46 training participants only. For the imagery-versus-imagery task, SVM, random forest, AdaBoost and naive Bayes were evaluated with LOSO as well.
 
 \begin{figure}[htbp]
 \centering
@@ -443,9 +492,9 @@ All windows of a trial always belong to the same test fold, so this averaging ne
 \label{fig:eval}
 \end{figure}
 
-\emph{Validity checks.} Several further checks were run on the final pipeline. (1) \emph{Label permutation}: the labels were shuffled across trials within each recording and the complete pipeline, including alignment, mirror augmentation, the ensemble and trial averaging, was run again; this was done three times for every task, twenty more times for the binary task, and five times under LOSO (four runs for the binary task and one for the imagery-versus-imagery task). (2) \emph{Reproducibility}: the pipelines were rerun with the same random seed, and the binary pipeline also with three other seeds. (3) \emph{Learning curve}: for the binary task, the same test participants were classified by models trained on 5, 10, 20 and 30 randomly chosen training participants and on all of them. (4) \emph{Nested cross-validation}: inside each outer training set, an inner person-wise cross-validation chose the configuration (no alignment, alignment, or alignment with mirror augmentation; for the imagery-versus-imagery task, standard or imagery-only calibration with or without mirroring) and the classifier, and only that choice was tested on the outer test participants. This removes the optimism that comes from comparing several set-ups on the same test people. (5) \emph{Onset sensitivity}: every detected onset was shifted by $\pm 2$~s and the classification was repeated.
+\textbf{Validity checks.} Several further checks were run on the final pipeline. (1) Label permutation: the labels were shuffled across trials within each recording and the complete pipeline, including alignment, mirror augmentation, the ensemble and trial averaging, was run again; this was done three times for every task, twenty more times for the binary task, and five times under LOSO (four runs for the binary task and one for the imagery-versus-imagery task). (2) Reproducibility: the pipelines were rerun with the same random seed, and the binary pipeline also with three other seeds. (3) Learning curve: for the binary task, the same test participants were classified by models trained on 5, 10, 20 and 30 randomly chosen training participants and on all of them. (4) Nested cross-validation: inside each outer training set, an inner person-wise cross-validation chose the configuration (no alignment, alignment, or alignment with mirror augmentation; for the imagery-versus-imagery task, standard or imagery-only calibration with or without mirroring) and the classifier, and only that choice was tested on the outer test participants. This removes the optimism that comes from comparing several set-ups on the same test people. (5) Onset sensitivity: every detected onset was shifted by $\pm 2$~s and the classification was repeated.
 
-\emph{Metrics.} Accuracy is reported as the number of correctly classified test trials pooled over all folds, and as the mean $\pm$ standard deviation across folds. For the LOSO results we also report balanced accuracy, macro-averaged F1, Cohen's kappa, the accuracy per participant, and the accuracy on the training participants, which shows the gap between fit and generalisation. Chance level is 50\% for the binary tasks, 16.67\% for six classes and 8.33\% for twelve classes. Accuracies were compared with chance using a one-sided binomial test, and paired comparisons between two methods on the same trials used McNemar's test.
+\textbf{Metrics.} Accuracy is reported as the number of correctly classified test trials pooled over all folds, and as the mean $\pm$ standard deviation across folds. For the LOSO results we also report balanced accuracy, macro-averaged F1, Cohen's kappa, the accuracy per participant, and the accuracy on the training participants, which shows the gap between fit and generalisation. Chance level is 50\% for the binary tasks, 16.67\% for six classes and 8.33\% for twelve classes. Accuracies were compared with chance using a one-sided binomial test, and paired comparisons between two methods on the same trials used McNemar's test.
 
 \FloatBarrier
 \section{Results and Discussion}\label{sec:results}

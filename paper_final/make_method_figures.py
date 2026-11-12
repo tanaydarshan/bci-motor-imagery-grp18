@@ -52,7 +52,7 @@ ax.text(0.75, 0.97, '(b) Representation and classification', ha='center', fontsi
 left = [('Raw EEG and motion recordings', 'Emotiv EPOC X, 14 channels, 128 Hz', GREY_L),
         ('Trial onset detection', 'motion sensor, action vs. imagery contrast', ORANGE_L),
         ('Band-pass filtering (4–45 Hz)', 'zero-phase FIR', BLUE_L),
-        ('Trial extraction and rejection', '12 trials per recording; 636 → 476', BLUE_L),
+        ('Trial extraction and rejection', '12 trials per recording; 476 clean trials', BLUE_L),
         ('Per-recording normalisation', 'channel-wise z-score', BLUE_L)]
 right = [('Sliding windows', '2 s length, 0.5 s stride; 8,092 windows', GREEN_L),
          ('Feature extraction', '1,771 spectral, time–frequency, spatial features', GREEN_L),
@@ -69,24 +69,24 @@ arrow(ax, 0.5, ys[0], 0.54, ys[0])
 save(fig, 'fig1_pipeline.png')
 
 # ---------------------------------------------------------------- 2. protocol
-names = ['RA', 'LA', 'RL', 'LL', 'RW', 'LW']
-fig, axes = plt.subplots(2, 1, figsize=(10, 3.6), sharex=True)
-for ax, start, base, title in [(axes[0], 25, False, '(a) Standard session'), (axes[1], 120, True, '(b) Session with resting baseline')]:
-    ax.set_ylim(0, 1); ax.set_yticks([]); ax.spines['left'].set_visible(False)
-    if base:
-        ax.add_patch(Rectangle((0, 0.15), 50, 0.7, fc='#CFE8D5', ec=EDGE, lw=0.8))
-        ax.text(25, 0.5, 'eyes open', ha='center', va='center', fontsize=9)
-        ax.add_patch(Rectangle((55, 0.15), 50, 0.7, fc='#B9D1E8', ec=EDGE, lw=0.8))
-        ax.text(80, 0.5, 'eyes closed', ha='center', va='center', fontsize=9)
-    for k in range(12):
-        t0 = start + 15 * k
-        c = ACT if k % 2 == 0 else IMG
-        ax.add_patch(Rectangle((t0, 0.15), 10, 0.7, fc=c, ec=EDGE, lw=0.6, alpha=0.9))
-        ax.text(t0 + 5, 0.5, f'{names[k // 2]}-{"AI"[k % 2]}', ha='center', va='center', fontsize=7.5, rotation=90, color='white')
-    ax.set_title(title, loc='left', fontsize=10.5)
-axes[1].set_xlim(0, 300); axes[1].set_xlabel('Time from start of recording (s)')
-axes[0].legend(handles=[Rectangle((0, 0), 1, 1, fc=ACT), Rectangle((0, 0), 1, 1, fc=IMG)],
-               labels=['Action (10 s)', 'Imagery (10 s)'], loc='upper right', ncol=2, frameon=False, fontsize=9)
+names = ['Right arm', 'Left arm', 'Right leg', 'Left leg', 'Right wrist', 'Left wrist']
+fig, ax = plt.subplots(figsize=(10.5, 2.9))
+ax.set_ylim(-0.55, 1.25); ax.set_yticks([]); ax.spines['left'].set_visible(False)
+for k in range(12):
+    t0 = 15 * k
+    ax.add_patch(Rectangle((t0, 0.1), 10, 0.75, fc=ACT if k % 2 == 0 else IMG, ec=EDGE, lw=0.6))
+    ax.text(t0 + 5, 0.475, 'A' if k % 2 == 0 else 'I', ha='center', va='center', fontsize=10, color='white', weight='bold')
+    if k < 11: ax.add_patch(Rectangle((t0 + 10, 0.1), 5, 0.75, fc='#F2F2F2', ec='#BBBBBB', lw=0.5))
+for j, nm in enumerate(names):
+    ax.annotate('', xy=(30 * j + 25, 1.0), xytext=(30 * j, 1.0), arrowprops=dict(arrowstyle='-', lw=1, color='#555555'))
+    ax.text(30 * j + 12.5, 1.08, nm, ha='center', fontsize=9.5)
+ax.annotate('', xy=(10, -0.2), xytext=(0, -0.2), arrowprops=dict(arrowstyle='<->', lw=0.9))
+ax.text(5, -0.42, 'task 10 s', ha='center', fontsize=8.5)
+ax.annotate('', xy=(15, -0.2), xytext=(10, -0.2), arrowprops=dict(arrowstyle='<->', lw=0.9))
+ax.text(12.5, -0.42, 'rest 5 s', ha='center', fontsize=8.5, color='#555555')
+ax.set_xlim(-2, 177); ax.set_xticks(range(0, 180, 15)); ax.set_xlabel('Time from the start of the first task (s)')
+ax.legend(handles=[Rectangle((0, 0), 1, 1, fc=ACT), Rectangle((0, 0), 1, 1, fc=IMG), Rectangle((0, 0), 1, 1, fc='#F2F2F2', ec='#BBBBBB')],
+          labels=['Action (A)', 'Imagery (I)', 'Rest'], loc='upper center', bbox_to_anchor=(0.5, -0.38), ncol=3, frameon=False, fontsize=9.5)
 fig.tight_layout(); save(fig, 'fig2_protocol.png')
 
 # ---------------------------------------------------------------- 3. onset detection (real recording)
@@ -134,15 +134,14 @@ print('onset example:', rec.recording.split('/')[0], rec.onset_s, round(rec.t_st
 
 # ---------------------------------------------------------------- 4. cleaning
 fig, ax = blank((10, 4.2))
-top = [(0.1, 'Raw EEG', '53 recordings', GREY_L), (0.3, 'Band-pass', '4–45 Hz FIR', BLUE_L), (0.5, 'Epoching', '636 trials', BLUE_L)]
+top = [(0.1, 'Raw EEG', '14 channels, 128 Hz', GREY_L), (0.3, 'Band-pass', '4–45 Hz FIR', BLUE_L), (0.5, 'Epoching', '12 trials per recording', BLUE_L)]
 for x, t, s, c in top: box(ax, x, 0.78, 0.15, 0.2, t, s, fc=c)
 for i in range(2): arrow(ax, top[i][0] + 0.075, 0.78, top[i + 1][0] - 0.075, 0.78)
 ax.add_patch(FancyBboxPatch((0.64, 0.6), 0.33, 0.36, boxstyle='round,pad=0.012,rounding_size=0.025', fc=ROSE_L, ec=EDGE, lw=1.1))
 ax.text(0.805, 0.9, 'Trial rejection (any condition)', ha='center', fontsize=11, weight='bold')
-for j, s in enumerate(['(i) flat signal, $\\sigma = 0$', '(ii) max$|x| \\geq$ 150 $\\mu$V   (158 trials)', '(iii) mean |kurtosis| $\\geq$ 10   (29 trials)']):
+for j, s in enumerate(['(i) flat signal, $\\sigma = 0$', '(ii) max$|x| \\geq$ 150 $\\mu$V', '(iii) mean |kurtosis| $\\geq$ 10']):
     ax.text(0.66, 0.82 - 0.075 * j, s, fontsize=10)
 arrow(ax, 0.575, 0.78, 0.64, 0.78)
-ax.text(0.805, 0.53, '160 trials rejected (27 by both rules)', ha='center', fontsize=10, style='italic', color='#9B2C2C')
 arrow(ax, 0.805, 0.5, 0.805, 0.33)
 bot = [(0.805, 'Clean trials', '476 trials, 47 participants', GREEN_L), (0.5, 'Per-recording z-score', r'$\hat{x} = (x-\mu_{r,c})/\sigma_{r,c}$', BLUE_L),
        (0.17, 'Normalised data', r'476 $\times$ 14 $\times$ 1280', GREY_L)]
