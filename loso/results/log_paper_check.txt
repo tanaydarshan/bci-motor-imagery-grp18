@@ -1,0 +1,2 @@
+bin mirror {'correct': 382, 'n': 476, 'pooled': 80.25210084033614, 'fold_mean': np.float64(80.18604466584316), 'fold_sd': np.float64(6.593945260136272), 'window_mean': np.float64(68.53499471214583), 'window_sd': np.float64(3.5853275537729776)} 6190s
+6 mirror {'correct': 127, 'n': 476, 'pooled': 26.680672268907564, 'fold_mean': np.float64(26.682692307692307), 'fold_sd': np.float64(1.7941562218278175), 'window_mean': np.float64(21.01212921065862), 'window_sd': np.float64(0.42381016841785124)} 8290s
