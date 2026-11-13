@@ -94,6 +94,7 @@ if part == 'families':
            'Handcrafted': Xa[:, o[0]:o[1]], 'All': Xa}
     for t, (y, k) in {'bin': (G['yw_bin'], 5), '6': (G['yw_body'], 3), '12': (G['yw_multi'], 3)}.items():
         for f, X in fam.items():
+            if f'family_{f}_{t}' in res: continue  # already computed before a restart
             r, _ = cv(G, X, y, k); res[f'family_{f}_{t}'] = r['Ensemble']; save()
             print('family', f, t, r['Ensemble']['correct'], flush=True)
     print('DONE families', flush=True)
