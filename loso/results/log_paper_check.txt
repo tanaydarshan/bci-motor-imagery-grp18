@@ -13,3 +13,5 @@ family STFT+CWT 6 100
 family Handcrafted 6 114
 family All 6 122
 family STFT 12 71
+family CWT 12 93
+family STFT+CWT 12 99
