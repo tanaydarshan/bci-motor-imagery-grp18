@@ -21,3 +21,8 @@ DONE families
 onset -2.0 bin 361 / 474
 onset -2.0 6 128 / 474
 onset 2.0 bin 355 / 468
+onset 2.0 6 117 / 468
+onset 0 bin 377 / 476
+onset 0 6 128 / 476
+DONE onset
+VERIFY_DONE
