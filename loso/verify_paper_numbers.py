@@ -102,11 +102,13 @@ if part == 'families':
 if part == 'onset':
     from pyriemann.estimation import Covariances
     for shift in (-2.0, 2.0):
+        if all(f'onset_{shift:+.0f}_{t}' in res for t in ('bin', '6')): continue  # done before a restart
         G = load(shift)
         # fast families as in the original check: spectrogram, scalogram, connectivity, covariance (aligned), no mirror
         n = [G['X_feat'].shape[1], G['X_spectro'].shape[1], G['X_scalo'].shape[1], G['X_conn'].shape[1]]
         X = G['X_final'][:, n[0]:]
         for t, (y, k) in {'bin': (G['yw_bin'], 5), '6': (G['yw_body'], 3)}.items():
+            if f'onset_{shift:+.0f}_{t}' in res: continue
             r, _ = cv(G, X, y, k); res[f'onset_{shift:+.0f}_{t}'] = r['Ensemble']; save()
             print('onset', shift, t, r['Ensemble']['correct'], '/', r['Ensemble']['n'], flush=True)
     G = load(0.0)
