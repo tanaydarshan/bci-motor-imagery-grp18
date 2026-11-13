@@ -11,3 +11,9 @@
   person 11/47 done in 1332s, Ensemble running 33/111 = 29.73%
   person 12/47 done in 1354s, Ensemble running 38/130 = 29.23%
   person 13/47 done in 1348s, Ensemble running 40/137 = 29.20%
+  person 14/47 done in 1364s, Ensemble running 47/160 = 29.38%
+  person 15/47 done in 1353s, Ensemble running 50/172 = 29.07%
+  person 16/47 done in 1358s, Ensemble running 52/181 = 28.73%
+  person 17/47 done in 1300s, Ensemble running 53/187 = 28.34%
+  person 18/47 done in 1374s, Ensemble running 57/198 = 28.79%
+  person 19/47 done in 1401s, Ensemble running 58/202 = 28.71%
