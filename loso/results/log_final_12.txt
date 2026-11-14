@@ -35,3 +35,6 @@
   person 35/47 done in 2560s, Ensemble running 90/353 = 25.50%
   person 36/47 done in 2505s, Ensemble running 93/375 = 24.80%
   person 37/47 done in 2453s, Ensemble running 95/385 = 24.68%
+  person 38/47 done in 2438s, Ensemble running 96/396 = 24.24%
+  person 39/47 done in 2440s, Ensemble running 98/405 = 24.20%
+  person 40/47 done in 2354s, Ensemble running 98/411 = 23.84%
