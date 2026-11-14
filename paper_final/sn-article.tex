@@ -1,0 +1,880 @@
+%Version 3.1 December 2024
+% See section 11 of the User Manual for version history
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                                 %%
+%% Please do not use \input{...} to include other tex files.       %%
+%% Submit your LaTeX manuscript as one .tex document.              %%
+%%                                                                 %%
+%% All additional figures and files should be attached             %%
+%% separately and not embedded in the \TeX\ document itself.       %%
+%%                                                                 %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%\documentclass[referee,sn-basic]{sn-jnl}% referee option is meant for double line spacing
+
+%%=======================================================%%
+%% to print line numbers in the margin use lineno option %%
+%%=======================================================%%
+
+%%\documentclass[lineno,pdflatex,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
+
+%%=========================================================================================%%
+%% the documentclass is set to pdflatex as default. You can delete it if not appropriate.  %%
+%%=========================================================================================%%
+
+%%\documentclass[sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
+
+%%Note: the following reference styles support Namedate and Numbered referencing. By default the style follows the most common style. To switch between the options you can add or remove Numbered in the optional parenthesis. 
+%%The option is available for: sn-basic.bst, sn-chicago.bst%  
+ 
+%%\documentclass[pdflatex,sn-nature]{sn-jnl}% Style for submissions to Nature Portfolio journals
+%%\documentclass[pdflatex,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
+\documentclass[pdflatex,sn-mathphys-num]{sn-jnl}% Math and Physical Sciences Numbered Reference Style
+%%\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}% Math and Physical Sciences Author Year Reference Style
+%%\documentclass[pdflatex,sn-aps]{sn-jnl}% American Physical Society (APS) Reference Style
+%%\documentclass[pdflatex,sn-vancouver-num]{sn-jnl}% Vancouver Numbered Reference Style
+%%\documentclass[pdflatex,sn-vancouver-ay]{sn-jnl}% Vancouver Author Year Reference Style
+%%\documentclass[pdflatex,sn-apa]{sn-jnl}% APA Reference Style
+%%\documentclass[pdflatex,sn-chicago]{sn-jnl}% Chicago-based Humanities Reference Style
+
+%%%% Standard Packages
+%%<additional latex packages if required can be included here>
+
+\usepackage{graphicx}%
+\usepackage{multirow}%
+\usepackage{amsmath,amssymb,amsfonts}%
+\usepackage{amsthm}%
+\usepackage{mathrsfs}%
+\usepackage[title]{appendix}%
+\usepackage{xcolor}%
+\usepackage{textcomp}%
+\usepackage{manyfoot}%
+\usepackage{booktabs}%
+\usepackage{algorithm}%
+\usepackage{algorithmicx}%
+\usepackage{algpseudocode}%
+\usepackage{listings}%
+\usepackage{placeins}
+
+%%%%
+
+%%%%%=============================================================================%%%%
+%%%%  Remarks: This template is provided to aid authors with the preparation
+%%%%  of original research articles intended for submission to journals published 
+%%%%  by Springer Nature. The guidance has been prepared in partnership with 
+%%%%  production teams to conform to Springer Nature technical requirements. 
+%%%%  Editorial and presentation requirements differ among journal portfolios and 
+%%%%  research disciplines. You may find sections in this template are irrelevant 
+%%%%  to your work and are empowered to omit any such section if allowed by the 
+%%%%  journal you intend to submit to. The submission guidelines and policies 
+%%%%  of the journal take precedence. A detailed User Manual is available in the 
+%%%%  template package for technical guidance.
+%%%%%=============================================================================%%%%
+
+%% as per the requirement new theorem styles can be included as shown below
+\theoremstyle{thmstyleone}%
+\newtheorem{theorem}{Theorem}%  meant for continuous numbers
+%%\newtheorem{theorem}{Theorem}[section]% meant for sectionwise numbers
+%% optional argument [theorem] produces theorem numbering sequence instead of independent numbers for Proposition
+\newtheorem{proposition}[theorem]{Proposition}% 
+%%\newtheorem{proposition}{Proposition}% to get separate numbers for theorem and proposition etc.
+
+\theoremstyle{thmstyletwo}%
+\newtheorem{example}{Example}%
+\newtheorem{remark}{Remark}%
+
+\theoremstyle{thmstylethree}%
+\newtheorem{definition}{Definition}%
+
+\raggedbottom
+%%\unnumbered% uncomment this for unnumbered level heads
+
+\begin{document}
+
+\title[EEG Motor Action and Motor Imagery Classification]{EEG-Based Motor Action and Motor Imagery Classification Using Machine Learning}
+
+\author[1]{\fnm{Harsada} \sur{K}}\email{cb.ai.u4aid24019@cb.students.amrita.edu}
+\author[1]{\fnm{V} \sur{Tanay Darshan}}\email{cb.ai.u4aid24059@cb.students.amrita.edu}
+\author[1]{\fnm{K} \sur{Nikhitha}}\email{cb.ai.u4aid24042@cb.students.amrita.edu}
+\author[1]{\fnm{S Sai} \sur{Tejesh Reddy}}\email{cb.ai.u4aid24057@cb.students.amrita.edu}
+\author*[1]{\fnm{Abhishek} \sur{S}}\email{s\_abhishek@cb.amrita.edu}
+
+\affil*[1]{\orgdiv{Amrita School of Artificial Intelligence, Coimbatore}\\ \orgname{Amrita Vishwa Vidyapeetham}, \country{India}}
+
+\abstract{This work presents an EEG-based classification framework for distinguishing motor actions and motor imagery using a consumer-grade Emotiv EPOC X headset. EEG recordings were collected from 47 participants using 14 channels sampled at 128~Hz while participants performed or imagined six limb movements involving the right and left arms, legs, and wrists. The resulting protocol formed twelve task classes by combining the body part with the action or imagery condition. The raw EDF recordings were processed using MNE-Python, including channel selection, 4--45~Hz band-pass filtering, signal-quality based trial rejection, per-recording normalisation and sliding-window segmentation. Each 10-second task segment was divided into 2-second windows with a 0.5-second stride, producing 8,092 windows from 476 trials. A heterogeneous representation of 1,771 features per window was then constructed using spectral, statistical, Hjorth, fractal and wavelet descriptors, together with spectrogram, scalogram, inter-hemispheric connectivity and Riemannian tangent-space features. An ensemble of Logistic Regression, Linear Discriminant Analysis, Extra Trees and Histogram Gradient Boosting was used as the main classifier, and Support Vector Machine, Random Forest, Naive Bayes, AdaBoost, EEGNet and CNN--LSTM models were evaluated for comparison. Subject-level GroupKFold validation was used to prevent windows from the same participant appearing in both training and evaluation folds. The ensemble achieved 80.25\% for binary action-versus-imagery classification, 26.68\% for six-class body-part classification and 21.43\% for the full twelve-class task, while left-versus-right imagery classification reached 52.28\% under nested cross-validation. The results show that combining complementary time--frequency, covariance-based and signal-derived features provides a strong baseline for subject-independent decoding of real versus imagined movement from low-cost EEG, while limb-level and side-level decoding remain challenging.}
+
+\keywords{Electroencephalography (EEG), Brain--Computer Interface, Motor Imagery, Motor Action, Spectrogram, Scalogram, Riemannian Geometry, Machine Learning, Emotiv EPOC X}
+
+\maketitle
+
+%% ===================================================================
+\section{Introduction}\label{sec1}
+
+Brain--computer interfaces (BCIs) give the brain a channel to a computer that does not pass through muscles. They record brain activity, look for patterns that match an intention, and turn those patterns into a command. Motor applications are where this matters most. A person who has lost control of a limb after a stroke or a spinal injury can often still produce the cortical activity that would normally drive the movement, and a BCI that reads this activity could steer a wheelchair, open a prosthetic hand or guide a rehabilitation robot. Most such systems use electroencephalography (EEG). It is non-invasive and cheap compared with other recording methods, it follows brain activity on the scale of milliseconds, and it can be recorded with equipment small enough to carry \citep{Wolpaw2002,NicolasAlonso2012}.
+
+Two related mental states are central to this work. In motor execution, or \emph{action}, the person really makes the movement. In motor imagery, the same movement is rehearsed in the mind while the body stays still. The two are not the same, but they share much of their neural machinery. Both reduce the power of the sensorimotor rhythms over the motor cortex, mostly in the mu band (8--12~Hz) and the beta band (13--30~Hz), and this drop, known as event-related desynchronisation, is the signal that most motor-imagery BCIs rely on \citep{Pfurtscheller2001,PfurtschellerAranibar1977}.
+
+Much of the early work kept the problem small. The classic task is to tell imagined left-hand movement from imagined right-hand movement, and Common Spatial Pattern (CSP) filters followed by linear discriminant analysis or a support vector machine became the standard way to solve it \citep{Ramoser2000,Blankertz2008}. Adding more classes makes things far harder. The cortical areas for the hand, the wrist and the leg lie close together, the skull spreads their activity across the scalp, and the EEG of one person can look quite unlike that of the next \citep{Naeem2006,Lotte2018}. A model that works well for the people it was trained on can therefore fail on someone new.
+
+The recording hardware adds its own limits. Clinical EEG amplifiers give clean signals, but they are expensive, slow to set up and rarely leave the laboratory. Consumer headsets such as the Emotiv EPOC are cheap, quick to put on and comfortable enough for everyday use, and studies have shown that they capture real neural activity \citep{Badcock2013,Duvinage2013}. They are also noisier, more sensitive to movement and limited in where they place their electrodes \citep{Maskeliunas2016}. The EPOC X used here has fourteen saline electrodes, none of which sits over the central motor strip (C3, Cz and C4), which is where motor activity is usually strongest.
+
+Researchers have tried many ways of turning short EEG segments into something a classifier can use. Band-power and statistical features summarise each channel. Spectrograms and scalograms keep track of how the rhythms change over time. Riemannian methods describe a trial by the covariance between its channels and work directly with the geometry of these matrices \citep{Barachant2012,Congedo2017}. Deep networks such as EEGNet learn their own features from the raw signal \citep{Schirrmeister2017,Lawhern2018}. Each of these views captures something the others miss, so combining them is a natural step, particularly when the dataset is too small for a deep network to learn everything on its own.
+
+How a model is evaluated matters as much as the model itself. EEG windows cut from the same recording are strongly correlated, so if windows of one person appear in both the training and the test set, the classifier can learn to recognise the person instead of the task. An early version of our own pipeline fell into exactly this trap and reported accuracies above 90\%, which dropped sharply once the evaluation was corrected. For a BCI that has to work for new users, the only fair test is one in which the people being tested were never seen during training.
+
+In this study we built a complete classification pipeline around the Emotiv EPOC X and a twelve-task protocol. Participants performed and then imagined six movements: right-arm and left-arm flexion, right-leg and left-leg lifting, and right-wrist and left-wrist rotation. We analysed the same recordings at three levels of detail: action versus imagery (two classes), the body part involved (six classes), and the exact task (twelve classes). At our guide's suggestion we also asked whether the side of an imagined movement, left or right, can be decoded. Along the way we found that the task schedule did not start at a fixed time in every recording, and we recovered the true start from the headset's own motion sensor before cutting any trials. Every result we report comes from people the model had not seen during training.
+
+The main contributions of this work are as follows:
+
+\begin{enumerate}
+\item \textbf{A new twelve-task EEG dataset of real and imagined limb movements.} We recorded 47 participants with a consumer-grade 14-channel Emotiv EPOC X while each of six movements (right and left arm, leg and wrist) was first performed and then imagined.
+
+\item \textbf{Subject-independent decoding of executed versus imagined movement from consumer-grade EEG.} We show that real and imagined movement can be told apart in people the model has never seen, at 80.25\% with a 14-channel consumer headset. The result holds under person-wise cross-validation, leave-one-subject-out validation (80.25\%) and nested cross-validation (79.41\%).
+
+\item \textbf{Classification of the same recordings at several levels of detail.} Every trial is classified in three ways: action or imagery (2 classes), the body part that was moved or imagined (6 classes), and the exact task, meaning body part and condition together (12 classes). In addition, an imagery-versus-imagery binary task uses only the imagery trials and asks whether the imagined movement was on the left or the right side of the body. Because all of these use the same trials, they show directly how accuracy falls as the question becomes more specific: 80.25\% for action versus imagery, 26.68\% for body part (chance 16.67\%), 21.43\% for the twelve tasks (chance 8.33\%), and 52.28\% for the imagery-versus-imagery (left versus right) task.
+
+\item \textbf{A controlled comparison of feature representations and classifiers under one subject-independent protocol.} On identical folds we compare handcrafted, spectrogram, scalogram, connectivity, CSP and Riemannian features, and classical, ensemble and deep-learning models. The Morlet scalogram is consistently more informative than the STFT spectrogram, adding CSP features to each classifier changes accuracy by less than two points, and deep networks (EEGNet, CNN--LSTM) do not outperform feature-based models on a dataset of this size.
+\end{enumerate}
+
+The rest of the paper is organised as follows. Section~\ref{sec:related} reviews related work. Section~\ref{sec:methods} describes the protocol, data acquisition, preprocessing, feature extraction, classifiers and evaluation. Section~\ref{sec:results} presents and discusses the results, and Section~\ref{sec:conclusion} concludes the paper.
+
+%% SECTIONS-BELOW
+\section{Literature Review}\label{sec:related}
+
+Decoding movement from scalp EEG has been studied for several decades, and the main obstacle has always been the same: the signal is weak, noisy and different from one person to the next. The physiological basis of almost all motor decoding is a change in the sensorimotor rhythms. When a person moves, or prepares to move, the power of the mu rhythm (8--12~Hz) and the beta rhythm (13--30~Hz) over the motor cortex falls, and it rises again, often above its resting level, once the movement ends. These two effects are called event-related desynchronisation and synchronisation (ERD/ERS) \citep{PfurtschellerAranibar1977,PfurtschellerLopes1999}. Neuper and Pfurtscheller showed that their frequency, timing and location depend on the body part involved, which is what makes it possible, in principle, to tell one movement from another \citep{Neuper2001}.
+
+Motor imagery produces a similar pattern without any overt movement. Studies of the neural basis of imagery have found that imagining an action engages much of the same motor network as performing it, although usually more weakly \citep{Munzert2009}. This overlap is why imagery can drive a BCI, but it also means that action and imagery are not trivially separable. Pfurtscheller et al.\ found that imagined hand movements desynchronise the hand-area mu rhythm, whereas imagined foot or tongue movements enhance it in most people, and that combining both patterns improves single-trial classification of the four tasks \citep{Pfurtscheller2006}. Most BCI work has concentrated on imagery alone. Distinguishing real from imagined movement, which matters for rehabilitation systems that must know whether a patient is trying to move or only thinking about it, has received far less attention.
+
+Common Spatial Pattern (CSP) filtering is probably the most influential single method in the field. Ramoser et al.\ showed that spatial filters which maximise the difference in variance between two classes give strong results for imagined left- and right-hand movement \citep{Ramoser2000}. Blankertz et al.\ later explained why plain CSP is fragile when the data are noisy or the training set is small, and how regularised variants make it more stable \citep{Blankertz2008}. Filter-bank CSP (FBCSP) added the observation that the most useful frequency band differs from person to person, so it runs CSP in several sub-bands and keeps the most informative features \citep{Ang2012}. FBCSP won the four-class and two-class motor imagery tasks of BCI Competition IV and is still one of the standard baselines \citep{Tangermann2012}.
+
+Covariance-based methods grew out of the limits of spatial filtering. Barachant et al.\ treated the covariance matrix of each trial as a point on the manifold of symmetric positive-definite matrices and classified trials by their Riemannian distance to the mean of each class \citep{Barachant2012}. Projecting the matrices onto a tangent space turns them into ordinary vectors that standard classifiers can use, while keeping the relationships between channels. Congedo et al.\ reviewed this family of methods and argued that they are both simpler and more robust than many earlier pipelines, especially for multi-class problems \citep{Congedo2017}.
+
+Time--frequency analysis looks at the same signals from another angle. ERD/ERS unfolds over time, so averaging power over a whole window can hide part of it. The short-time Fourier transform (STFT) produces a spectrogram that shows how band power changes during a trial, and Tabar and Halici used STFT images of motor-imagery EEG as the input to a convolutional network \citep{Tabar2017}. The continuous wavelet transform (CWT) produces a scalogram instead. It analyses high frequencies with short windows and low frequencies with long ones, which suits signals whose rhythms come and go \citep{Torrence1998}. Simpler descriptors remain widely used as well: band power in fixed frequency bands \citep{Lotte2014}, the Hjorth parameters, which summarise the activity, mobility and complexity of a signal \citep{Hjorth1970}, and fractal measures of how irregular the signal is \citep{Higuchi1988}.
+
+Deep learning is a further major direction. Schirrmeister et al.\ showed that convolutional networks trained on raw EEG can match FBCSP (mean accuracy 84.0\% against 82.1\%), and visualised what the networks had learned \citep{Schirrmeister2017}. Sakhavi et al.\ fed a temporal representation of filter-bank envelopes into a CNN to capture how the signal evolves within a trial \citep{Sakhavi2018}. EEGNet showed that a compact network built from depthwise and separable convolutions can work across several BCI paradigms with very few parameters \citep{Lawhern2018}. Reviews of deep learning for EEG, however, note that its advantage over well-designed classical pipelines is often small and uneven, particularly when the number of participants is limited \citep{Roy2019,Craik2019,Altaheri2023}.
+
+Generalising to people who were not in the training set is still one of the hardest problems. The EEG of different people differs in amplitude, in the exact position of the electrodes and in how each person carries out the task, so a classifier trained on one group often performs poorly on another \citep{Lotte2018}. Alignment methods reduce this shift by re-centring each person's data before classification, either in Euclidean space \citep{He2020} or on the Riemannian manifold \citep{Zanini2018,Zhang2020}. The MOABB benchmark compared many algorithms on many public datasets and showed how strongly the ranking of methods can change from one dataset to the next, which argues for testing under realistic, subject-independent conditions rather than reporting a single favourable split \citep{Jayaram2018}.
+
+Consumer-grade EEG lowers the cost of all this but adds problems of its own. Badcock et al.\ compared the Emotiv EPOC with a research system and found that it captured auditory event-related potentials of usable quality \citep{Badcock2013}. Duvinage et al.\ found it workable for a P300 speller, though clearly less accurate than a medical-grade amplifier \citep{Duvinage2013}, and Maskeli\={u}nas et al.\ reported high variability between trials when consumer headsets were used for control tasks \citep{Maskeliunas2016}. Motor-imagery BCIs have nevertheless reached clinical use; Ang et al., for example, combined CSP-based imagery detection with robotic feedback in a randomised trial of stroke rehabilitation \citep{Ang2015}.
+
+Taken together, these studies leave a clear gap. Most motor-imagery work uses research-grade amplifiers, public benchmark datasets and two or four imagery classes. Far fewer studies separate real from imagined movement, compare several levels of detail on the same recordings, or test consumer hardware under strictly subject-independent evaluation. Our study addresses this gap. Table~\ref{tab:litreview} summarises the representative studies discussed above.
+
+\begin{table*}[t]
+\centering
+\caption{Comparison of representative studies on EEG-based motor imagery and motor-related classification. N/R: not reported in a directly comparable form.}
+\label{tab:litreview}
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{@{}p{0.06\linewidth}p{0.15\linewidth}p{0.13\linewidth}p{0.17\linewidth}p{0.12\linewidth}p{0.12\linewidth}p{0.16\linewidth}@{}}
+\toprule
+Ref. & Task / Classes & Dataset / Hardware & Features / Representation & Model & Accuracy & Main Limitation \\
+\midrule
+\cite{Ramoser2000} & Left vs.\ right hand MI (2-class) & Research EEG, 3 subjects & CSP + log-variance & N/R & 90.8--99.7\% (best, per subject) & Restricted to binary MI \\ \addlinespace
+\cite{Pfurtscheller2006} & Left hand, right hand, foot, tongue MI (4-class) & 60-ch EEG, 9 subjects & Mu-band ERD/ERS patterns & Single-trial classifier & N/R & Imagery only \\ \addlinespace
+\cite{Naeem2006} & Left hand, right hand, foot, tongue MI (4-class) & 22-ch EEG, 8 subjects & ICA (Infomax, FastICA, SOBI) vs.\ CSP & N/R & 33--84\% (best, CSP) & Large differences between subjects \\ \addlinespace
+\cite{Ang2012} & Motor imagery (4-class 2a; 2-class 2b) & BCI Competition IV-2a, 2b & Filter-bank CSP + feature selection & Naive Bayes & $\kappa$ = 0.569 (2a), 0.600 (2b) & Many frequency/filter parameters \\ \addlinespace
+\cite{Barachant2012} & Multi-class MI & Research EEG & Covariance matrices + Riemannian geometry & MDM / tangent-space classifier & N/R & Costly covariance operations \\ \addlinespace
+\cite{Tabar2017} & Motor imagery (2-class) & BCI Competition IV-2b & Time--frequency images & CNN + stacked autoencoder & $\kappa$ = 0.547 & Complex, data-sensitive training \\ \addlinespace
+\cite{Schirrmeister2017} & Executed and imagined movement & BCI Competition IV-2a and a high-gamma dataset & Learned spatio-temporal features & Deep / Shallow ConvNet & 84.0\% (mean; FBCSP 82.1\%) & Data-hungry, less interpretable \\ \addlinespace
+\cite{Sakhavi2018} & Motor imagery (4-class) & BCI Competition IV-2a & Temporal filter-bank representation & CNN & +7\% over prior best & More complex architecture \\ \addlinespace
+\cite{Lawhern2018} & Several BCI paradigms & Public EEG datasets & Depthwise and separable convolutions & EEGNet & N/R & Needs enough training data \\ \addlinespace
+\cite{He2020} & Cross-subject MI/ERP & Public EEG datasets & Euclidean alignment of covariance & Various classifiers & N/R & Assumes a moderate covariance shift \\ \addlinespace
+\cite{Zanini2018} & Cross-subject MI & Public EEG datasets & Riemannian re-centring of covariances & MDM & N/R & Needs unlabelled data of the new subject \\ \addlinespace
+\cite{Zhang2020} & Cross-subject EEG & Four EEG datasets & Riemannian alignment + tangent space & MEKT & N/R & Needs source/target adaptation \\ \addlinespace
+\cite{Badcock2013} & EEG signal validation & Emotiv EPOC vs.\ Neuroscan, 21 adults & Auditory event-related potentials & ERP analysis & N/R & Only late ERPs reliable; MMN noisy \\ \addlinespace
+\cite{Maskeliunas2016} & Concentration / blink control & Emotiv EPOC, NeuroSky, 10 subjects & Attention, meditation and blink signals & Statistical analysis & $>$75\% blink recognition (EPOC) & High variability of attention data \\ \addlinespace
+\cite{Ang2015} & MI-based stroke rehabilitation & Stroke patients & CSP-based MI features & BCI + robotic feedback & N/R & Small clinical cohort \\ \addlinespace
+\textbf{Our work} & Action vs.\ imagery (2), body part (6), twelve tasks (12), imagery vs.\ imagery left/right (2) & Emotiv EPOC X (14-ch, 128 Hz), 47 participants & 1,771 features: handcrafted + STFT + CWT + connectivity + Riemannian & Ensemble (LR + LDA + Extra Trees + HistGB), mirror augmentation, trial-level voting & 80.25\% (2-class); 26.68\% (6-class); 21.43\% (12-class); 52.28\% (imagery L/R, nested CV) & Consumer EEG with no central electrodes; limb and side remain hard to decode \\
+\botrule
+\end{tabular}
+\end{table*}
+\FloatBarrier
+
+\section{Proposed Methodology}\label{sec:methods}
+
+\subsection{System Overview}\label{subsec:overview}
+
+The system takes the raw files produced by the headset and returns one label for every 10~s task. It works in two stages (Fig.~\ref{fig:pipeline}). The first stage, signal preparation, turns a continuous recording into clean, labelled trials: it finds where the task schedule starts, filters the EEG, cuts out the twelve trials, removes the ones spoiled by artefacts and normalises what is left. The second stage, representation and classification, splits each trial into short overlapping windows, describes every window with spectral, time--frequency, connectivity and covariance features, aligns these features within each recording and classifies the window with an ensemble of four models. The predictions for the windows of a trial are then averaged into one decision. Throughout the pipeline, no participant's data are ever used for both training and testing.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.88\textwidth]{figures/fig1_pipeline.png}
+\caption{Overview of the proposed pipeline.}
+\label{fig:pipeline}
+\end{figure}
+
+\subsection{Experimental Protocol}\label{subsec:protocol}
+
+The protocol comprised six limb movements: right-arm flexion, left-arm flexion, right-leg lifting, left-leg lifting, right-wrist rotation and left-wrist rotation. Each movement was performed twice in succession, first as an overt movement (\textbf{action}) and then as a mental rehearsal of the same movement without any muscle activity (\textbf{imagery}). This produced twelve task conditions, presented in the following fixed order:
+
+\noindent\begin{minipage}{\linewidth}
+\begin{verbatim}
+RightArm_Action    RightArm_Imagine
+LeftArm_Action     LeftArm_Imagine
+RightLeg_Action    RightLeg_Imagine
+LeftLeg_Action     LeftLeg_Imagine
+RightWrist_Action  RightWrist_Imagine
+LeftWrist_Action   LeftWrist_Imagine
+\end{verbatim}
+\end{minipage}
+
+\noindent Each task lasted 10~s and was followed by a 5~s rest interval, during which a fixation cross was displayed, so the complete schedule spanned 175~s (Fig.~\ref{fig:protocol}). Participants were instructed to keep their eyes open, to follow the cue displayed on the screen, and to avoid unnecessary movement and speech throughout the session. Three labels were assigned to every trial: the task (twelve classes), the condition, action or imagery (two classes), and the body part (six classes).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig2_protocol.png}
+\caption{Timeline of the twelve-task protocol (A = action, I = imagery).}
+\label{fig:protocol}
+\end{figure}
+
+\subsection{Data Acquisition}\label{subsec:acquisition}
+
+EEG was recorded with a 14-channel Emotiv EPOC X fitted with saline-soaked felt electrodes at AF3, AF4, F3, F4, F7, F8, FC5, FC6, T7, T8, P7, P8, O1 and O2, placed according to the international 10--20 system, with the headset's CMS/DRL reference. The signals were sampled at 128~Hz and saved in EDF format by the EmotivPRO software. For every session EmotivPRO also saves a second file from the headset's built-in inertial sensor, which holds three accelerometer axes and four quaternion (orientation) components sampled at 32~Hz. We never used this motion file as a classification input; it served only to locate the task schedule (Section~\ref{subsec:onset}). The final dataset comprises 476 trials from 47 participants.
+
+\subsection{Motion-Guided Trial Onset Detection}\label{subsec:onset}
+
+To cut the trials correctly, we need to know when the first task begins in each recording. Our first pipeline assumed a fixed delay of 15~s for every file. When we checked this against the data it turned out to be wrong: the delay between starting the recording and starting the tasks changed from session to session. With a fixed offset, most trials were cut several seconds early, and a window labelled with one task often contained the end of the previous one.
+
+To recover the real onset we used a simple physical fact. Moving an arm, a leg or a wrist shakes the head slightly, and the headset's motion sensor picks this up; imagining the same movement does not. The procedure has four steps.
+
+\textbf{Step 1: motion energy.} The motion signal is divided into 0.5~s bins. For each bin $b$, the motion energy is the logarithm of the total absolute change across the seven inertial channels,
+\begin{equation}
+m_b = \log \sum_{c=1}^{7} \sum_{n \in b} \left| s_c[n] - s_c[n-1] \right| ,
+\end{equation}
+and the sequence $m_b$ is centred on its median and divided by its standard deviation.
+
+\textbf{Step 2: scoring each candidate onset.} For every candidate onset $t_0$, in steps of 0.5~s, the twelve-task schedule is laid over the motion signal. We take the mean motion energy over seconds 1--10 of each task, skipping the first second, when the participant is still reacting to the cue. For each of the six action--imagery pairs we compute the difference $d_k$, and from these a paired $t$-statistic:
+\begin{equation}
+d_k = \bar{m}_{\mathrm{action},k} - \bar{m}_{\mathrm{imagery},k}, \qquad
+t(t_0) = \frac{\bar{d}}{s_d/\sqrt{6}}, \qquad k = 1,\dots,6.
+\end{equation}
+
+\textbf{Step 3: choosing the onset.} The candidate with the largest $t$ is selected. We treat it as confident if $t \ge 4$ and all six pairs show more motion during action than during imagery.
+
+\textbf{Step 4: an independent check.} Recordings were normally stopped soon after the last task, and across the confident recordings the file ended a median of 181~s after the first task began. This gives a second, label-free estimate of the onset, $\hat{t}_0 = T_{\mathrm{rec}} - 181$, where $T_{\mathrm{rec}}$ is the length of the recording. An onset that fails Step~3 is still accepted if it lies within 5~s of this estimate. Otherwise the recording is dropped, since mislabelled trials would do more harm than a slightly smaller dataset.
+
+Fig.~\ref{fig:onset} shows the procedure for one recording. Motion energy rises clearly in every action block and stays low in the imagery blocks. The $t$-statistic peaks sharply at the detected onset of 26.0~s ($t = 24.8$), whereas at the old fixed onset of 15~s it is slightly negative, which means that under the old timing the ``action'' windows of this recording contained less movement than the ``imagery'' windows.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig3_onset.png}
+\caption{Motion-guided onset detection for one recording: (a) head-motion energy with the detected schedule; (b) paired $t$-statistic for every candidate onset.}
+\label{fig:onset}
+\end{figure}
+
+\subsection{EEG Preprocessing}\label{subsec:cleaning}
+
+Preprocessing has three parts: filtering, trial rejection and normalisation (Fig.~\ref{fig:cleaning}).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig4_cleaning.png}
+\caption{Filtering, trial rejection and per-recording normalisation.}
+\label{fig:cleaning}
+\end{figure}
+
+\textbf{Band-pass filtering.} The EDF files were loaded with MNE-Python \citep{Gramfort2013}, and only the fourteen EEG channels were kept; the quality, battery and marker channels were discarded and missing samples were set to zero. Each continuous recording was filtered between 4 and 45~Hz with a zero-phase FIR filter (Hamming-window design, MNE defaults). The 4~Hz edge removes slow electrode drift and most of the energy of blinks and eye movements. The 45~Hz edge removes high-frequency muscle activity and the 50~Hz mains interference. What remains covers the theta, mu, beta and low-gamma rhythms. Because the filter is zero-phase it does not shift the signal in time, and filtering the whole recording before cutting the trials avoids distortion at the trial edges.
+
+\textbf{Trial extraction.} Starting from the detected onset $t_0$, trial $k$ ($k = 0, \dots, 11$) runs from $t_0 + 15k$ to $t_0 + 15k + 10$~s. Each trial is therefore a $14 \times 1280$ matrix.
+
+\textbf{Trial rejection.} A trial was discarded if it failed any of three checks. (i) It was flat, with zero variance over the whole trial. (ii) Any sample reached 150~$\mu$V. Genuine EEG on this device stays well below this level (the median peak of a trial was 92~$\mu$V), and larger values nearly always come from blinks, jaw clenching or a moving cable. (iii) The mean absolute excess kurtosis across channels was 10 or more, which flags sudden spikes and electrode pops that stay under the amplitude limit. After rejection, \textbf{476 clean trials} from 47 participants remained, a data array of size $476 \times 14 \times 1280$. Rejection was done before windowing, so that a noisy trial could not enter the training data as many overlapping windows. The classes stayed balanced: 235 action and 241 imagery trials, and between 36 and 44 trials for each of the twelve tasks.
+
+\textbf{Per-recording normalisation.} Signal amplitude changes from session to session with electrode impedance, the amount of saline and head shape. We therefore z-scored every channel $c$ of every recording $r$ separately,
+\begin{equation}
+\hat{x}_{r,c}[n] = \frac{x_{r,c}[n] - \mu_{r,c}}{\sigma_{r,c}},
+\end{equation}
+where $\mu_{r,c}$ and $\sigma_{r,c}$ are the mean and standard deviation of that channel over all retained trials of the recording. These statistics pool all twelve tasks, so no class labels are involved.
+
+\subsection{Sliding-Window Segmentation}\label{subsec:windows}
+
+A 10~s trial is long compared with the short bursts of mu and beta change that accompany a movement, and 476 trials are not many for training a classifier. Each trial was therefore split into overlapping 2~s windows with a stride of 0.5~s (Fig.~\ref{fig:windows}). At 128~Hz a window holds $2 \times 128 = 256$ samples, neighbouring windows overlap by 75\%, and one trial yields
+\begin{equation}
+N_w = \frac{10 - 2}{0.5} + 1 = 17
+\end{equation}
+windows. The 476 trials thus give $476 \times 17 = 8{,}092$ windows, an input array of size $8092 \times 14 \times 256$. Every window keeps the labels of its trial, together with the index of the trial and the identity of the participant. The trial index is used later to combine the 17 window predictions into one decision, and the participant identity keeps all windows of a person in the same cross-validation fold.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.88\textwidth]{figures/fig5_windowing.png}
+\caption{Sliding-window segmentation of one trial.}
+\label{fig:windows}
+\end{figure}
+
+\subsection{Feature Extraction}\label{subsec:features}
+
+Each 2~s window is turned into a fixed-length vector built from five families of features (Fig.~\ref{fig:features}): handcrafted spectral, statistical, fractal and wavelet measures; a spectrogram; a scalogram; inter-hemispheric connectivity; and the spatial covariance of the fourteen channels. The first four families give 1,666 values and the covariance family gives 105, for 1,771 features per window. None of them uses class labels.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/fig6_features.png}
+\caption{The five feature families computed for every window.}
+\label{fig:features}
+\end{figure}
+
+\subsubsection{Handcrafted Features}\label{subsec:handcrafted}
+
+Twenty-four features are computed for each of the 14 channels, which gives 336 features. The power spectral density (PSD) of each channel is estimated with Welch's method (1~s Hann segments, 50\% overlap, 1~Hz resolution), and the mean power is taken in four bands: theta (4--8~Hz), mu (8--12~Hz), beta (13--30~Hz) and gamma (30--45~Hz). For band $b$ with frequency bins $F_b$,
+\begin{equation}
+P_b = \frac{1}{|F_b|} \sum_{f \in F_b} \mathrm{PSD}(f).
+\end{equation}
+Each band is kept on a log scale, $\log(1 + P_b)$, and as relative power, $P_b / \overline{\mathrm{PSD}}$. Three ratios are added: beta to mu, mu to theta, and a sensorimotor ratio $(P_\mu + P_\beta)/(P_\theta + P_\gamma)$. The time-domain group contains the variance, kurtosis, skewness and mean absolute value of the signal, together with the Hjorth mobility and complexity \citep{Hjorth1970},
+\begin{equation}
+\mathrm{Mobility} = \sqrt{\frac{\mathrm{var}(x')}{\mathrm{var}(x)}}, \qquad
+\mathrm{Complexity} = \frac{\mathrm{Mobility}(x')}{\mathrm{Mobility}(x)} ,
+\end{equation}
+where $x'$ is the first difference of the signal. Three non-linear measures describe how irregular the signal is: the Higuchi fractal dimension with $k_{\max} = 8$ \citep{Higuchi1988}, the Petrosian fractal dimension, and the Hurst exponent estimated by rescaled-range analysis. Finally, a three-level discrete wavelet transform with the Daubechies-4 wavelet splits the window into bands of roughly 0--8, 8--16, 16--32 and 32--64~Hz, and the log energy of each band is kept.
+
+\subsubsection{Spectrogram Features (STFT)}\label{subsec:stft}
+
+Band power over a whole window tells us how much of a rhythm is present, but not when. Event-related desynchronisation, however, is a change over time. To keep this information we compute a spectrogram with the short-time Fourier transform,
+\begin{equation}
+S(t, f) = \left| \sum_{n} x[n]\, w[n - t]\, e^{-j 2\pi f n / N} \right|^2 ,
+\end{equation}
+where $w$ is a 0.5~s (64-sample) Hann window moved in 0.25~s steps. This gives 9 time frames per window and a frequency resolution of 2~Hz. For each channel and band, the power in each frame is averaged over the band and log-transformed (9 values), and the variance across frames is added as a measure of how unsteady the band power is. The result is $14 \times 4 \times 10 = 560$ spectrogram features.
+
+Fig.~\ref{fig:stft} shows the mean spectrogram of all action windows and all imagery windows at four channels, together with their difference. At all four sites, imagery windows carry about 0.8--2~dB more power in the 8--13~Hz mu band than action windows, which fits the stronger mu suppression expected during real movement. Action windows, in turn, show more power below 8~Hz at the frontal channel AF3 and above 30~Hz at FC5 and T8. This points to eye and head movement and to muscle activity while the participant moves.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/fig7_spectrogram.png}
+\caption{Mean STFT spectrograms of action and imagery windows at AF3, F3, FC5 and T8, and their difference (imagery minus action).}
+\label{fig:stft}
+\end{figure}
+
+\subsubsection{Scalogram Features (CWT)}\label{subsec:cwt}
+
+The STFT uses the same window at every frequency, so it has to trade time resolution against frequency resolution. The continuous wavelet transform avoids this by stretching the analysing wavelet with frequency, short for fast rhythms and long for slow ones \citep{Torrence1998}. We use the real-valued Morlet wavelet $\psi$:
+\begin{equation}
+W(a, \tau) = \frac{1}{\sqrt{a}} \int x(t)\, \psi\!\left(\frac{t - \tau}{a}\right) dt, \qquad
+\mathrm{Scalogram}(a,\tau) = |W(a, \tau)|^2 ,
+\end{equation}
+with scales $a$ chosen so that the centre frequencies are exactly 5, 7, 10, 12, 15, 20, 25, 30, 35 and 40~Hz. Three groups of values are kept for each channel: the log energy at each frequency in four 0.5~s segments (40 values), the ratio of high-frequency (20--40~Hz) to low-frequency (5--15~Hz) energy (1 value), and the log variance over time at each frequency (10 values). This gives $14 \times 51 = 714$ scalogram features. The mean scalograms (Fig.~\ref{fig:cwt}) show the same pattern as the spectrograms, with more mu power during imagery, but sharper in both time and frequency, particularly around 10--12~Hz.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/fig8_scalogram.png}
+\caption{Mean Morlet scalograms of action and imagery windows and their difference, for the channels of Fig.~\ref{fig:stft}.}
+\label{fig:cwt}
+\end{figure}
+
+\subsubsection{Connectivity and Riemannian Covariance Features}\label{subsec:conn}
+
+\textbf{Inter-hemispheric connectivity (56 features).} Moving one side of the body mainly engages the opposite hemisphere. The fourteen electrodes form seven left--right pairs (AF3--AF4, F3--F4, F7--F8, FC5--FC6, T7--T8, P7--P8 and O1--O2). For each pair and each of the four bands we compute the magnitude-squared coherence and the power asymmetry $\log(P_{\mathrm{left}}/P_{\mathrm{right}})$, which gives $7 \times 4 \times 2 = 56$ features.
+
+\textbf{Riemannian covariance features (105 features).} For each window $X \in \mathbb{R}^{14 \times 256}$ we estimate the spatial covariance matrix
+\begin{equation}
+C = \frac{1}{T - 1} X X^{\top}
+\end{equation}
+with Ledoit--Wolf shrinkage \citep{LedoitWolf2004}, which keeps the matrix well conditioned with only $T = 256$ samples. Covariance matrices are symmetric and positive definite, and they lie on a curved Riemannian manifold rather than in an ordinary vector space \citep{Barachant2012}. To remove the offset between sessions, the matrices of each recording $r$ are re-centred on their own Riemannian mean $M_r$ \citep{Zanini2018},
+\begin{equation}
+\tilde{C} = M_r^{-1/2}\, C\, M_r^{-1/2},
+\end{equation}
+so that every recording is centred on the identity matrix. The re-centred matrices are projected onto the tangent space at the identity, and the upper triangle is kept as a vector of $14 \times 15 / 2 = 105$ values. $M_r$ is computed from all windows of the recording, without labels.
+
+\subsection{Subject-Wise Feature Alignment}\label{subsec:align}
+
+Normalising the raw signal is not enough on its own: feature values still sit in different ranges for different people, and one person's mu power may simply be higher than another's. Each of the 1,666 non-covariance features is therefore standardised separately for every recording $r$, using that recording's own windows,
+\begin{equation}
+\hat{z}_{r,j} = \frac{z_{r,j} - \mu_{r,j}}{\sigma_{r,j}}, \qquad j = 1, \dots, 1666 .
+\end{equation}
+Together with the covariance re-centring, this places every recording around the same reference point. The statistics pool all twelve tasks and use no labels, so in practice a new user would only need to provide one unlabelled calibration session.
+
+\subsection{Hemispheric Mirror Augmentation}\label{subsec:mirror}
+
+The electrodes of the EPOC X are arranged in symmetric pairs. Since a limb on one side of the body is controlled mainly by the opposite hemisphere, swapping each left electrode with its right partner gives a rough picture of the same movement made on the other side. We use this to add a mirrored copy of every training window (Fig.~\ref{fig:mirror}). Because every feature is computed per channel or per channel pair, the mirrored features can be built directly. The handcrafted, spectrogram and scalogram columns of partner electrodes are swapped, coherence stays the same, the sign of the asymmetry is flipped, and the re-centred covariance matrix is permuted, $\tilde{C}' = P \tilde{C} P^{\top}$, before it is projected to the tangent space. The labels are mirrored in the same way (right arm becomes left arm, right leg becomes left leg, right wrist becomes left wrist), while the action or imagery condition is kept. Mirrored copies are added to the training folds only; test windows are never altered.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/fig9_mirror.png}
+\caption{Hemispheric mirror augmentation: (a) electrode pairs that are swapped; (b) how each feature group and the label are mirrored.}
+\label{fig:mirror}
+\end{figure}
+
+\subsection{Classification Models}\label{subsec:models}
+
+Three groups of classifiers were used: the proposed ensemble, a set of classical comparison models, and two deep-learning models. All of them were trained and tested on exactly the same participant folds. Tables~\ref{tab:models}--\ref{tab:dlmodels} list every model with the parameter values used and what each value controls.
+
+\subsubsection{Proposed Ensemble}\label{subsec:ensemble}
+
+The proposed classifier is an ensemble of four models of different types (Table~\ref{tab:models}). The 1,771 aligned features are first scaled with a standard scaler fitted on the training participants only. Each of the four models then outputs class probabilities for a window $w$, and the ensemble averages them with equal weights:
+\begin{equation}
+p_w = \frac{1}{4} \sum_{m=1}^{4} p_w^{(m)} .
+\end{equation}
+Two members are linear models and two are tree ensembles. Linear models capture broad, additive differences between classes, while tree ensembles capture non-linear interactions between features, so the two kinds tend to make different errors and averaging them reduces the overall error. The four models and their settings were fixed before the experiments and used unchanged for every task.
+
+\begin{table}[htbp]
+\centering
+\caption{Members of the proposed ensemble.}
+\label{tab:models}
+\footnotesize
+\begin{tabular}{@{}p{0.2\linewidth}p{0.27\linewidth}p{0.45\linewidth}@{}}
+\toprule
+\textbf{Model} & \textbf{Parameter values} & \textbf{Meaning of the values} \\
+\midrule
+Logistic Regression (LR) & L2 penalty, $C = 0.01$ & $C$ is the inverse of the regularisation strength. A small value applies strong regularisation, which keeps the weights small and limits overfitting with 1,771 features. \\ \addlinespace
+Linear Discriminant Analysis (LDA) & Least-squares solver, automatic Ledoit--Wolf shrinkage & Shrinkage pulls the class covariance towards a diagonal matrix by an amount estimated from the data, so the model stays stable when features outnumber training trials. \\ \addlinespace
+Extra Trees & 500 trees, $\sqrt{d} \approx 42$ features per split & Many randomised trees are averaged. Each split considers only 42 of the 1,771 features, which makes the trees different from one another and lowers the variance of the average. \\ \addlinespace
+Histogram Gradient Boosting (HistGB) & 200 iterations, learning rate 0.05, maximum depth 4 & Shallow trees (depth 4) are added one at a time, each correcting the errors of the previous ones. The small learning rate makes each step cautious, which reduces overfitting. \\ \addlinespace
+Ensemble & Equal-weight average of the four probability outputs & No model is favoured; the average is taken window by window and then over the 17 windows of a trial (Section~\ref{subsec:eval}). \\
+\botrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Classical Comparison Models}\label{subsec:baselinemodels}
+
+To place the ensemble in context, classical comparison models were evaluated on the same folds, at window level and without subject-wise alignment (Table~\ref{tab:basemodels}). Each of the first six models was trained on five alternative feature sets: (i) filter-bank CSP, with four components in each of seven sub-bands between 4 and 40~Hz, giving 28 features \citep{Ang2012}; (ii) all 1,666 non-covariance features; (iii) the top $k$ features ranked by ANOVA $F$-score, with $k = 150$ for the binary task and $k = 200$ for the multi-class tasks; (iv) the 105 Riemannian tangent-space features; and (v) a combined set of CSP, all features and Riemannian features. Naive Bayes and AdaBoost were run on the binary task only because of their run time. In every comparison model the scaler, the feature selection, the CSP filters and the tangent-space reference were fitted inside each fold on the training participants only.
+
+\begin{table}[htbp]
+\centering
+\caption{Classical comparison models.}
+\label{tab:basemodels}
+\footnotesize
+\begin{tabular}{@{}p{0.2\linewidth}p{0.27\linewidth}p{0.45\linewidth}@{}}
+\toprule
+\textbf{Model} & \textbf{Parameter values} & \textbf{Meaning of the values} \\
+\midrule
+Support Vector Machine (SVM) \citep{CortesVapnik1995} & RBF kernel, $C = 10$, $\gamma$ = scale & $C$ sets how strongly training errors are penalised; $\gamma$ sets the width of the kernel and is derived from the number and variance of the features. \\ \addlinespace
+Random Forest \citep{Breiman2001} & 300 trees, maximum depth 15 & Trees are grown on bootstrap samples and averaged; limiting the depth to 15 stops individual trees from memorising the training windows. \\ \addlinespace
+HistGB & 200 iterations, depth 5, learning rate 0.05 (binary); 100 iterations, learning rate 0.1 (multi-class) & Same boosting principle as in the ensemble, with fewer iterations for the slower multi-class runs. \\ \addlinespace
+Gaussian Naive Bayes & Default settings & Treats features as independent and normally distributed within each class; a fast, simple baseline. \\ \addlinespace
+AdaBoost & 100 estimators & Builds 100 weak learners in sequence, giving more weight each time to the windows misclassified so far. \\ \addlinespace
+LDA (shrinkage) & Least-squares solver, automatic Ledoit--Wolf shrinkage & Shrinkage pulls the class covariance towards a diagonal matrix by an amount estimated from the data, so the linear model stays stable on every feature set. \\ \addlinespace
+Riemannian MDM \citep{Barachant2012} & Riemannian mean of each class & Assigns a window to the class whose mean covariance matrix is closest in Riemannian distance; no tuning parameters. \\ \addlinespace
+Hierarchical model & Stage 1: Random Forest (action vs.\ imagery); stage 2: SVM per condition (body part) & Predicts the condition first and then the body part within that condition, giving a twelve-class label. \\
+\botrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Deep-Learning Models}\label{subsec:dl}
+
+Two neural networks were trained directly on the raw $14 \times 256$ windows, normalised with the mean and standard deviation of the training participants (Table~\ref{tab:dlmodels}). Early stopping was based on a validation set formed from 15\% of the training participants, never from the test participants.
+
+\begin{table}[htbp]
+\centering
+\caption{Deep-learning models.}
+\label{tab:dlmodels}
+\footnotesize
+\begin{tabular}{@{}p{0.14\linewidth}p{0.46\linewidth}p{0.32\linewidth}@{}}
+\toprule
+\textbf{Model} & \textbf{Architecture} & \textbf{Training settings} \\
+\midrule
+EEGNet \citep{Lawhern2018} & Temporal convolution with 8 filters (kernel 64 samples); depthwise spatial convolution over the 14 channels with depth multiplier 2; separable convolution with 16 filters (kernel 16); batch normalisation, ELU activation, average pooling and dropout 0.5 after each block & Adam optimiser, batch size 64, up to 100 epochs, early stopping with patience 15 \\ \addlinespace
+CNN--LSTM & Two 1-D convolution blocks with 32 filters (kernel 32, stride 2) and 64 filters (kernel 16), each with batch normalisation, max pooling and dropout 0.3; two LSTM layers with 64 and 32 units \citep{HochreiterSchmidhuber1997}; dense layer of 32 units & Adam optimiser, batch size 64, up to 50 epochs, early stopping with patience 10 \\
+\botrule
+\end{tabular}
+\end{table}
+
+\subsubsection{CSP Features Added to Every Classifier}\label{subsec:cspadd}
+
+Because CSP is the standard feature for motor imagery, we also tested whether it improves the proposed pipeline. In every fold, CSP filters with Ledoit--Wolf regularisation (four components in each of the seven sub-bands) were fitted on the training windows and their mirrored copies. The resulting 28 log-variance features were standardised within each recording and appended to the 1,771 features. Eight classifiers (LR, LDA, SVM, Random Forest, Extra Trees, HistGB, AdaBoost and Naive Bayes) and the ensemble were then trained with and without these extra features, all with alignment, mirror augmentation and trial averaging.
+
+\subsection{Imagery-versus-Imagery (Left versus Right) Task}\label{subsec:lr}
+
+The imagery-versus-imagery binary task asks whether the side of an imagined movement can be decoded. Only the 241 imagery trials are used, and the target is the side of the body, left or right, pooled over arm, leg and wrist. For this task the per-recording standardisation of Section~\ref{subsec:align} is computed from that recording's imagery windows only (three left and three right trials) rather than from all twelve tasks; the side labels are not used. Mirror augmentation is applied as before, with the side label flipped. As a reference we also ran the standard method for this kind of problem, filter-bank CSP followed by shrinkage LDA \citep{Ang2012}, and all eight classifiers listed above. Significance against the 50\% chance level was tested with a one-sided binomial test.
+
+\subsection{Trial-Level Decision and Evaluation}\label{subsec:eval}
+
+\textbf{Trial-level decision.} A working BCI makes one decision per task, not one per 2~s window. The 17 window probabilities of a trial are therefore averaged, and the class with the highest mean probability is chosen (Fig.~\ref{fig:eval}c):
+\begin{equation}
+\bar{p} = \frac{1}{17} \sum_{w=1}^{17} p_w, \qquad \hat{y} = \arg\max_c \bar{p}_c .
+\end{equation}
+All windows of a trial always belong to the same test fold, so this averaging never mixes training and test data. Window-level accuracy is reported as well.
+
+\textbf{Person-wise GroupKFold.} The main results use GroupKFold cross-validation grouped by participant (Fig.~\ref{fig:eval}a). The participants are divided into folds, and each of them is tested exactly once, by a model that never saw any of their data. Five folds were used for the two binary tasks (9--10 test participants per fold) and three folds for the six- and twelve-class tasks (15--16 test participants per fold), so that every class keeps enough training examples. Folds are grouped by person rather than by recording, so a participant with two sessions can never appear on both sides of a split. The neural networks and the hierarchical model used three folds for all tasks.
+
+\textbf{Leave-one-subject-out (LOSO).} As a stricter check, the ensemble and its four members were also evaluated with leave-one-subject-out validation (Fig.~\ref{fig:eval}b). Each of the 47 participants is held out in turn, and a new model is trained on the other 46, giving 47 folds per task. The label-free steps are unchanged, and the scaler, the classifiers and mirror augmentation use the 46 training participants only. For the imagery-versus-imagery task, SVM, random forest, AdaBoost and naive Bayes were evaluated with LOSO as well.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig10_evaluation.png}
+\caption{Evaluation scheme: (a) person-wise 5-fold cross-validation; (b) leave-one-subject-out validation; (c) trial-level decision.}
+\label{fig:eval}
+\end{figure}
+
+\textbf{Validity checks.} Several further checks were run on the final pipeline. (1) Label permutation: the labels were shuffled across trials within each recording and the complete pipeline, including alignment, mirror augmentation, the ensemble and trial averaging, was run again; this was done three times for every task, twenty more times for the binary task, and five times under LOSO (four runs for the binary task and one for the imagery-versus-imagery task). (2) Reproducibility: the pipelines were rerun with the same random seed, and the binary pipeline also with three other seeds. (3) Learning curve: for the binary task, the same test participants were classified by models trained on 5, 10, 20 and 30 randomly chosen training participants and on all of them. (4) Nested cross-validation: inside each outer training set, an inner person-wise cross-validation chose the configuration (no alignment, alignment, or alignment with mirror augmentation; for the imagery-versus-imagery task, standard or imagery-only calibration with or without mirroring) and the classifier, and only that choice was tested on the outer test participants. This removes the optimism that comes from comparing several set-ups on the same test people. (5) Onset sensitivity: every detected onset was shifted by $\pm 2$~s and the classification was repeated.
+
+\textbf{Metrics.} Accuracy is reported as the number of correctly classified test trials pooled over all folds, and as the mean $\pm$ standard deviation across folds. For the LOSO results we also report balanced accuracy, macro-averaged F1, Cohen's kappa (the agreement between predicted and true labels after removing the agreement expected by chance, where 0 means chance level and 1 means perfect classification), the accuracy per participant, and the accuracy on the training participants, which shows the gap between fit and generalisation. Chance level is 50\% for the binary tasks, 16.67\% for six classes and 8.33\% for twelve classes. Accuracies were compared with chance using a one-sided binomial test, and paired comparisons between two methods on the same trials used McNemar's test.
+
+\FloatBarrier
+\section{Results and Discussion}\label{sec:results}
+
+\subsection{Dataset Summary}\label{subsec:data}
+
+Table~\ref{tab:dataset} summarises the data that reached the classification stage. The final dataset contains 476 trials from 47 participants, which gives 8,092 windows. Action and imagery are almost equally represented, and every one of the twelve tasks has between 36 and 44 trials. Because the classes are this close to balanced, accuracy can be read directly, without a correction for class imbalance.
+
+\begin{table}[htbp]
+\centering
+\caption{Summary of the final dataset.}
+\label{tab:dataset}
+\footnotesize
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+Participants & 47 \\
+Trials & 476 \\
+Action / imagery trials & 235 / 241 \\
+Trials per task (twelve classes) & 36--44 \\
+EEG channels / sampling rate & 14 / 128 Hz \\
+Trial length / window length / stride & 10 s / 2 s / 0.5 s \\
+Windows & 8,092 \\
+Features per window & 1,771 \\
+\botrule
+\end{tabular}
+\end{table}
+
+\subsection{Overall Classification Performance}\label{subsec:main}
+
+Table~\ref{tab:main} gives the accuracy of the proposed ensemble on all four tasks. Every value is subject-independent: each trial was classified by a model that had seen no data from that participant.
+
+\begin{table*}[htbp]
+\centering
+\caption{Accuracy of the proposed ensemble with mirror augmentation. Pooled values count the correctly classified test trials over all folds.}
+\label{tab:main}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Task} & \textbf{Chance} & \textbf{GroupKFold, pooled} & \textbf{GroupKFold, fold mean} & \textbf{Window level} & \textbf{LOSO, pooled} \\
+\midrule
+Action vs.\ imagery (2) & 50.00\% & \textbf{80.25\%} (382/476) & 80.19 $\pm$ 6.59\% & 68.53 $\pm$ 3.59\% & \textbf{80.25\%} (382/476) \\
+Body part (6) & 16.67\% & \textbf{26.68\%} (127/476) & 26.68 $\pm$ 1.79\% & 21.01 $\pm$ 0.42\% & \textbf{25.84\%} (123/476) \\
+Twelve tasks (12) & 8.33\% & \textbf{21.43\%} (102/476) & 21.42 $\pm$ 1.21\% & 15.75 $\pm$ 0.83\% & \textbf{22.27\%} (106/476) \\
+Imagery vs.\ imagery, L/R (2) & 50.00\% & 58.09\% (140/241) & 58.10 $\pm$ 5.91\% & 52.65 $\pm$ 2.74\% & 58.51\% (141/241) \\
+\botrule
+\end{tabular}}
+\end{table*}
+
+Telling real from imagined movement was clearly the easiest problem. Four out of five trials from people the model had never seen were classified correctly, about 30 percentage points above chance. The two multi-class problems are much harder, but both stay well above chance: body-part accuracy is 1.6 times the chance level and twelve-task accuracy 2.6 times. As expected, accuracy falls as the target becomes more specific. The imagery-versus-imagery task looks above chance in Table~\ref{tab:main}, but it does not hold up under nested cross-validation (Section~\ref{subsec:lrresults}).
+
+Averaging over a trial helped on every task. Going from single windows to whole trials raised accuracy by 11.7 points for action versus imagery and by 5.7 points for both body part and twelve tasks. A single 2~s window is noisy, and the average of 17 windows removes much of that noise. The spread between folds is wide, however. Binary accuracy ranged from 71.3\% to 89.7\% depending on which participants were held out, so decoding depends strongly on the individual, and differences of one or two points between methods should be read with care.
+
+\subsection{Accuracy of All Models}\label{subsec:allmodels}
+
+Tables~\ref{tab:allmodels} and~\ref{tab:allbaselines} bring together the accuracy of every model evaluated in this study. Table~\ref{tab:allmodels} covers the classifiers that were run inside the proposed pipeline, with subject-wise alignment, mirror augmentation and trial averaging, under both GroupKFold and LOSO validation. Table~\ref{tab:allbaselines} covers the comparison and deep-learning models, which were evaluated per window on raw or unaligned features.
+
+\begin{table*}[htbp]
+\centering
+\caption{Trial-level accuracy (\%) of every classifier in the proposed pipeline (alignment, mirror augmentation and trial averaging). GKF = person-wise GroupKFold; LOSO = leave-one-subject-out. The best value in each column is in bold; -- = not evaluated.}
+\label{tab:allmodels}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lcccccccc@{}}
+\toprule
+ & \multicolumn{2}{c}{\textbf{Action vs.\ imagery}} & \multicolumn{2}{c}{\textbf{Body part (6)}} & \multicolumn{2}{c}{\textbf{Twelve tasks (12)}} & \multicolumn{2}{c}{\textbf{Imagery vs.\ imagery (L/R)}} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
+\textbf{Model} & \textbf{GKF} & \textbf{LOSO} & \textbf{GKF} & \textbf{LOSO} & \textbf{GKF} & \textbf{LOSO} & \textbf{GKF} & \textbf{LOSO} \\
+\midrule
+Ensemble (proposed) & 80.25 & 80.25 & \textbf{26.68} & 25.84 & \textbf{21.43} & \textbf{22.27} & \textbf{58.09} & 58.51 \\
+Logistic Regression & \textbf{80.46} & 80.25 & 26.26 & 25.42 & 20.17 & 21.22 & 57.68 & \textbf{61.00} \\
+LDA (shrinkage) & 80.25 & \textbf{80.88} & 23.95 & 24.58 & 19.96 & 20.38 & 56.85 & 56.85 \\
+HistGB & 79.20 & 80.46 & 24.58 & \textbf{27.52} & 18.70 & 18.91 & 50.21 & 50.62 \\
+Extra Trees & 77.94 & 77.94 & 19.33 & 20.80 & 16.18 & 19.12 & 50.62 & 54.36 \\
+SVM (RBF) & 77.94 & -- & 25.21 & -- & -- & -- & 54.36 & 53.94 \\
+Random Forest & 77.52 & -- & 19.96 & -- & -- & -- & 44.81 & 51.87 \\
+AdaBoost & 78.78 & -- & 19.33 & -- & -- & -- & 48.55 & 53.11 \\
+Naive Bayes & 73.11 & -- & 19.54 & -- & -- & -- & 45.23 & 51.87 \\
+\midrule
+Chance level & \multicolumn{2}{c}{50.00} & \multicolumn{2}{c}{16.67} & \multicolumn{2}{c}{8.33} & \multicolumn{2}{c}{50.00} \\
+\botrule
+\end{tabular}}
+\end{table*}
+
+\begin{table*}[htbp]
+\centering
+\caption{Window-level accuracy (fold mean $\pm$ SD, \%) of the comparison and deep-learning models, evaluated without subject-wise alignment, augmentation or trial averaging. Each value is the best of the five feature sets for that model and task. The proposed ensemble is shown at window and trial level for reference.}
+\label{tab:allbaselines}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Model} & \textbf{Action vs.\ imagery} & \textbf{Body part (6)} & \textbf{Twelve tasks (12)} \\
+\midrule
+Histogram Gradient Boosting & 64.45 $\pm$ 2.35 & 20.27 $\pm$ 0.84 & 13.91 $\pm$ 1.11 \\
+Random Forest & 63.81 $\pm$ 3.95 & 20.37 $\pm$ 0.69 & 13.35 $\pm$ 0.72 \\
+LDA (shrinkage) & 63.35 $\pm$ 2.91 & 20.30 $\pm$ 1.61 & 13.44 $\pm$ 1.87 \\
+SVM (RBF) & 62.89 $\pm$ 3.73 & 20.70 $\pm$ 1.13 & 14.32 $\pm$ 1.27 \\
+AdaBoost & 62.85 $\pm$ 2.77 & -- & -- \\
+Gaussian Naive Bayes & 59.80 $\pm$ 3.06 & -- & -- \\
+Riemannian MDM & 62.31 $\pm$ 4.64 & 19.92 $\pm$ 1.44 & 12.05 $\pm$ 1.37 \\
+FBCSP + best classifier & 61.60 $\pm$ 4.37 & 19.47 $\pm$ 2.49 & 11.50 $\pm$ 1.03 \\
+Hierarchical (condition $\to$ body part) & -- & -- & 13.83 $\pm$ 1.28 \\
+EEGNet & 61.65 $\pm$ 2.14 & 15.94 $\pm$ 0.46 & 11.77 $\pm$ 0.55 \\
+CNN--LSTM & 57.84 $\pm$ 2.08 & -- & -- \\
+\midrule
+\textbf{Proposed ensemble (window level)} & \textbf{68.53 $\pm$ 3.59} & \textbf{21.01 $\pm$ 0.42} & \textbf{15.75 $\pm$ 0.83} \\
+\textbf{Proposed ensemble (trial level)} & \textbf{80.19 $\pm$ 6.59} & \textbf{26.68 $\pm$ 1.79} & \textbf{21.42 $\pm$ 1.21} \\
+\botrule
+\end{tabular}}
+\end{table*}
+
+Within the proposed pipeline, the linear models and HistGB performed almost identically on action versus imagery (79.2--80.9\%), while Extra Trees, Random Forest, AdaBoost and Naive Bayes were 2--7 points lower. The ensemble gave the highest accuracy for body part and for the imagery-versus-imagery task under GroupKFold and for the twelve tasks under LOSO, and it stayed within 2.5 points of the best model in every other column. Logistic regression was almost as consistent, while the tree-based models varied much more from task to task. On the imagery-versus-imagery task, only the linear models and the ensemble rose clearly above chance. Among the comparison models, no classifier stood out: the best result for each was within a few points of the others, and all of them fell well short of the proposed pipeline.
+
+\subsection{Leave-One-Subject-Out Evaluation}\label{subsec:loso}
+
+Under LOSO validation each model is trained on 46 participants and tested on the remaining one, and this is repeated for all 47 participants. Table~\ref{tab:loso} lists the metrics of the ensemble, and Fig.~\ref{fig:losomodels} shows the accuracy of every member of the ensemble.
+
+\begin{table*}[htbp]
+\centering
+\caption{Leave-one-subject-out results of the proposed ensemble (47 folds, trial level).}
+\label{tab:loso}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+\textbf{Task} & \textbf{Accuracy} & \textbf{Balanced acc.} & \textbf{Macro F1} & \textbf{Kappa} & \textbf{Per participant} & \textbf{Window level} & \textbf{$p$ (binomial)} \\
+\midrule
+Action vs.\ imagery & 80.25\% & 80.23\% & 80.24\% & 0.61 & 81.3 $\pm$ 17.8\% & 69.76\% & $< 10^{-40}$ \\
+Body part & 25.84\% & 25.57\% & 25.42\% & 0.11 & 25.3 $\pm$ 11.5\% & 22.08\% & $< 10^{-6}$ \\
+Twelve tasks & 22.27\% & 21.88\% & 21.63\% & 0.15 & 22.0 $\pm$ 14.7\% & 14.90\% & $< 10^{-19}$ \\
+Imagery vs.\ imagery (L/R) & 58.51\% & 58.57\% & 58.51\% & 0.17 & 58.5 $\pm$ 24.6\% & 53.48\% & 0.005 \\
+\botrule
+\end{tabular}}
+\end{table*}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig14_loso_models.png}
+\caption{LOSO accuracy of each classifier on each task. The dashed line marks chance level.}
+\label{fig:losomodels}
+\end{figure}
+
+LOSO and GroupKFold agree to within one point on every task. The identical action-versus-imagery score is a coincidence and not a repeat of the same predictions: the two schemes disagreed on 14 trials from 13 participants, and 7 of these were correct only under LOSO while 7 were correct only under GroupKFold. On the harder tasks the predictions changed much more, on 38\% of the body-part trials and 41\% of the twelve-task trials, but again the gains and losses balanced out (McNemar $p \ge 0.72$ on every task). Training on 46 instead of about 31--38 participants therefore did not change the overall accuracy, which is in line with the learning curve in Section~\ref{subsec:validity}.
+
+Balanced accuracy and macro F1 track plain accuracy closely on every task, so no single class is responsible for the scores. The variation between participants is large. For action versus imagery, 14 of the 47 participants were classified without a single error while 3 fell below 50\%, and the standard deviation across participants (17.8 points) is much larger than the spread between folds. All four ensemble members were significantly above chance on the binary, body-part and twelve-task problems ($p < 0.02$), and they reached similar binary accuracy (77.9--80.9\%). On the training participants, accuracy was between 91\% and 100\% for every model, far above the test accuracy. The models therefore fit individual participants closely, and only part of what they learn carries over to a new person.
+
+\subsection{Contribution of Alignment, Augmentation and the Ensemble}\label{subsec:ablation}
+
+Table~\ref{tab:ablation} compares the four ensemble members with the ensemble, and shows what happens when subject-wise alignment and mirror augmentation are switched off.
+
+\begin{table}[htbp]
+\centering
+\caption{Trial-level accuracy (fold mean $\pm$ SD, \%) of the single classifiers and of the ensemble with and without alignment and augmentation (GroupKFold). The single classifiers were trained without augmentation.}
+\label{tab:ablation}
+\footnotesize
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Model} & \textbf{Action vs.\ imagery} & \textbf{Body part} & \textbf{Twelve tasks} \\
+\midrule
+Logistic Regression & 79.96 $\pm$ 7.71 & 23.51 $\pm$ 1.69 & 17.67 $\pm$ 2.86 \\
+LDA (shrinkage) & 76.19 $\pm$ 7.94 & 23.50 $\pm$ 3.13 & 19.55 $\pm$ 2.40 \\
+Extra Trees & 77.88 $\pm$ 6.81 & 22.49 $\pm$ 1.01 & 18.92 $\pm$ 1.44 \\
+HistGB & 78.74 $\pm$ 5.01 & 26.48 $\pm$ 2.91 & 19.96 $\pm$ 0.86 \\
+Ensemble, no alignment, no augmentation & 70.14 $\pm$ 5.51 & 23.77 $\pm$ 2.36 & 19.34 $\pm$ 1.74 \\
+Ensemble, no augmentation & 79.56 $\pm$ 6.37 & 25.60 $\pm$ 3.59 & 20.41 $\pm$ 5.59 \\
+\textbf{Ensemble + mirror augmentation} & \textbf{80.19 $\pm$ 6.59} & \textbf{26.68 $\pm$ 1.79} & \textbf{21.42 $\pm$ 1.21} \\
+\botrule
+\end{tabular}
+\end{table}
+
+No single classifier was best on all three tasks: logistic regression did best on the binary problem and gradient boosting on body part. The ensemble stayed within about one point of the best single model on every task. We kept it fixed rather than choosing a different model for each task after seeing the results, since that choice would itself inflate the scores.
+
+Subject-wise alignment had the largest effect of any step. Without it, binary accuracy fell from 79.62\% to 70.17\% (pooled, 379 against 334 correct trials), body-part accuracy from 25.63\% to 23.74\%, and twelve-task accuracy from 20.38\% to 19.33\%. Much of the difference between people therefore behaves like a simple shift in feature values, which per-recording standardisation removes. Mirror augmentation added 3, 5 and 5 correct trials on the three tasks (379 to 382, 122 to 127 and 97 to 102). These gains are small and lie within the spread across folds, but they appear on all three tasks, and the fold-to-fold variation of the multi-class tasks dropped markedly (from $\pm$3.59 to $\pm$1.79 points for body part and from $\pm$5.59 to $\pm$1.21 points for twelve tasks).
+
+\subsection{Comparison with Baseline and Deep-Learning Models}\label{subsec:baselines}
+
+Table~\ref{tab:allbaselines} sets the proposed system beside the comparison models. These were evaluated window by window on the same folds and with the same leakage controls, but without subject-wise alignment, augmentation or trial averaging.
+
+
+
+The proposed system was the best method on every task. Even at window level it beat every baseline on the binary and twelve-task problems and slightly exceeded the best body-part baselines. The strongest conventional pipelines, which combined CSP, Riemannian and handcrafted features with SVM or gradient boosting, reached 62--64\% on the binary task and about 20--21\% on body part. Riemannian classifiers were competitive throughout, especially for body part, which shows that the covariance between channels carries useful information.
+
+The deep-learning models did not outperform the classical pipelines. EEGNet reached 61.65\% on the binary task, close to the classical baselines, but stayed at chance for body part (15.94\%) and only just above it for twelve tasks (11.77\%), and the CNN--LSTM was weaker still. With fewer than 40 training participants per fold, the networks most likely did not see enough different people to learn features that transfer to someone new, in line with earlier reports that deep EEG models need large training sets \citep{Roy2019,Altaheri2023}. The hierarchical model did not beat direct twelve-class classification either, because every error in its first stage is passed on to the second.
+
+\subsection{Effect of Adding CSP Features}\label{subsec:csp}
+
+Since filter-bank CSP on its own was weaker than our feature set, we tested whether CSP helps when it is added to that set. Table~\ref{tab:csp} gives the result for every classifier on three tasks.
+
+\begin{table*}[htbp]
+\centering
+\caption{Trial-level accuracy (pooled, \%; correct trials in brackets) of each classifier with and without filter-bank CSP features (GroupKFold). All models use alignment, mirror augmentation and trial averaging.}
+\label{tab:csp}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+ & \multicolumn{2}{c}{\textbf{Action vs.\ imagery (476)}} & \multicolumn{2}{c}{\textbf{Body part (476)}} & \multicolumn{2}{c}{\textbf{Imagery L/R (241)}} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+\textbf{Model} & \textbf{Base} & \textbf{+ CSP} & \textbf{Base} & \textbf{+ CSP} & \textbf{Base} & \textbf{+ CSP} \\
+\midrule
+\textbf{Ensemble} & \textbf{80.25} (382) & 81.30 (387) & \textbf{26.68} (127) & 25.00 (119) & 58.09 (140) & 57.26 (138) \\
+Logistic Regression & 80.46 (383) & 79.83 (380) & 26.26 (125) & 26.47 (126) & 57.68 (139) & 59.34 (143) \\
+LDA & 80.25 (382) & 80.04 (381) & 23.95 (114) & 24.16 (115) & 56.85 (137) & 59.34 (143) \\
+HistGB & 79.20 (377) & 80.04 (381) & 24.58 (117) & 24.16 (115) & 50.21 (121) & 53.11 (128) \\
+SVM (RBF) & 77.94 (371) & 76.89 (366) & 25.21 (120) & 26.89 (128) & 54.36 (131) & 54.77 (132) \\
+Extra Trees & 77.94 (371) & 78.99 (376) & 19.33 (92) & 21.64 (103) & 50.62 (122) & 51.45 (124) \\
+Random Forest & 77.52 (369) & 78.57 (374) & 19.96 (95) & 20.59 (98) & 44.81 (108) & 43.57 (105) \\
+AdaBoost & 78.78 (375) & 79.83 (380) & 19.33 (92) & 20.80 (99) & 48.55 (117) & 54.36 (131) \\
+Naive Bayes & 73.11 (348) & 72.90 (347) & 19.54 (93) & 19.33 (92) & 45.23 (109) & 48.13 (116) \\
+\botrule
+\end{tabular}}
+\end{table*}
+
+CSP did not give a consistent gain. On action versus imagery it added about one point to the tree models and took up to one point from logistic regression and SVM. On body part it helped Extra Trees (+2.3 points) and SVM (+1.7 points) but lowered the ensemble from 26.68\% to 25.00\%. On the imagery-versus-imagery task it added four trials to logistic regression and LDA and almost six points to AdaBoost, but these models stayed close to chance. For the ensemble, CSP added five trials on the binary task and cost eight on body part and two on the imagery-versus-imagery task. All of these changes are about the size of the spread between folds, or smaller, and they point in different directions on different tasks. We therefore kept the pipeline without CSP.
+
+There are two likely reasons why CSP adds so little here. First, a CSP feature is the log-variance of a spatially filtered signal, which is a weighted combination of band power and inter-channel covariance; our feature set already contains band power for every channel in every band and the full covariance matrix in tangent space, so most of what CSP extracts is already present. Second, CSP filters are learned from the training participants, and spatial patterns transfer poorly between people when only 14 electrodes are available and none of them lies over the central motor strip.
+
+\subsection{Spectrogram versus Scalogram Features}\label{subsec:families}
+
+To measure the value of each feature family on its own, the ensemble pipeline (with alignment and trial averaging, without mirror augmentation) was run with one family at a time (Fig.~\ref{fig:families}, Table~\ref{tab:families}).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig11_families.png}
+\caption{Trial-level accuracy of the ensemble with a single feature family. The dashed line marks chance level.}
+\label{fig:families}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{Trial-level accuracy (pooled, \%; correct trials in brackets) with single feature families, without mirror augmentation.}
+\label{tab:families}
+\footnotesize
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Features} & \textbf{Number} & \textbf{Action vs.\ imagery} & \textbf{Body part} & \textbf{Twelve tasks} \\
+\midrule
+Spectrogram (STFT) & 560 & 76.47 (364) & 18.07 (86) & 14.92 (71) \\
+Scalogram (CWT) & 714 & 77.52 (369) & 21.85 (104) & 19.54 (93) \\
+STFT + CWT & 1,274 & 78.15 (372) & 21.01 (100) & 20.80 (99) \\
+Handcrafted & 336 & 77.31 (368) & 23.95 (114) & 19.54 (93) \\
+All features & 1,771 & \textbf{79.62} (379) & \textbf{25.63} (122) & 20.38 (97) \\
+\botrule
+\end{tabular}
+\end{table}
+
+The scalogram outperformed the spectrogram on all three tasks. The gap was small for the binary task (1.05 points) but large for body part (3.78 points) and twelve tasks (4.62 points); with the spectrogram alone, body-part accuracy was barely above chance. This matches what the two transforms do. The STFT uses one fixed 0.5~s window, so its frequency resolution is only 2~Hz and the mu and beta bands blur together, whereas the Morlet wavelet adapts its length to each frequency and resolves the 8--13~Hz rhythm more sharply. The difference maps in Figs.~\ref{fig:stft} and~\ref{fig:cwt} show the same effect. On its own, the scalogram matched the 336 handcrafted features on the binary and twelve-task problems, and combining STFT and CWT gave the best twelve-task accuracy in this comparison (20.80\%). For body part, adding the handcrafted, connectivity and covariance features raised accuracy from about 21\% to 25.63\%, so identifying the limb also depends on spatial and statistical information that the time--frequency maps do not capture.
+
+\subsection{Most Informative Features}\label{subsec:importance}
+
+To see which features separate action from imagery, an ANOVA $F$-score was computed for every feature on the training participants of each fold and averaged over the five folds (Fig.~\ref{fig:importance}).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig12_importance.png}
+\caption{Discriminative power of the features for action versus imagery: (a) the 15 features with the highest ANOVA $F$-score; (b) median $F$-score of each feature family.}
+\label{fig:importance}
+\end{figure}
+
+Almost all of the strongest features are mu-band measures: relative mu power, the mu-to-theta ratio and the sensorimotor ratio. This agrees with the spectrogram and scalogram maps, in which imagery trials carried more mu power than action trials, the expected sign of stronger desynchronisation during real movement \citep{Pfurtscheller2001}. A scalogram feature, the temporal variance of the 12~Hz wavelet energy at F3, also appears among the strongest. By family, the handcrafted features have the highest median $F$-score (43.0), followed by the scalogram (31.5), the spectrogram (13.7) and connectivity (7.8).
+
+One caveat is important. The strongest features come from the frontal electrodes AF3, AF4, F3 and F4, not from the central motor cortex, which the EPOC X does not cover. Frontal sites are also the most exposed to eye movement and muscle activity, and Figs.~\ref{fig:stft} and~\ref{fig:cwt} show extra low-frequency power at AF3 and extra high-frequency power at FC5 and T8 during action trials. Part of the action-versus-imagery accuracy is therefore probably due to the physical side effects of moving, such as eye, head and muscle activity, rather than to cortical activity alone. Separating the two would require ICA-based artefact removal or EMG reference channels.
+
+\subsection{Error Analysis}\label{subsec:errors}
+
+Fig.~\ref{fig:confusion} shows the confusion matrices of the proposed system, pooled over all test folds.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig13_confusion.png}
+\caption{Trial-level confusion matrices pooled over all test folds: (a) action versus imagery; (b) body part; (c) twelve tasks.}
+\label{fig:confusion}
+\end{figure}
+
+On the binary task the errors were fairly balanced: 77.0\% of action trials and 83.4\% of imagery trials were recognised. For body part, the classifier was better at telling \textbf{which limb} than \textbf{which side}. The arm, leg or wrist was identified correctly in 46.0\% of trials (chance 33.3\%), but the side in only 54.6\% (chance 50\%). Right arm (37.8\%) and right wrist (31.0\%) were recognised best and left wrist worst (13.5\%). Confusing left and right is not surprising with this headset, because lateralised motor activity is strongest over C3 and C4, where the EPOC X has no electrodes. In the twelve-task problem, the action-or-imagery part of the label was correct in 78.2\% of trials, but the body part in only 25.8\%, so most twelve-task errors come from the body part and not from the condition.
+
+\subsection{Imagery-versus-Imagery (Left versus Right) Classification}\label{subsec:lrresults}
+
+Table~\ref{tab:lr} gives the results for the imagery-versus-imagery task, in which the side of an imagined movement had to be decoded from the imagery trials alone.
+
+\begin{table}[htbp]
+\centering
+\caption{Imagery-versus-imagery (left versus right) classification (241 imagery trials, trial level). Chance is 50\%; with 241 trials, 55.6\% is needed for $p < 0.05$.}
+\label{tab:lr}
+\footnotesize
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Method} & \textbf{Correct} & \textbf{Accuracy} & \textbf{$p$ (binomial)} \\
+\midrule
+FBCSP + LDA (standard baseline) & 127/241 & 52.70\% & 0.22 \\
+Ensemble, standard calibration + mirror & 129/241 & 53.53\% & 0.15 \\
+Ensemble, imagery-only calibration + mirror & 140/241 & 58.09\% & 0.007 \\
+\quad arm only & 60/81 & 74.07\% & $<$0.001 \\
+\quad leg only & 46/78 & 58.97\% & 0.07 \\
+\quad wrist only & 48/82 & 58.54\% & 0.08 \\
+Ensemble, LOSO & 141/241 & 58.51\% & 0.005 \\
+\midrule
+\textbf{Nested cross-validation} (set-up chosen inside each fold) & \textbf{126/241} & \textbf{52.28\%} & \textbf{0.26} \\
+\botrule
+\end{tabular}
+\end{table}
+
+Decoding the side of an imagined movement was the hardest problem in this study. The standard FBCSP + LDA method, which works well for left- and right-hand imagery with research-grade equipment, stayed at chance (52.70\%). The ensemble reached 58.09\% ($p = 0.007$), and 58.51\% under LOSO, but only when each participant's features were calibrated on their imagery trials alone and mirror augmentation was used. Across classifiers (Fig.~\ref{fig:losomodels}), only the linear models and the ensemble rose above chance; SVM, Random Forest, AdaBoost and Naive Bayes stayed between 51.9\% and 53.9\% under LOSO ($p \ge 0.12$).
+
+These figures do not survive a stricter test. The imagery-only calibration was selected after several set-ups had been compared on the same test participants, and that selection can itself inflate the score. In nested cross-validation, where the calibration, the augmentation and the classifier were chosen using only the training participants of each fold, accuracy fell to 52.28\% (126/241, $p = 0.26$). The inner loop also failed to settle on one set-up and chose a different combination in almost every fold. The per-limb figures come from the same selected set-up and are likely to be optimistic as well. With this headset and protocol, the side of an imagined movement therefore cannot yet be decoded reliably in people the model has not seen. In addition, the right-side task always preceded the matching left-side task by 30~s, so slow changes during a session could partly separate the two sides; a protocol with randomised order and electrodes over C3 and C4 is needed before lateralised imagery can be assessed properly.
+
+\subsection{Validity of the Results}\label{subsec:validity}
+
+Several checks were run to make sure the results are not caused by information leaking from the test participants (Table~\ref{tab:validity}).
+
+\begin{table}[htbp]
+\centering
+\caption{Validity checks on the final pipeline (trial-level accuracy, \%).}
+\label{tab:validity}
+\footnotesize
+\begin{tabular}{@{}p{0.48\linewidth}p{0.44\linewidth}@{}}
+\toprule
+\textbf{Check} & \textbf{Result} \\
+\midrule
+Shuffled labels, action vs.\ imagery & 54.62, 52.10, 50.21 \\
+Shuffled labels, action vs.\ imagery (20 further runs) & mean 48.68 $\pm$ 2.84 (41.8--52.9) \\
+Shuffled labels, body part & 18.07, 19.33, 17.02 \\
+Shuffled labels, twelve tasks & 10.50, 7.98, 8.19 \\
+Shuffled labels, imagery L/R & 45.64, 43.57, 51.04 \\
+Shuffled labels, LOSO, action vs.\ imagery & 56.72, 52.94, 49.37, 48.74 \\
+\addlinespace
+Same random seed, repeated runs & 382 / 382 of 476 (GroupKFold); identical prediction for every trial (LOSO) \\
+Other random seeds, action vs.\ imagery & 80.67, 80.67, 81.09 \\
+\addlinespace
+Nested CV, action vs.\ imagery & 79.41 \\
+Nested CV, imagery L/R & 52.28 \\
+\addlinespace
+Onset shifted by $-2$ / 0 / $+2$ s, action vs.\ imagery & 76.16 / 79.20 / 75.85 \\
+Onset shifted by $-2$ / 0 / $+2$ s, body part & 27.00 / 26.89 / 25.00 \\
+\botrule
+\end{tabular}
+\end{table}
+
+\textbf{Fold integrity.} In every fold of every task, under both GroupKFold and LOSO, no participant, recording or trial appeared in both the training and the test set, and every trial was tested exactly once.
+
+\textbf{Label permutation.} A pipeline that leaks information keeps scoring above chance even when the labels are meaningless. Ours did not: with shuffled labels, all four tasks fell to the level expected from guessing. For action versus imagery, twenty further shuffles ranged from 41.8\% to 52.9\%, and the real result lies about 11 standard deviations above their mean. The spread of these shuffled scores is wider than a simple binomial model would predict, because trials of the same person are correlated; the highest shuffled LOSO score (56.72\%) lies within this spread.
+
+\textbf{Reproducibility.} Repeating an evaluation with the same random seed gave exactly the same result: 382 of 476 correct trials both times under GroupKFold, and the same prediction for every trial in repeated LOSO runs. With three other seeds, the binary accuracy was 80.67\%, 80.67\% and 81.09\%, and over the five runs it was 80.59 $\pm$ 0.35\%. The small differences come from the random parts of the tree models, so repeated runs do not drift upwards. Finally, every feature was recomputed from the raw EDF files and the full LOSO evaluation was run again for all four tasks. Each of the four classifiers and the ensemble gave the same prediction for every one of the 1,669 test trials as in the first run. Per-person accuracy showed no upward trend with the order in which participants were held out (Spearman $\rho$ between $-0.39$ and $+0.20$ for all models and tasks).
+
+\textbf{Learning curve.} Fig.~\ref{fig:lcurve} shows the binary accuracy on the same test participants when the model was trained on a growing number of participants. Accuracy rose from 70.9\% with 5 training participants to 80.25\% with all of them, with smaller gains at each step, and it did not change between about 38 and 46 training participants. This is the pattern of genuine learning; a leak would give high accuracy even with very few training participants.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/fig15_learning_curve.png}
+\caption{Learning curve for action versus imagery: test accuracy against the number of training participants.}
+\label{fig:lcurve}
+\end{figure}
+
+\textbf{Nested cross-validation.} When the inner loop was free to choose between no alignment, alignment, and alignment with mirror augmentation, and between the four classifiers and the ensemble, action versus imagery reached 79.41\%, less than one point below standard cross-validation. The inner loop chose subject-wise alignment in every fold. The binary result is therefore not an artefact of choosing the set-up on the test participants, unlike the imagery-versus-imagery result.
+
+\textbf{Sensitivity to the onset estimate.} Each onset was chosen to maximise the action--imagery difference in head motion, so in principle it could favour the binary task. Shifting every onset by 2~s in either direction barely changed body-part accuracy, but lowered binary accuracy by about 3 points. Part of this drop is expected, since a shifted window includes rest or part of the next task, but it also means that the binary result may be optimistic by up to about 3 points. Even in the worst case it stays above 75\%.
+
+\subsection{Limitations}\label{subsec:limits}
+
+Three limitations matter most. First, every participant performed the tasks in the same order, so slow drift or fatigue during a session may be partly confounded with the task label, particularly for the imagery-versus-imagery task. Second, artefacts were handled by filtering and trial rejection only; eye and muscle activity may therefore contribute to the action-versus-imagery result, and ICA-based artefact removal would help to separate it from cortical activity. Third, all results are offline, and subject-wise alignment assumes one unlabelled calibration session for each new user; an online evaluation with real-time feedback remains to be done.
+
+\FloatBarrier
+\section{Conclusion}\label{sec:conclusion}
+
+This study presented a subject-independent pipeline for classifying motor action and motor imagery from a consumer-grade 14-channel Emotiv EPOC X headset. EEG was recorded from 47 participants who performed and then imagined six limb movements, and the same 476 trials were classified at several levels of detail. The pipeline recovers the true trial timing from the headset's motion sensor, standardises 1,771 spectral, time--frequency, connectivity and covariance features within each recording, doubles the training data by hemispheric mirroring, and combines four classifiers into an ensemble that makes one decision per trial.
+
+Real and imagined movement could be told apart reliably in people the model had never seen. The ensemble reached 80.25\% under person-wise cross-validation, the same 80.25\% under leave-one-subject-out validation, and 79.41\% under nested cross-validation, while shuffled labels brought accuracy down to chance. The finer distinctions were much harder: 26.68\% for the six body parts and 21.43\% for the twelve tasks, both clearly above chance but far from what a practical BCI would need. The side of an imagined movement could not be decoded reliably, with 52.28\% under nested cross-validation.
+
+Three further findings are of practical use. Subject-wise alignment was the single most effective step, raising action-versus-imagery accuracy by almost ten points. The Morlet scalogram was consistently more informative than the STFT spectrogram, and adding CSP features or replacing the feature-based models with deep networks did not improve the results on a dataset of this size.
+
+The main limit of the present system is the headset itself: with no electrodes over the central motor strip, decoding the limb and the side of a movement remains out of reach. Future work will therefore use recordings with randomised task order, more imagery repetitions and better coverage of the motor cortex, add ICA-based removal of eye and muscle activity, and evaluate the system online with real-time feedback.
+
+\section{Data availability}
+The data that support the findings of this study are available from the corresponding author upon reasonable request.
+
+\section{Author Contributions}
+All authors contributed to the study design, data collection, analysis and writing, and read and approved the final manuscript.
+
+\section{Funding}
+All necessary funding, including support for open access publication, is provided by Amrita Vishwa Vidyapeetham, India.
+
+
+\bibliography{bibliography}
+
+\end{document}

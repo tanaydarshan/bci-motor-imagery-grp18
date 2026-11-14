@@ -1,0 +1,486 @@
+4 Results and Discussion
+4.1 Dataset Summary
+Table 5 summarises the data that reached the classification stage. The final dataset
+contains 476 trials from 47 participants, which gives 8,092 windows. Action and
+imagery are almost equally represented, and every one of the twelve tasks has between
+36 and 44 trials. Because the classes are this close to balanced, accuracy can be read
+directly, without a correction for class imbalance.
+
+                               Table 5 Summary of the final dataset.
+
+                               Parameter                                      Value
+                               Participants                                     47
+                               Trials                                          476
+                               Action / imagery trials                      235 / 241
+                               Trials per task (twelve classes)               36–44
+                               EEG channels / sampling rate               14 / 128 Hz
+                               Trial length / window length / stride    10 s / 2 s / 0.5 s
+                               Windows                                        8,092
+                               Features per window                            1,771
+
+
+
+
+4.2 Overall Classification Performance
+Table 6 gives the accuracy of the proposed ensemble on all four tasks. Every value is
+subject-independent: each trial was classified by a model that had seen no data from
+that participant.
+
+Table 6 Accuracy of the proposed ensemble with mirror augmentation. Pooled values count the
+correctly classified test trials over all folds.
+Task                           Chance    GroupKFold, pooled   GroupKFold, fold mean   Window level     LOSO, pooled
+Action vs. imagery (2)          50.00%    80.25% (382/476)        80.19 ± 6.59%       68.53 ± 3.59%   80.25% (382/476)
+Body part (6)                   16.67%    26.68% (127/476)        26.68 ± 1.79%       21.01 ± 0.42%   25.84% (123/476)
+Twelve tasks (12)                8.33%    21.43% (102/476)        21.42 ± 1.21%       15.75 ± 0.83%   22.27% (106/476)
+Imagery vs. imagery, L/R (2)    50.00%    58.09% (140/241)        58.10 ± 5.91%       52.65 ± 2.74%   58.51% (141/241)
+
+
+
+
+    Telling real from imagined movement was clearly the easiest problem. Four out of
+five trials from people the model had never seen were classified correctly, about 30
+percentage points above chance. The two multi-class problems are much harder, but
+both stay well above chance: body-part accuracy is 1.6 times the chance level and
+twelve-task accuracy 2.6 times. As expected, accuracy falls as the target becomes more
+specific. The imagery-versus-imagery task looks above chance in Table 6, but it does
+not hold up under nested cross-validation (Section 4.11).
+    Averaging over a trial helped on every task. Going from single windows to whole
+trials raised accuracy by 11.7 points for action versus imagery and by 5.7 points for
+both body part and twelve tasks. A single 2 s window is noisy, and the average of
+
+
+                                                             22
+17 windows removes much of that noise. The spread between folds is wide, however.
+Binary accuracy ranged from 71.3% to 89.7% depending on which participants were
+held out, so decoding depends strongly on the individual, and differences of one or
+two points between methods should be read with care.
+
+4.3 Accuracy of All Models
+Tables 7 and 8 bring together the accuracy of every model evaluated in this study.
+Table 7 covers the classifiers that were run inside the proposed pipeline, with subject-
+wise alignment, mirror augmentation and trial averaging, under both GroupKFold
+and LOSO validation. Table 8 covers the comparison and deep-learning models, which
+were evaluated per window on raw or unaligned features.
+
+Table 7 Trial-level accuracy (%) of every classifier in the proposed pipeline (alignment, mirror
+augmentation and trial averaging). GKF = person-wise GroupKFold; LOSO =
+leave-one-subject-out. The best value in each column is in bold; – = not evaluated.
+
+                      Action vs. imagery   Body part (6)     Twelve tasks (12)      Imagery vs. imagery (L/R)
+Model                 GKF        LOSO      GKF       LOSO    GKF       LOSO         GKF          LOSO
+Ensemble (proposed)   80.25      80.25     26.68     25.84   21.43      22.27       58.09         58.51
+Logistic Regression   80.46      80.25     26.26     25.42     –        21.22       57.68         61.00
+LDA (shrinkage)       80.25      80.88     23.95     24.58     –        20.38       56.85         56.85
+HistGB                79.20      80.46     24.58     27.52     –        18.91       50.21         50.62
+Extra Trees           77.94      77.94     19.33     20.80     –        19.12       50.62         54.36
+SVM (RBF)             77.94        –       25.21       –       –          –         54.36         53.94
+Random Forest         77.52        –       19.96       –       –          –         44.81         51.87
+AdaBoost              78.78        –       19.33       –       –          –         48.55         53.11
+Naive Bayes           73.11        –       19.54       –       –          –         45.23         51.87
+Chance level                  50.00            16.67                 8.33                     50.00
+
+
+
+
+Table 8 Window-level accuracy (fold mean ± SD, %) of the comparison and deep-learning
+models, evaluated without subject-wise alignment, augmentation or trial averaging. Each value is
+the best of the five feature sets for that model and task. The proposed ensemble is shown at
+window and trial level for reference.
+
+Model                                      Action vs. imagery          Body part (6)        Twelve tasks (12)
+Histogram Gradient Boosting                        64.45 ± 2.35             20.27 ± 0.84       13.91 ± 1.11
+Random Forest                                      63.81 ± 3.95             20.37 ± 0.69       13.35 ± 0.72
+LDA (shrinkage)                                    63.35 ± 2.91             20.30 ± 1.61       13.44 ± 1.87
+SVM (RBF)                                          62.89 ± 3.73             20.70 ± 1.13       14.32 ± 1.27
+AdaBoost                                           62.85 ± 2.77                   –                  –
+Gaussian Naive Bayes                               59.80 ± 3.06                   –                  –
+Riemannian MDM                                     62.31 ± 4.64             19.92 ± 1.44       12.05 ± 1.37
+FBCSP + best classifier                            61.60 ± 4.37             19.47 ± 2.49       11.50 ± 1.03
+Hierarchical (condition → body part)                     –                        –            13.83 ± 1.28
+EEGNet                                             61.65 ± 2.14             15.94 ± 0.46       11.77 ± 0.55
+CNN–LSTM                                           57.84 ± 2.08                   –                  –
+Proposed ensemble (window level)               68.53 ± 3.59             21.01 ± 0.42          15.75 ± 0.83
+Proposed ensemble (trial level)                80.19 ± 6.59             26.68 ± 1.79          21.42 ± 1.21
+
+
+
+
+                                                       23
+    Within the proposed pipeline, the linear models and HistGB performed almost
+identically on action versus imagery (79.2–80.9%), while Extra Trees, Random Forest,
+AdaBoost and Naive Bayes were 2–7 points lower. The ensemble gave the highest
+accuracy for body part and for the imagery-versus-imagery task under GroupKFold
+and for the twelve tasks under LOSO, and it stayed within 2.5 points of the best model
+in every other column. Logistic regression was almost as consistent, while the tree-
+based models varied much more from task to task. On the imagery-versus-imagery
+task, only the linear models and the ensemble rose clearly above chance. Among the
+comparison models, no classifier stood out: the best result for each was within a few
+points of the others, and all of them fell well short of the proposed pipeline.
+
+4.4 Leave-One-Subject-Out Evaluation
+Under LOSO validation each model is trained on 46 participants and tested on the
+remaining one, and this is repeated for all 47 participants. Table 9 lists the metrics of
+the ensemble, and Fig. 11 shows the accuracy of every member of the ensemble.
+
+Table 9 Leave-one-subject-out results of the proposed ensemble (47 folds, trial level).
+
+Task                        Accuracy   Balanced acc.   Macro F1   Kappa   Per participant   Window level   p (binomial)
+Action vs. imagery           80.25%       80.23%        80.24%     0.61    81.3 ± 17.8%        69.76%        < 10−40
+Body part                    25.84%       25.57%        25.42%     0.11    25.3 ± 11.5%        22.08%        < 10−6
+Twelve tasks                 22.27%       21.88%        21.63%     0.15    22.0 ± 14.7%        14.90%        < 10−19
+Imagery vs. imagery (L/R)    58.51%       58.57%        58.51%     0.17    58.5 ± 24.6%        53.48%         0.005
+
+
+
+
+Fig. 11 LOSO accuracy of each classifier on each task. The dashed line marks chance level.
+
+
+    LOSO and GroupKFold agree to within one point on every task. The identical
+action-versus-imagery score is a coincidence and not a repeat of the same predictions:
+the two schemes disagreed on 14 trials from 13 participants, and 7 of these were correct
+only under LOSO while 7 were correct only under GroupKFold. On the harder tasks
+the predictions changed much more, on 38% of the body-part trials and 41% of the
+twelve-task trials, but again the gains and losses balanced out (McNemar p ≥ 0.72
+on every task). Training on 46 instead of about 31–38 participants therefore did not
+change the overall accuracy, which is in line with the learning curve in Section 4.12.
+
+
+                                                           24
+    Balanced accuracy and macro F1 track plain accuracy closely on every task, so no
+single class is responsible for the scores. The variation between participants is large.
+For action versus imagery, 14 of the 47 participants were classified without a single
+error while 3 fell below 50%, and the standard deviation across participants (17.8
+points) is much larger than the spread between folds. All four ensemble members
+were significantly above chance on the binary, body-part and twelve-task problems
+(p < 0.02), and they reached similar binary accuracy (77.9–80.9%). On the training
+participants, accuracy was between 91% and 100% for every model, far above the test
+accuracy. The models therefore fit individual participants closely, and only part of
+what they learn carries over to a new person.
+
+4.5 Contribution of Alignment, Augmentation and the
+    Ensemble
+Table 10 compares the four ensemble members with the ensemble, and shows what
+happens when subject-wise alignment and mirror augmentation are switched off.
+
+ Table 10 Trial-level accuracy (fold mean ± SD, %) of the single classifiers and of the ensemble
+ with and without alignment and augmentation (GroupKFold). The single classifiers were
+ trained without augmentation.
+
+ Model                                     Action vs. imagery      Body part      Twelve tasks
+ Logistic Regression                           79.96 ± 7.71        23.51 ± 1.69    17.67 ± 2.86
+ LDA (shrinkage)                               76.19 ± 7.94        23.50 ± 3.13    19.55 ± 2.40
+ Extra Trees                                   77.88 ± 6.81        22.49 ± 1.01    18.92 ± 1.44
+ HistGB                                        78.74 ± 5.01        26.48 ± 2.91    19.96 ± 0.86
+ Ensemble, no alignment, no augmentation       70.14 ± 5.51        23.77 ± 2.36    19.34 ± 1.74
+ Ensemble, no augmentation                     79.56 ± 6.37        25.60 ± 3.59    20.41 ± 5.59
+ Ensemble + mirror augmentation               80.19 ± 6.59        26.68 ± 1.79    21.42 ± 1.21
+
+
+
+
+    No single classifier was best on all three tasks: logistic regression did best on the
+binary problem and gradient boosting on body part. The ensemble stayed within about
+one point of the best single model on every task. We kept it fixed rather than choosing
+a different model for each task after seeing the results, since that choice would itself
+inflate the scores.
+    Subject-wise alignment had the largest effect of any step. Without it, binary accu-
+racy fell from 79.62% to 70.17% (pooled, 379 against 334 correct trials), body-part
+accuracy from 25.63% to 23.74%, and twelve-task accuracy from 20.38% to 19.33%.
+Much of the difference between people therefore behaves like a simple shift in feature
+values, which per-recording standardisation removes. Mirror augmentation added 3, 5
+and 5 correct trials on the three tasks (379 to 382, 122 to 127 and 97 to 102). These
+gains are small and lie within the spread across folds, but they appear on all three
+tasks, and the fold-to-fold variation of the multi-class tasks dropped markedly (from
+±3.59 to ±1.79 points for body part and from ±5.59 to ±1.21 points for twelve tasks).
+
+
+
+
+                                               25
+4.6 Comparison with Baseline and Deep-Learning Models
+Table 8 sets the proposed system beside the comparison models. These were evaluated
+window by window on the same folds and with the same leakage controls, but without
+subject-wise alignment, augmentation or trial averaging.
+    The proposed system was the best method on every task. Even at window level it
+beat every baseline on the binary and twelve-task problems and slightly exceeded the
+best body-part baselines. The strongest conventional pipelines, which combined CSP,
+Riemannian and handcrafted features with SVM or gradient boosting, reached 62–
+64% on the binary task and about 20–21% on body part. Riemannian classifiers were
+competitive throughout, especially for body part, which shows that the covariance
+between channels carries useful information.
+    The deep-learning models did not outperform the classical pipelines. EEGNet
+reached 61.65% on the binary task, close to the classical baselines, but stayed at chance
+for body part (15.94%) and only just above it for twelve tasks (11.77%), and the
+CNN–LSTM was weaker still. With fewer than 40 training participants per fold, the
+networks most likely did not see enough different people to learn features that transfer
+to someone new, in line with earlier reports that deep EEG models need large train-
+ing sets [28, 30]. The hierarchical model did not beat direct twelve-class classification
+either, because every error in its first stage is passed on to the second.
+
+4.7 Effect of Adding CSP Features
+Since filter-bank CSP on its own was weaker than our feature set, we tested whether
+CSP helps when it is added to that set. Table 11 gives the result for every classifier
+on three tasks.
+
+Table 11 Trial-level accuracy (pooled, %; correct trials in brackets) of each classifier with and
+without filter-bank CSP features (GroupKFold). All models use alignment, mirror augmentation
+and trial averaging.
+
+                      Action vs. imagery (476)         Body part (476)        Imagery L/R (241)
+Model                    Base        + CSP             Base      + CSP          Base         + CSP
+Ensemble              80.25 (382)   81.30 (387)   26.68 (127)   25.00 (119)   58.09 (140)   57.26 (138)
+Logistic Regression   80.46 (383)   79.83 (380)   26.26 (125)   26.47 (126)   57.68 (139)   59.34 (143)
+LDA                   80.25 (382)   80.04 (381)   23.95 (114)   24.16 (115)   56.85 (137)   59.34 (143)
+HistGB                79.20 (377)   80.04 (381)   24.58 (117)   24.16 (115)   50.21 (121)   53.11 (128)
+SVM (RBF)             77.94 (371)   76.89 (366)   25.21 (120)   26.89 (128)   54.36 (131)   54.77 (132)
+Extra Trees           77.94 (371)   78.99 (376)    19.33 (92)   21.64 (103)   50.62 (122)   51.45 (124)
+Random Forest         77.52 (369)   78.57 (374)    19.96 (95)   20.59 (98)    44.81 (108)   43.57 (105)
+AdaBoost              78.78 (375)   79.83 (380)    19.33 (92)    20.80 (99)   48.55 (117)   54.36 (131)
+Naive Bayes           73.11 (348)   72.90 (347)    19.54 (93)   19.33 (92)    45.23 (109)   48.13 (116)
+
+
+
+   CSP did not give a consistent gain. On action versus imagery it added about one
+point to the tree models and took up to one point from logistic regression and SVM.
+On body part it helped Extra Trees (+2.3 points) and SVM (+1.7 points) but lowered
+the ensemble from 26.68% to 25.00%. On the imagery-versus-imagery task it added
+four trials to logistic regression and LDA and almost six points to AdaBoost, but these
+
+
+                                                  26
+models stayed close to chance. For the ensemble, CSP added five trials on the binary
+task and cost eight on body part and two on the imagery-versus-imagery task. All of
+these changes are about the size of the spread between folds, or smaller, and they point
+in different directions on different tasks. We therefore kept the pipeline without CSP.
+    There are two likely reasons why CSP adds so little here. First, a CSP feature is
+the log-variance of a spatially filtered signal, which is a weighted combination of band
+power and inter-channel covariance; our feature set already contains band power for
+every channel in every band and the full covariance matrix in tangent space, so most
+of what CSP extracts is already present. Second, CSP filters are learned from the
+training participants, and spatial patterns transfer poorly between people when only
+14 electrodes are available and none of them lies over the central motor strip.
+
+4.8 Spectrogram versus Scalogram Features
+To measure the value of each feature family on its own, the ensemble pipeline (with
+alignment and trial averaging, without mirror augmentation) was run with one family
+at a time (Fig. 12, Table 12).
+
+
+
+
+Fig. 12 Trial-level accuracy of the ensemble with a single feature family. The dashed line marks
+chance level.
+
+
+
+
+      Table 12 Trial-level accuracy (pooled, %; correct trials in brackets) with single
+      feature families, without mirror augmentation.
+
+      Features               Number      Action vs. imagery     Body part      Twelve tasks
+      Spectrogram (STFT)        560          76.47 (364)         18.07 (86)      14.92 (71)
+      Scalogram (CWT)           714          77.52 (369)        21.85 (104)      19.54 (93)
+      STFT + CWT               1,274         78.15 (372)        21.01 (100)      20.80 (99)
+      Handcrafted               336          77.31 (368)        23.95 (114)      19.54 (93)
+      All features             1,771         79.62 (379)        25.63 (122)      20.38 (97)
+
+
+
+
+   The scalogram outperformed the spectrogram on all three tasks. The gap was
+small for the binary task (1.05 points) but large for body part (3.78 points) and
+twelve tasks (4.62 points); with the spectrogram alone, body-part accuracy was barely
+
+
+                                                27
+above chance. This matches what the two transforms do. The STFT uses one fixed
+0.5 s window, so its frequency resolution is only 2 Hz and the mu and beta bands
+blur together, whereas the Morlet wavelet adapts its length to each frequency and
+resolves the 8–13 Hz rhythm more sharply. The difference maps in Figs. 7 and 8 show
+the same effect. On its own, the scalogram matched the 336 handcrafted features
+on the binary and twelve-task problems, and combining STFT and CWT gave the
+best twelve-task accuracy in this comparison (20.80%). For body part, adding the
+handcrafted, connectivity and covariance features raised accuracy from about 21% to
+25.63%, so identifying the limb also depends on spatial and statistical information
+that the time–frequency maps do not capture.
+
+4.9 Most Informative Features
+To see which features separate action from imagery, an ANOVA F -score was computed
+for every feature on the training participants of each fold and averaged over the five
+folds (Fig. 13).
+
+
+
+
+Fig. 13 Discriminative power of the features for action versus imagery: (a) the 15 features with the
+highest ANOVA F -score; (b) median F -score of each feature family.
+
+
+    Almost all of the strongest features are mu-band measures: relative mu power, the
+mu-to-theta ratio and the sensorimotor ratio. This agrees with the spectrogram and
+scalogram maps, in which imagery trials carried more mu power than action trials, the
+expected sign of stronger desynchronisation during real movement [3]. A scalogram
+feature, the temporal variance of the 12 Hz wavelet energy at F3, also appears among
+the strongest. By family, the handcrafted features have the highest median F -score
+(43.0), followed by the scalogram (31.5), the spectrogram (13.7) and connectivity (7.8).
+    One caveat is important. The strongest features come from the frontal electrodes
+AF3, AF4, F3 and F4, not from the central motor cortex, which the EPOC X does not
+cover. Frontal sites are also the most exposed to eye movement and muscle activity,
+and Figs. 7 and 8 show extra low-frequency power at AF3 and extra high-frequency
+power at FC5 and T8 during action trials. Part of the action-versus-imagery accuracy
+is therefore probably due to the physical side effects of moving, such as eye, head
+
+
+                                                28
+and muscle activity, rather than to cortical activity alone. Separating the two would
+require ICA-based artefact removal or EMG reference channels.
+
+4.10 Error Analysis
+Fig. 14 shows the confusion matrices of the proposed system, pooled over all test folds.
+
+
+
+
+Fig. 14 Trial-level confusion matrices pooled over all test folds: (a) action versus imagery; (b) body
+part; (c) twelve tasks.
+
+
+    On the binary task the errors were fairly balanced: 77.0% of action trials and 83.4%
+of imagery trials were recognised. For body part, the classifier was better at telling
+which limb than which side. The arm, leg or wrist was identified correctly in 46.0%
+of trials (chance 33.3%), but the side in only 54.6% (chance 50%). Right arm (37.8%)
+and right wrist (31.0%) were recognised best and left wrist worst (13.5%). Confusing
+left and right is not surprising with this headset, because lateralised motor activity is
+strongest over C3 and C4, where the EPOC X has no electrodes. In the twelve-task
+problem, the action-or-imagery part of the label was correct in 78.2% of trials, but
+the body part in only 25.8%, so most twelve-task errors come from the body part and
+not from the condition.
+
+4.11 Imagery-versus-Imagery (Left versus Right) Classification
+Table 13 gives the results for the imagery-versus-imagery task, in which the side of an
+imagined movement had to be decoded from the imagery trials alone.
+   Decoding the side of an imagined movement was the hardest problem in this study.
+The standard FBCSP + LDA method, which works well for left- and right-hand
+imagery with research-grade equipment, stayed at chance (52.70%). The ensemble
+reached 58.09% (p = 0.007), and 58.51% under LOSO, but only when each partici-
+pant’s features were calibrated on their imagery trials alone and mirror augmentation
+was used. Across classifiers (Fig. 11), only the linear models and the ensemble rose
+above chance; SVM, Random Forest, AdaBoost and Naive Bayes stayed between 51.9%
+and 53.9% under LOSO (p ≥ 0.12).
+
+
+                                                 29
+ Table 13 Imagery-versus-imagery (left versus right) classification (241 imagery trials, trial
+ level). Chance is 50%; with 241 trials, 55.6% is needed for p < 0.05.
+
+ Method                                                           Correct    Accuracy      p (binomial)
+ FBCSP + LDA (standard baseline)                                   127/241        52.70%      0.22
+ Ensemble, standard calibration + mirror                           129/241        53.53%      0.15
+ Ensemble, imagery-only calibration + mirror                       140/241        58.09%     0.007
+   arm only                                                         60/81         74.07%     <0.001
+   leg only                                                         46/78         58.97%      0.07
+   wrist only                                                       48/82         58.54%      0.08
+ Ensemble, LOSO                                                    141/241        58.51%     0.005
+ Nested cross-validation (set-up chosen inside each fold)         126/241     52.28%          0.26
+
+
+
+
+    These figures do not survive a stricter test. The imagery-only calibration was
+selected after several set-ups had been compared on the same test participants, and
+that selection can itself inflate the score. In nested cross-validation, where the cal-
+ibration, the augmentation and the classifier were chosen using only the training
+participants of each fold, accuracy fell to 52.28% (126/241, p = 0.26). The inner loop
+also failed to settle on one set-up and chose a different combination in almost every
+fold. The per-limb figures come from the same selected set-up and are likely to be
+optimistic as well. With this headset and protocol, the side of an imagined movement
+therefore cannot yet be decoded reliably in people the model has not seen. In addition,
+the right-side task always preceded the matching left-side task by 30 s, so slow changes
+during a session could partly separate the two sides; a protocol with randomised order
+and electrodes over C3 and C4 is needed before lateralised imagery can be assessed
+properly.
+
+4.12 Validity of the Results
+Several checks were run to make sure the results are not caused by information leaking
+from the test participants (Table 14).
+
+  Table 14 Validity checks on the final pipeline (trial-level accuracy, %).
+
+  Check                                                   Result
+  Shuffled labels, action vs. imagery                     54.62, 52.10, 50.21
+  Shuffled labels, action vs. imagery (20 further runs)   mean 48.68 ± 2.84 (41.8–52.9)
+  Shuffled labels, body part                              18.07, 19.33, 17.02
+  Shuffled labels, twelve tasks                           10.50, 7.98, 8.19
+  Shuffled labels, imagery L/R                            45.64, 43.57, 51.04
+  Shuffled labels, LOSO, action vs. imagery               56.72, 52.94, 49.37, 48.74
+  Same random seed, repeated runs                         382 / 382 of 476 (GroupKFold); identical pre-
+                                                          diction for every trial (LOSO)
+  Other random seeds, action vs. imagery                  80.67, 80.67, 81.09
+  Nested CV, action vs. imagery                           79.41
+  Nested CV, imagery L/R                                  52.28
+  Onset shifted by −2 / 0 / +2 s, action vs. imagery      76.16 / 79.20 / 75.85
+  Onset shifted by −2 / 0 / +2 s, body part               27.00 / 26.89 / 25.00
+
+
+
+
+                                                     30
+    Fold integrity. In every fold of every task, under both GroupKFold and LOSO,
+no participant, recording or trial appeared in both the training and the test set, and
+every trial was tested exactly once.
+    Label permutation. A pipeline that leaks information keeps scoring above chance
+even when the labels are meaningless. Ours did not: with shuffled labels, all four tasks
+fell to the level expected from guessing. For action versus imagery, twenty further
+shuffles ranged from 41.8% to 52.9%, and the real result lies about 11 standard devi-
+ations above their mean. The spread of these shuffled scores is wider than a simple
+binomial model would predict, because trials of the same person are correlated; the
+highest shuffled LOSO score (56.72%) lies within this spread.
+    Reproducibility. Repeating an evaluation with the same random seed gave
+exactly the same result: 382 of 476 correct trials both times under GroupKFold, and
+the same prediction for every trial in repeated LOSO runs. With three other seeds,
+the binary accuracy was 80.67%, 80.67% and 81.09%, and over the five runs it was
+80.59 ± 0.35%. The small differences come from the random parts of the tree models,
+so repeated runs do not drift upwards.
+    Learning curve. Fig. 15 shows the binary accuracy on the same test participants
+when the model was trained on a growing number of participants. Accuracy rose from
+70.9% with 5 training participants to 80.25% with all of them, with smaller gains at
+each step, and it did not change between about 38 and 46 training participants. This
+is the pattern of genuine learning; a leak would give high accuracy even with very few
+training participants.
+
+
+
+
+Fig. 15 Learning curve for action versus imagery: test accuracy against the number of training
+participants.
+
+
+    Nested cross-validation. When the inner loop was free to choose between no
+alignment, alignment, and alignment with mirror augmentation, and between the four
+classifiers and the ensemble, action versus imagery reached 79.41%, less than one point
+below standard cross-validation. The inner loop chose subject-wise alignment in every
+
+
+
+                                             31
+fold. The binary result is therefore not an artefact of choosing the set-up on the test
+participants, unlike the imagery-versus-imagery result.
+    Sensitivity to the onset estimate. Each onset was chosen to maximise the
+action–imagery difference in head motion, so in principle it could favour the binary
+task. Shifting every onset by 2 s in either direction barely changed body-part accuracy,
+but lowered binary accuracy by about 3 points. Part of this drop is expected, since
+a shifted window includes rest or part of the next task, but it also means that the
+binary result may be optimistic by up to about 3 points. Even in the worst case it
+stays above 75%.
+
+4.13 Limitations
+Three limitations matter most. First, every participant performed the tasks in the
+same order, so slow drift or fatigue during a session may be partly confounded with
+the task label, particularly for the imagery-versus-imagery task. Second, artefacts were
+handled by filtering and trial rejection only; eye and muscle activity may therefore
+contribute to the action-versus-imagery result, and ICA-based artefact removal would
+help to separate it from cortical activity. Third, all results are offline, and subject-
+wise alignment assumes one unlabelled calibration session for each new user; an online
+evaluation with real-time feedback remains to be done.
+
